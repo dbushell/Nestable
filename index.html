@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html lang="en" class="lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>    <html lang="en" class="lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>    <html lang="en" class="lt-ie9"> <![endif]-->
+<!--[if IE 9]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if gt IE 9]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <title>Nestable</title>
+    <style type="text/css">
+
+.cf:after { visibility: hidden; display: block; font-size: 0; content: " "; clear: both; height: 0; }
+* html .cf { zoom: 1; }
+*:first-child+html .cf { zoom: 1; }
+
+html { margin: 0; padding: 0; }
+body { font-size: 100%; margin: 0; padding: 1.75em; font-family: 'Helvetica Neue', Arial, sans-serif; }
+
+h1 { font-size: 1.75em; margin: 0 0 0.6em 0; }
+
+a { color: #2996cc; }
+a:hover { text-decoration: none; }
+
+p { line-height: 1.5em; }
+.small { color: #666; font-size: 0.875em; }
+.large { font-size: 1.25em; }
+
+.dd { position: relative; display: block; width: 500px; list-style: none; font-size: 13px; line-height: 20px; margin: 0; padding: 0; }
+
+.dd ul,
+.dd-item ul { display: block; position: relative; list-style: none; padding: 0 0 0 30px; margin: 0; /* border: 1px dotted #ccc; */ }
+
+.dd-item { display: block; position: relative; font-size: 13px; line-height: 20px; padding: 0; margin: 0; }
+.dd-item > .dd-handle { display: block; height: 30px; padding: 5px 10px; margin: 5px 0; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
+    background: #fafafa;
+    background: -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#eee));
+    background: -webkit-linear-gradient(top, #fafafa 0%,#eee 100%);
+    background: -o-linear-gradient(top, #fafafa 0%,#eee 100%);
+    background: -ms-linear-gradient(top, #fafafa 0%,#eee 100%);
+    background: linear-gradient(top, #fafafa 0%,#eee 100%);
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.dd-item > .dd-handle:hover { color: #2ea8e5; background: #fff; }
+
+.dd-item > button { cursor: pointer; float: left; border: 0; background: transparent; width: 25px; height: 20px; margin: 5px 0; padding: 0; line-height: 20px; font-size: 12px; text-align: center; font-weight: bold; }
+
+.dd-collapsed > ul { display: none; }
+
+.dd-placeholder { background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
+.dd-dragel { position: absolute; z-index: 9999; pointer-events: none; }
+
+.dd-dragel .dd-handle {
+    -webkit-box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+    box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+}
+
+
+.dd-menu { padding: 0; margin: 20px 0; }
+
+    </style>
+</head>
+<body>
+
+    <h1>Nestable</h1>
+
+    <p>Drag &amp; drop hierarchical list (mouse and touch compatible).</p>
+
+    <menu class="dd-menu">
+        <button type="button" data-action="expand-all">Expand All</button>
+        <button type="button" data-action="collapse-all">Collapse All</button>
+    </menu>
+
+    <div class="dd">
+        <ul>
+            <li class="dd-item">
+                <div class="dd-handle">Item 1</div>
+            </li>
+            <li class="dd-item">
+                <div class="dd-handle">Item 2</div>
+                <ul>
+                    <li class="dd-item"><div class="dd-handle">Sub Item 2.1</div></li>
+                    <li class="dd-item"><div class="dd-handle">Sub Item 2.2</div></li>
+                    <li class="dd-item"><div class="dd-handle">Sub Item 2.3</div></li>
+                    <li class="dd-item"><div class="dd-handle">Sub Item 2.4</div></li>
+                    <li class="dd-item"><div class="dd-handle">Sub Item 2.5</div></li>
+                </ul>
+            </li>
+            <li class="dd-item">
+                <div class="dd-handle">Item 3</div>
+                <ul>
+                    <li class="dd-item"><div class="dd-handle">Sub Item 3.1</div></li>
+                    <li class="dd-item"><div class="dd-handle">Sub Item 3.2</div></li>
+                    <li class="dd-item"><div class="dd-handle">Sub Item 3.3</div></li>
+                </ul>
+            </li>
+            <li class="dd-item">
+                <div class="dd-handle">Item 4</div>
+            </li>
+            <li class="dd-item">
+                <div class="dd-handle">Item 5</div>
+            </li>
+        </ul>
+    </div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="jquery.nestable.js"></script>
+<script>
+
+$(document).ready(function()
+{
+
+    // temp ids
+    /*
+    $.each($('.dd').find('li'), function(k, el) {
+        $(el).attr('data-id', k);
+    });
+    */
+
+    // nestable
+    $('.dd').nestable();
+
+    // events
+    $('.dd-menu').on('click', function(e)
+    {
+        var target = $(e.target),
+            action = target.data('action');
+        if (action === 'expand-all') {
+            $('.dd').nestable('expandAll');
+        }
+        if (action === 'collapse-all') {
+            $('.dd').nestable('collapseAll');
+        }
+    });
+
+
+});
+</script>
+</body>
+</html>
