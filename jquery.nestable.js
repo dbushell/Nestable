@@ -13,14 +13,15 @@
         eCancel = hasTouch ? 'touchcancel' : 'mouseup';
 
     var defaults = {
-            listNodeName   : 'ul',
-            itemNodeName   : 'li',
-            dragClass      : 'dd-dragel',
-            handleClass    : 'dd-handle',
-            collapsedClass : 'dd-collapsed',
-            placeClass     : 'dd-placeholder',
-            maxdepth       : 3,
-            threshold      : 20
+            itemIdAttribute : null,
+            listNodeName    : 'ul',
+            itemNodeName    : 'li',
+            dragClass       : 'dd-dragel',
+            handleClass     : 'dd-handle',
+            collapsedClass  : 'dd-collapsed',
+            placeClass      : 'dd-placeholder',
+            maxdepth        : 3,
+            threshold       : 20
         };
 
     function Plugin(element, options)
@@ -103,6 +104,38 @@
 
         },
 
+        serialize: function()
+        {
+            if (typeof this.options.itemIdAttribute !== 'string') {
+                return 'No ID attribute specified.';
+            }
+            var data,
+                list  = this;
+                step  = function(level)
+                {
+                    var array = [ ],
+                        items = level.children(list.options.itemNodeName);
+                    items.each(function()
+                    {
+                        var li   = $(this),
+                            item = { id: li.attr(list.options.itemIdAttribute) },
+                            sub  = li.children(list.options.listNodeName);
+                        if (sub.length) {
+                            item.children = step(sub);
+                        }
+                        array.push(item);
+                    });
+                    return array;
+                };
+            data = step(list.el.find(list.options.listNodeName + ':first'));
+            return data;
+        },
+
+        serialise: function()
+        {
+            return this.serialize();
+        },
+
         reset: function()
         {
             this.mouse = {
@@ -137,7 +170,7 @@
 
         collapseItem: function(li)
         {
-            var lists = li.children('ul');
+            var lists = li.children(this.options.listNodeName);
             if (lists.length) {
                 li.addClass(this.options.collapsedClass);
                 li.children('[data-action="collapse"]').hide();
@@ -211,6 +244,7 @@
             this.dragEl[0].style.cssText = '';
             this.dragEl = null;
             this.pointEl = null;
+            this.el.trigger('change');
         },
 
         dragMove: function(e)
@@ -339,17 +373,22 @@
 
     $.fn.nestable = function(params)
     {
-        return this.each(function()
+        var lists  = this,
+            retval = this;
+
+        lists.each(function()
         {
             var plugin = $.data(this, 'plugin_nestable');
             if (!plugin) {
                 $.data(this, 'plugin_nestable', new Plugin(this, params));
             } else {
                 if (typeof params === 'string' && typeof plugin[params] === 'function') {
-                    plugin[params]();
+                    retval = plugin[params]();
                 }
             }
         });
+
+        return retval || lists;
     };
 
 })(jQuery, window, document);
