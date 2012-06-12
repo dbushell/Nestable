@@ -26,7 +26,7 @@ p { line-height: 1.5em; }
 .small { color: #666; font-size: 0.875em; }
 .large { font-size: 1.25em; }
 
-.dd { position: relative; display: block; max-width: 500px; list-style: none; font-size: 13px; line-height: 20px; margin: 0; padding: 0; }
+.dd { position: relative; display: block; max-width: 600px; list-style: none; font-size: 13px; line-height: 20px; margin: 0; padding: 0; }
 
 .dd ul,
 .dd-item ul { display: block; position: relative; list-style: none; padding: 0 0 0 30px; margin: 0; /* border: 1px dotted #ccc; */ }
@@ -58,8 +58,9 @@ p { line-height: 1.5em; }
     box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
 }
 
+#nestable-menu { padding: 0; margin: 20px 0; }
 
-.dd-menu { padding: 0; margin: 20px 0; }
+#nestable-output { width: 100%; max-width: 600px; font-size: 0.75em; line-height: 1.333333em; height: 10em; padding: 5px; box-sizing: border-box; -moz-box-sizing: border-box; }
 
     </style>
 </head>
@@ -71,42 +72,53 @@ p { line-height: 1.5em; }
 
     <p><strong><a href="https://github.com/dbushell/Nestable">Code on GitHub</a></strong></p>
 
-    <menu class="dd-menu">
+    <menu id="nestable-menu">
         <button type="button" data-action="expand-all">Expand All</button>
         <button type="button" data-action="collapse-all">Collapse All</button>
     </menu>
 
-    <div class="dd">
-        <ul>
-            <li class="dd-item">
+    <div class="dd" id="nestable">
+        <ol>
+            <li class="dd-item" data-id="1">
                 <div class="dd-handle">Item 1</div>
             </li>
-            <li class="dd-item">
+            <li class="dd-item" data-id="2">
                 <div class="dd-handle">Item 2</div>
-                <ul>
-                    <li class="dd-item"><div class="dd-handle">Sub Item 2.1</div></li>
-                    <li class="dd-item"><div class="dd-handle">Sub Item 2.2</div></li>
-                    <li class="dd-item"><div class="dd-handle">Sub Item 2.3</div></li>
-                    <li class="dd-item"><div class="dd-handle">Sub Item 2.4</div></li>
-                    <li class="dd-item"><div class="dd-handle">Sub Item 2.5</div></li>
-                </ul>
+                <ol>
+                    <li class="dd-item" data-id="3"><div class="dd-handle">Sub Item 2.1</div></li>
+                    <li class="dd-item" data-id="4"><div class="dd-handle">Sub Item 2.2</div></li>
+                    <li class="dd-item" data-id="5">
+                        <div class="dd-handle">Sub Item 2.3</div>
+                        <ol>
+                            <li class="dd-item" data-id="6"><div class="dd-handle">Sub Item 3.1</div></li>
+                            <li class="dd-item" data-id="7"><div class="dd-handle">Sub Item 3.2</div></li>
+                            <li class="dd-item" data-id="8"><div class="dd-handle">Sub Item 3.3</div></li>
+                        </ol>
+                    </li>
+                    <li class="dd-item" data-id="9"><div class="dd-handle">Sub Item 2.4</div></li>
+                    <li class="dd-item" data-id="10"><div class="dd-handle">Sub Item 2.5</div></li>
+                </ol>
             </li>
-            <li class="dd-item">
+            <li class="dd-item" data-id="11">
                 <div class="dd-handle">Item 3</div>
-                <ul>
-                    <li class="dd-item"><div class="dd-handle">Sub Item 3.1</div></li>
-                    <li class="dd-item"><div class="dd-handle">Sub Item 3.2</div></li>
-                    <li class="dd-item"><div class="dd-handle">Sub Item 3.3</div></li>
-                </ul>
+                <ol>
+                    <li class="dd-item" data-id="12"><div class="dd-handle">Sub Item 3.1</div></li>
+                    <li class="dd-item" data-id="13"><div class="dd-handle">Sub Item 3.2</div></li>
+                    <li class="dd-item" data-id="14"><div class="dd-handle">Sub Item 3.3</div></li>
+                </ol>
             </li>
-            <li class="dd-item">
+            <li class="dd-item" data-id="15">
                 <div class="dd-handle">Item 4</div>
             </li>
-            <li class="dd-item">
+            <li class="dd-item" data-id="16">
                 <div class="dd-handle">Item 5</div>
             </li>
-        </ul>
+        </ol>
     </div>
+
+    <p><strong>Serialised Output</strong></p>
+
+    <textarea id="nestable-output"></textarea>
 
     <p class="small">Copyright &copy; <a href="http://dbushell.com/">David Bushell</a> | Made for <a href="http://www.browserlondon.com/">Browser</a></p>
 
@@ -117,22 +129,38 @@ p { line-height: 1.5em; }
 $(document).ready(function()
 {
 
-    // nestable
-    $('.dd').nestable();
+    var list   = $('#nestable'),
+        output = $('#nestable-output');
 
-    // events
-    $('.dd-menu').on('click', function(e)
+    var updateList = function()
+    {
+        var data = list.nestable('serialize');
+        if (window.JSON) {
+            output.val(window.JSON.stringify(data));
+        } else {
+            output.val('JSON browser support required for this demo.');
+        }
+    };
+
+    list.nestable({
+        listNodeName    : 'ol',
+        itemIdAttribute : 'data-id'
+    })
+    .on('change', updateList);
+
+    updateList();
+
+    $('#nestable-menu').on('click', function(e)
     {
         var target = $(e.target),
             action = target.data('action');
         if (action === 'expand-all') {
-            $('.dd').nestable('expandAll');
+            list.nestable('expandAll');
         }
         if (action === 'collapse-all') {
-            $('.dd').nestable('collapseAll');
+            list.nestable('collapseAll');
         }
     });
-
 
 });
 </script>
