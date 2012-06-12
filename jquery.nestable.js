@@ -352,5 +352,4 @@
         });
     };
 
-
 })(jQuery, window, document);
