@@ -26,7 +26,7 @@ p { line-height: 1.5em; }
 .small { color: #666; font-size: 0.875em; }
 .large { font-size: 1.25em; }
 
-.dd { position: relative; display: block; width: 500px; list-style: none; font-size: 13px; line-height: 20px; margin: 0; padding: 0; }
+.dd { position: relative; display: block; max-width: 500px; list-style: none; font-size: 13px; line-height: 20px; margin: 0; padding: 0; }
 
 .dd ul,
 .dd-item ul { display: block; position: relative; list-style: none; padding: 0 0 0 30px; margin: 0; /* border: 1px dotted #ccc; */ }
@@ -51,7 +51,7 @@ p { line-height: 1.5em; }
 .dd-collapsed > ul { display: none; }
 
 .dd-placeholder { background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
-.dd-dragel { position: absolute; z-index: 9999; pointer-events: none; }
+.dd-dragel { position: absolute; margin-top: -5px; z-index: 9999; pointer-events: none; }
 
 .dd-dragel .dd-handle {
     -webkit-box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);

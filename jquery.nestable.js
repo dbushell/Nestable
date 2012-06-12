@@ -13,6 +13,8 @@
         eCancel = hasTouch ? 'touchcancel' : 'mouseup';
 
     var defaults = {
+            listNodeName   : 'ul',
+            itemNodeName   : 'li',
             dragClass      : 'dd-dragel',
             handleClass    : 'dd-handle',
             collapsedClass : 'dd-collapsed',
@@ -41,7 +43,7 @@
 
             list.placeEl = $('<div class="' + list.options.placeClass + '"/>');
 
-            $.each(this.el.find('li'), function(k, el) {
+            $.each(this.el.find(list.options.itemNodeName), function(k, el) {
                 list.setParent($(el));
             });
 
@@ -51,7 +53,7 @@
                 }
                 var target = $(e.target),
                     action = target.data('action'),
-                    item   = target.parent('li');
+                    item   = target.parent(list.options.itemNodeName);
                 if (action === 'collapse') {
                     list.collapseItem(item);
                 }
@@ -130,7 +132,7 @@
             li.removeClass(this.options.collapsedClass);
             li.children('[data-action="expand"]').hide();
             li.children('[data-action="collapse"]').show();
-            li.children('ul').show();
+            li.children(this.options.listNodeName).show();
         },
 
         collapseItem: function(li)
@@ -140,14 +142,14 @@
                 li.addClass(this.options.collapsedClass);
                 li.children('[data-action="collapse"]').hide();
                 li.children('[data-action="expand"]').show();
-                li.children('ul').hide();
+                li.children(this.options.listNodeName).hide();
             }
         },
 
         expandAll: function()
         {
             var list = this;
-            list.el.find('li').each(function() {
+            list.el.find(list.options.itemNodeName).each(function() {
                 list.expandItem($(this));
             });
         },
@@ -155,14 +157,14 @@
         collapseAll: function()
         {
             var list = this;
-            list.el.find('li').each(function() {
+            list.el.find(list.options.itemNodeName).each(function() {
                 list.collapseItem($(this));
             });
         },
 
         setParent: function(li)
         {
-            if (li.children('ul').length) {
+            if (li.children(this.options.listNodeName).length) {
                 li.prepend('<button data-action="expand">+</button>');
                 li.prepend('<button data-action="collapse">-</button>');
             }
@@ -173,14 +175,14 @@
         {
             li.removeClass(this.options.collapsedClass);
             li.children('[data-action]').remove();
-            li.children('ul').remove();
+            li.children(this.options.listNodeName).remove();
         },
 
         dragStart: function(e)
         {
             var mouse  = this.mouse,
                 target = $(e.target);
-            this.dragEl = target.parents('li:first');
+            this.dragEl = target.parents(this.options.itemNodeName + ':first');
             this.placeEl.css({
                 'width'         : this.dragEl.width(),
                 'height'        : this.dragEl.height(),
@@ -188,6 +190,9 @@
             });
             mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
             mouse.offsetY = e.offsetY !== undefined ? e.offsetY : e.pageY - target.offset().top;
+
+            
+
             mouse.startX = mouse.lastX = e.pageX;
             mouse.startY = mouse.lastY = e.pageY;
 
@@ -231,8 +236,8 @@
             mouse.lastDirX = mouse.dirX;
             mouse.lastDirY = mouse.dirY;
             // direction mouse is now moving (on both axis)
-            mouse.dirX     = mouse.distX === 0 ? 0 : mouse.distX > 0 ? 1 : -1;
-            mouse.dirY     = mouse.distY === 0 ? 0 : mouse.distY > 0 ? 1 : -1;
+            mouse.dirX = mouse.distX === 0 ? 0 : mouse.distX > 0 ? 1 : -1;
+            mouse.dirY = mouse.distY === 0 ? 0 : mouse.distY > 0 ? 1 : -1;
             // axis mouse is now moving on
             var newAx   = Math.abs(mouse.distX) > Math.abs(mouse.distY) ? 1 : 0;
 
@@ -268,11 +273,11 @@
                 mouse.distAxX = 0;
                 // increase level
                 if (mouse.distX > 0) {
-                    prev = this.placeEl.prev('li');
+                    prev = this.placeEl.prev(this.options.itemNodeName);
                     if (!prev.length) {
                         return;
                     }
-                    list = prev.find('ul:last');
+                    list = prev.find(this.options.listNodeName + ':last');
                     // item is at same level as item above
                     if (prev.hasClass(this.options.collapsedClass)) {
                         return;
@@ -284,23 +289,23 @@
                     }
                     */
                     if (!list.length) {
-                        list = $('<ul/>');
+                        list = $('<' + this.options.listNodeName + '/>');
                         list.append(this.placeEl);
                         prev.append(list);
                         this.setParent(prev);
                     } else {
                         // else append to next level up
-                        list = prev.children('ul:last');
+                        list = prev.children(this.options.listNodeName + ':last');
                         list.append(this.placeEl);
                     }
                 // decrease level
                 } else {
-                    next = this.placeEl.next('li');
+                    next = this.placeEl.next(this.options.itemNodeName);
                     if (next.length) {
                         return;
                     }
                     parent = this.placeEl.parent();
-                    this.placeEl.parents('li:first').after(this.placeEl);
+                    this.placeEl.parents(this.options.itemNodeName + ':first').after(this.placeEl);
                     if (!parent.children().length) {
                         this.unsetParent(parent.parent());
                     }
@@ -313,12 +318,12 @@
                 if (this.pointEl.hasClass(this.options.handleClass)) {
                     this.pointEl = $(this.pointEl[0].parentNode);
                 }
-                if (this.pointEl[0].nodeName.toLowerCase() !== 'li' || this.pointEl.hasClass(this.options.dragClass)) {
+                if (this.pointEl[0].nodeName.toLowerCase() !== this.options.itemNodeName || this.pointEl.hasClass(this.options.dragClass)) {
                     return;
                 }
                 var before = e.clientY < (this.pointEl.offset().top + this.pointEl.height() / 2);
                     parent = this.placeEl.parent();
-                    this.placeEl.parents('li:first').after(this.placeEl);
+                    this.placeEl.parents(this.options.itemNodeName + ':first').after(this.placeEl);
                     if (!parent.children().length) {
                         this.unsetParent(parent.parent());
                     }
