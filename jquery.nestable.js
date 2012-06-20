@@ -13,7 +13,6 @@
         eCancel = hasTouch ? 'touchcancel' : 'mouseup';
 
     var defaults = {
-            itemIdAttribute : null,
             listNodeName    : 'ul',
             itemNodeName    : 'li',
             dragClass       : 'dd-dragel',
@@ -106,9 +105,6 @@
 
         serialize: function()
         {
-            if (typeof this.options.itemIdAttribute !== 'string') {
-                return 'No ID attribute specified.';
-            }
             var data,
                 list  = this;
                 step  = function(level)
