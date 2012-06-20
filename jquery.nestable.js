@@ -25,6 +25,7 @@
 
     function Plugin(element, options)
     {
+        this.w  = $(window);
         this.el = $(element);
         this.options = $.extend({}, defaults, options);
         this.dragEl = null;
@@ -97,8 +98,8 @@
                 window.addEventListener(eCancel, onEndEvent, false);
             } else {
                 list.el.on(eStart, onStartEvent);
-                $(window).on(eMove, onMoveEvent);
-                $(window).on(eEnd, onEndEvent);
+                list.w.on(eMove, onMoveEvent);
+                list.w.on(eEnd, onEndEvent);
             }
 
         },
@@ -219,8 +220,6 @@
             });
             mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
             mouse.offsetY = e.offsetY !== undefined ? e.offsetY : e.pageY - target.offset().top;
-
-            
 
             mouse.startX = mouse.lastX = e.pageX;
             mouse.startY = mouse.lastY = e.pageY;
@@ -344,14 +343,14 @@
              * move vertical
              */
             } else {
-                this.pointEl = $(document.elementFromPoint(e.clientX, e.clientY));
+                this.pointEl = $(document.elementFromPoint(e.pageX - this.w.scrollLeft(), e.pageY - this.w.scrollTop()));
                 if (this.pointEl.hasClass(this.options.handleClass)) {
                     this.pointEl = $(this.pointEl[0].parentNode);
                 }
                 if (this.pointEl[0].nodeName.toLowerCase() !== this.options.itemNodeName || this.pointEl.hasClass(this.options.dragClass)) {
                     return;
                 }
-                var before = e.clientY < (this.pointEl.offset().top + this.pointEl.height() / 2);
+                var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
                     parent = this.placeEl.parent();
                     this.placeEl.parents(this.options.itemNodeName + ':first').after(this.placeEl);
                     if (!parent.children().length) {
