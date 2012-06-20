@@ -118,7 +118,7 @@
                     items.each(function()
                     {
                         var li   = $(this),
-                            item = { id: li.attr(list.options.itemIdAttribute) },
+                            item = li.data(),
                             sub  = li.children(list.options.listNodeName);
                         if (sub.length) {
                             item.children = step(sub);
