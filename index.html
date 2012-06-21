@@ -60,7 +60,7 @@ p { line-height: 1.5em; }
 
 #nestable-menu { padding: 0; margin: 20px 0; }
 
-#nestable-output { width: 100%; max-width: 600px; font-size: 0.75em; line-height: 1.333333em; height: 10em; padding: 5px; box-sizing: border-box; -moz-box-sizing: border-box; }
+#nestable-output { width: 100%; max-width: 600px; height: 30em; font-size: 0.75em; line-height: 1.333333em; font-family: Consolas, monospace; padding: 5px; box-sizing: border-box; -moz-box-sizing: border-box; }
 
     </style>
 </head>
@@ -136,7 +136,7 @@ $(document).ready(function()
     {
         var data = list.nestable('serialize');
         if (window.JSON) {
-            output.val(window.JSON.stringify(data));
+            output.val(window.JSON.stringify(data, null, 2));
         } else {
             output.val('JSON browser support required for this demo.');
         }

@@ -107,24 +107,25 @@
         serialize: function()
         {
             var data,
+                depth = 0,
                 list  = this;
-                step  = function(level)
+                step  = function(level, depth)
                 {
                     var array = [ ],
                         items = level.children(list.options.itemNodeName);
                     items.each(function()
                     {
                         var li   = $(this),
-                            item = li.data(),
+                            item = $.extend({}, li.data()),
                             sub  = li.children(list.options.listNodeName);
                         if (sub.length) {
-                            item.children = step(sub);
+                            item.children = step(sub, depth + 1);
                         }
                         array.push(item);
                     });
                     return array;
                 };
-            data = step(list.el.find(list.options.listNodeName + ':first'));
+            data = step(list.el.find(list.options.listNodeName + ':first'), depth);
             return data;
         },
 
