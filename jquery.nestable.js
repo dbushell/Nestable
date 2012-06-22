@@ -7,6 +7,26 @@
 
     var hasTouch = 'ontouchstart' in window;
 
+    /**
+     * Detect CSS pointer-events property
+     * events are normally disabled on the dragging element to avoid conflicts
+     * https://github.com/ausi/Feature-detection-technique-for-pointer-events/blob/master/modernizr-pointerevents.js
+     */
+    var hasPointerEvents = (function()
+    {
+        var el    = document.createElement('div'),
+            docEl = document.documentElement;
+        if (!('pointerEvents' in el.style)) {
+            return false;
+        }
+        el.style.pointerEvents = 'auto';
+        el.style.pointerEvents = 'x';
+        docEl.appendChild(el);
+        var supports = window.getComputedStyle && window.getComputedStyle(el, '').pointerEvents === 'auto';
+        docEl.removeChild(el);
+        return !!supports;
+    })();
+
     var eStart  = hasTouch ? 'touchstart'  : 'mousedown',
         eMove   = hasTouch ? 'touchmove'   : 'mousemove',
         eEnd    = hasTouch ? 'touchend'    : 'mouseup';
@@ -344,7 +364,13 @@
              * move vertical
              */
             } else {
+                if (!hasPointerEvents) {
+                    this.dragEl[0].style.visibility = 'hidden';
+                }
                 this.pointEl = $(document.elementFromPoint(e.pageX - this.w.scrollLeft(), e.pageY - this.w.scrollTop()));
+                if (!hasPointerEvents) {
+                    this.dragEl[0].style.visibility = 'visible';
+                }
                 if (this.pointEl.hasClass(this.options.handleClass)) {
                     this.pointEl = $(this.pointEl[0].parentNode);
                 }
