@@ -39,8 +39,7 @@ Then activate with jQuery like so:
 
 The `change` event is fired when items are reordered.
 
-    $('.dd').on('change', function()
-    {
+    $('.dd').on('change', function() {
         /* on change event */
     });
 
