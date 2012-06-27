@@ -42,14 +42,11 @@ p { line-height: 1.5em; }
 
 .dd-handle { display: block; height: 30px; margin: 5px 0; padding: 5px 10px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
     background: #fafafa;
-    background: -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fafafa), color-stop(100%, #eee));
     background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
-    background: -o-linear-gradient(top, #fafafa 0%, #eee 100%);
-    background: -ms-linear-gradient(top, #fafafa 0%, #eee 100%);
-    background: linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:         linear-gradient(top, #fafafa 0%, #eee 100%);
     -webkit-border-radius: 3px;
-    border-radius: 3px;
+            border-radius: 3px;
     box-sizing: border-box; -moz-box-sizing: border-box;
 }
 .dd-handle:hover { color: #2ea8e5; background: #fff; }
@@ -59,8 +56,17 @@ p { line-height: 1.5em; }
 .dd-item > button[data-action="collapse"]:before { content: '-'; }
 
 .dd-placeholder,
-.dd-empty { margin: 5px 0; padding: 0; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
-.dd-empty { background: #f2f2f2; border: 1px dashed #ccc; }
+.dd-empty { margin: 5px 0; padding: 0; min-height: 30px; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
+.dd-empty { border: 1px dashed #bbb; min-height: 100px; background-color: #e5e5e5;
+    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+                      -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:    -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+                         -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:         linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+                              linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+}
 
 .dd-dragel { position: absolute; pointer-events: none; z-index: 9999; }
 .dd-dragel > .dd-item .dd-handle { margin-top: 0; }
@@ -84,12 +90,9 @@ p { line-height: 1.5em; }
     color: #fff;
     border: 1px solid #999;
     background: #bbb;
-    background: -moz-linear-gradient(top, #bbb 0%, #999 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bbb), color-stop(100%, #999));
     background: -webkit-linear-gradient(top, #bbb 0%, #999 100%);
-    background: -o-linear-gradient(top, #bbb 0%, #999 100%);
-    background: -ms-linear-gradient(top, #bbb 0%, #999 100%);
-    background: linear-gradient(top, #bbb 0%, #999 100%);
+    background:    -moz-linear-gradient(top, #bbb 0%, #999 100%);
+    background:         linear-gradient(top, #bbb 0%, #999 100%);
 }
 #nestable2 .dd-handle:hover { background: #bbb; }
 #nestable2 .dd-item > button:before { color: #fff; }

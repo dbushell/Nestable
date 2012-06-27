@@ -6,6 +6,12 @@
 {
     var hasTouch = 'ontouchstart' in window;
 
+/**
+
+TODO : empty placeholder
+
+**/
+
     /**
      * Detect CSS pointer-events property
      * events are normally disabled on the dragging element to avoid conflicts
@@ -41,6 +47,7 @@
             handleClass     : 'dd-handle',
             collapsedClass  : 'dd-collapsed',
             placeClass      : 'dd-placeholder',
+            emptyClass      : 'dd-empty',
             expandBtnHTML   : '<button data-action="expand">Expand></button>',
             collapseBtnHTML : '<button data-action="collapse">Collapse</button>',
             group           : 0,
@@ -371,6 +378,8 @@
                 }
             }
 
+            var isEmpty = false;
+
             // find list item under cursor
             if (!hasPointerEvents) {
                 this.dragEl[0].style.visibility = 'hidden';
@@ -382,7 +391,10 @@
             if (this.pointEl.hasClass(opt.handleClass)) {
                 this.pointEl = this.pointEl.parent('.' + opt.itemClass);
             }
-            if (!this.pointEl.length || !this.pointEl.hasClass(opt.itemClass)) {
+            if (this.pointEl.hasClass(opt.emptyClass)) {
+                isEmpty = true;
+            }
+            else if (!this.pointEl.length || !this.pointEl.hasClass(opt.itemClass)) {
                 return;
             }
 
@@ -393,20 +405,29 @@
             /**
              * move vertical
              */
-            if (!mouse.dirAx || isNewRoot) {
+            if (!mouse.dirAx || isNewRoot || isEmpty) {
                 if (isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
                     return;
                 }
                 var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
                     parent = this.placeEl.parent();
-                    this.placeEl.parents(opt.itemNodeName + ':first').after(this.placeEl);
-                    if (!parent.children().length) {
-                        this.unsetParent(parent.parent());
-                    }
-                if (before) {
+                // if empty create new list to replace empty placeholder
+                if (isEmpty) {
+                    list = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass);
+                    list.append(this.placeEl);
+                    this.pointEl.replaceWith(list);
+                }
+                else if (before) {
                     this.pointEl.before(this.placeEl);
-                } else {
+                }
+                else {
                     this.pointEl.after(this.placeEl);
+                }
+                if (!parent.children().length) {
+                    this.unsetParent(parent.parent());
+                }
+                if (!this.dragRootEl.find(opt.itemNodeName).length) {
+                    this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
                 }
                 // parent root list has changed
                 if (isNewRoot) {

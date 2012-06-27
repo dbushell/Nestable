@@ -5,8 +5,6 @@ Nestable
 
 [**Try Nestable Demo**](http://dbushell.github.com/Nestable/)
 
-* * *
-
 ## Usage
 
 Instructions are being written soon. For the time being inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.
