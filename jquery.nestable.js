@@ -43,6 +43,7 @@
             placeClass      : 'dd-placeholder',
             expandBtnHTML   : '<button data-action="expand">Expand></button>',
             collapseBtnHTML : '<button data-action="collapse">Collapse</button>',
+            group           : 0,
             maxdepth        : 3,
             threshold       : 20
         };
@@ -52,11 +53,6 @@
         this.w  = $(window);
         this.el = $(element);
         this.options = $.extend({}, defaults, options);
-        this.dragEl     = null;
-        this.dragRootEl = null;
-        this.hasNewRoot = false;
-        this.pointEl    = null;
-        this.placeEl    = null;
         this.init();
     }
 
@@ -67,6 +63,8 @@
             var list = this;
 
             list.reset();
+
+            list.el.data('nestable-group', this.options.group);
 
             list.placeEl = $('<div class="' + list.options.placeClass + '"/>');
 
@@ -181,7 +179,11 @@
                 distAxX   : 0,
                 distAxY   : 0
             };
-            this.moving = false;
+            this.moving     = false;
+            this.dragEl     = null;
+            this.dragRootEl = null;
+            this.hasNewRoot = false;
+            this.pointEl    = null;
         },
 
         expandItem: function(li)
@@ -252,7 +254,6 @@
             mouse.startY = mouse.lastY = e.pageY;
 
             this.dragRootEl = this.el;
-            this.hasNewRoot = false;
 
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
@@ -266,16 +267,13 @@
 
         dragStop: function(e)
         {
-            this.reset();
             this.placeEl.replaceWith(this.dragEl.html());
             this.dragEl.remove();
             this.el.trigger('change');
             if (this.hasNewRoot) {
                 this.dragRootEl.trigger('change');
             }
-            this.dragEl     = null;
-            this.dragRootEl = null;
-            this.pointEl    = null;
+            this.reset();
         },
 
         dragMove: function(e)
@@ -392,12 +390,13 @@
             var pointElRoot = this.pointEl.parents('.' + this.options.rootClass + ':first'),
                 isNewRoot   = this.dragRootEl.data('nestable-id') !== pointElRoot.data('nestable-id');
 
-
             /**
              * move vertical
              */
             if (!mouse.dirAx || isNewRoot) {
-
+                if (isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
+                    return;
+                }
                 var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
                     parent = this.placeEl.parent();
                     this.placeEl.parents(opt.itemNodeName + ':first').after(this.placeEl);
