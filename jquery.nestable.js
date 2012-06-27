@@ -245,7 +245,7 @@
                 dragItem = target.parents(this.options.itemNodeName + ':first');
 
             this.placeEl.css({
-                'width'         : dragItem.width(),
+            //  'width'         : dragItem.width(),
                 'height'        : dragItem.height()
             });
 
