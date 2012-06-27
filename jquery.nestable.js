@@ -352,7 +352,7 @@
                     list = prev.find(opt.listNodeName + ':last');
                     // check if depth limit has reached
                     depth = this.placeEl.parents(opt.listNodeName).length;
-                    if (depth + this.dragDepth <= this.options.maxDepth) {
+                    if (depth + this.dragDepth <= opt.maxDepth) {
                         // create new sub-level if one doesn't exist
                         if (!list.length) {
                             list = $('<' + opt.listNodeName + '/>').addClass(opt.listClass);
@@ -391,7 +391,7 @@
                 this.dragEl[0].style.visibility = 'visible';
             }
             if (this.pointEl.hasClass(opt.handleClass)) {
-                this.pointEl = this.pointEl.parent('.' + opt.itemClass);
+                this.pointEl = this.pointEl.parent(opt.itemNodeName);
             }
             if (this.pointEl.hasClass(opt.emptyClass)) {
                 isEmpty = true;
@@ -401,7 +401,7 @@
             }
 
             // find parent list of item under cursor
-            var pointElRoot = this.pointEl.parents('.' + this.options.rootClass + ':first'),
+            var pointElRoot = this.pointEl.parents('.' + opt.rootClass + ':first'),
                 isNewRoot   = this.dragRootEl.data('nestable-id') !== pointElRoot.data('nestable-id');
 
             /**
@@ -421,7 +421,7 @@
                     parent = this.placeEl.parent();
                 // if empty create new list to replace empty placeholder
                 if (isEmpty) {
-                    list = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass);
+                    list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
                     list.append(this.placeEl);
                     this.pointEl.replaceWith(list);
                 }
