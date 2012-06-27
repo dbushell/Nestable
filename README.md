@@ -35,6 +35,25 @@ Then activate with jQuery like so:
 
     $('.dd').nestable({ /* config options */ });
 
+### Events
+
+The `change` event is fired when items are reordered.
+
+    $('.dd').on('change', function()
+    {
+        /* on change event */
+    });
+
+### Methods
+
+You can get a serialised object with all `data-*` attributes for each item.
+
+    $('.dd').nestable('serialize');
+
+The serialised JSON for the example above would be:
+
+    [{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]
+
 ### Configuration
 
 You can change the follow options:
