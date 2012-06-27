@@ -42,7 +42,7 @@
             collapsedClass  : 'dd-collapsed',
             placeClass      : 'dd-placeholder',
             emptyClass      : 'dd-empty',
-            expandBtnHTML   : '<button data-action="expand">Expand></button>',
+            expandBtnHTML   : '<button data-action="expand">Expand</button>',
             collapseBtnHTML : '<button data-action="collapse">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
