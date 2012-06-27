@@ -26,41 +26,82 @@ p { line-height: 1.5em; }
 .small { color: #666; font-size: 0.875em; }
 .large { font-size: 1.25em; }
 
-.dd { position: relative; display: block; max-width: 600px; list-style: none; font-size: 13px; line-height: 20px; margin: 0; padding: 0; }
+/**
+ * Nestable
+ */
 
-.dd ul,
-.dd-item ul { display: block; position: relative; list-style: none; padding: 0 0 0 30px; margin: 0; /* border: 1px dotted #ccc; */ }
+.dd { position: relative; display: block; margin: 0; padding: 0; max-width: 600px; list-style: none; font-size: 13px; line-height: 20px; }
 
-.dd-item { display: block; position: relative; font-size: 13px; line-height: 20px; padding: 0; margin: 0; }
-.dd-item > .dd-handle { display: block; height: 30px; padding: 5px 10px; margin: 5px 0; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
+.dd-list { display: block; position: relative; margin: 0; padding: 0; list-style: none; }
+.dd-list .dd-list { padding-left: 30px; }
+.dd-collapsed .dd-list { display: none; }
+
+.dd-item,
+.dd-empty,
+.dd-placeholder { display: block; position: relative; margin: 0; padding: 0; min-height: 20px; font-size: 13px; line-height: 20px; }
+
+.dd-handle { display: block; height: 30px; margin: 5px 0; padding: 5px 10px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
     background: #fafafa;
     background: -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#eee));
-    background: -webkit-linear-gradient(top, #fafafa 0%,#eee 100%);
-    background: -o-linear-gradient(top, #fafafa 0%,#eee 100%);
-    background: -ms-linear-gradient(top, #fafafa 0%,#eee 100%);
-    background: linear-gradient(top, #fafafa 0%,#eee 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fafafa), color-stop(100%, #eee));
+    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background: -o-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background: -ms-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background: linear-gradient(top, #fafafa 0%, #eee 100%);
     -webkit-border-radius: 3px;
     border-radius: 3px;
     box-sizing: border-box; -moz-box-sizing: border-box;
 }
-.dd-item > .dd-handle:hover { color: #2ea8e5; background: #fff; }
+.dd-handle:hover { color: #2ea8e5; background: #fff; }
 
-.dd-item > button { cursor: pointer; float: left; border: 0; background: transparent; width: 25px; height: 20px; margin: 5px 0; padding: 0; line-height: 20px; font-size: 12px; text-align: center; font-weight: bold; }
+.dd-item > button { display: block; position: relative; cursor: pointer; float: left; width: 25px; height: 20px; margin: 5px 0; padding: 0; text-indent: 100%; white-space: nowrap; overflow: hidden; border: 0; background: transparent; font-size: 12px; line-height: 1; text-align: center; font-weight: bold; }
+.dd-item > button:before { content: '+'; display: block; position: absolute; width: 100%; text-align: center; text-indent: 0; }
+.dd-item > button[data-action="collapse"]:before { content: '-'; }
 
-.dd-collapsed > ul { display: none; }
+.dd-placeholder,
+.dd-empty { margin: 5px 0; padding: 0; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
+.dd-empty { background: #f2f2f2; border: 1px dashed #ccc; }
 
-.dd-placeholder { background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
-.dd-dragel { position: absolute; margin-top: -5px; z-index: 9999; pointer-events: none; }
-
+.dd-dragel { position: absolute; pointer-events: none; z-index: 9999; }
+.dd-dragel > .dd-item .dd-handle { margin-top: 0; }
 .dd-dragel .dd-handle {
     -webkit-box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
-    box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+            box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
 }
+
+/**
+ * Nestable Extras
+ */
+
+#nestable-lists { display: block; clear: both; padding: 30px 0; width: 100%; border: 0; border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; }
 
 #nestable-menu { padding: 0; margin: 20px 0; }
 
-#nestable-output { width: 100%; max-width: 600px; height: 30em; font-size: 0.75em; line-height: 1.333333em; font-family: Consolas, monospace; padding: 5px; box-sizing: border-box; -moz-box-sizing: border-box; }
+#nestable-output,
+#nestable2-output { width: 100%; height: 7em; font-size: 0.75em; line-height: 1.333333em; font-family: Consolas, monospace; padding: 5px; box-sizing: border-box; -moz-box-sizing: border-box; }
+
+#nestable2 .dd-handle {
+    color: #fff;
+    border: 1px solid #999;
+    background: #bbb;
+    background: -moz-linear-gradient(top, #bbb 0%, #999 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bbb), color-stop(100%, #999));
+    background: -webkit-linear-gradient(top, #bbb 0%, #999 100%);
+    background: -o-linear-gradient(top, #bbb 0%, #999 100%);
+    background: -ms-linear-gradient(top, #bbb 0%, #999 100%);
+    background: linear-gradient(top, #bbb 0%, #999 100%);
+}
+#nestable2 .dd-handle:hover { background: #bbb; }
+#nestable2 .dd-item > button:before { color: #fff; }
+
+@media only screen and (min-width: 700px) { 
+
+    .dd { float: left; width: 48%; }
+    .dd + .dd { margin-left: 2%; }
+
+}
+
+.dd-hover > .dd-handle { background: #2ea8e5 !important; }
 
     </style>
 </head>
@@ -77,48 +118,64 @@ p { line-height: 1.5em; }
         <button type="button" data-action="collapse-all">Collapse All</button>
     </menu>
 
-    <div class="dd" id="nestable">
-        <ol>
-            <li class="dd-item" data-id="1">
-                <div class="dd-handle">Item 1</div>
-            </li>
-            <li class="dd-item" data-id="2">
-                <div class="dd-handle">Item 2</div>
-                <ol>
-                    <li class="dd-item" data-id="3"><div class="dd-handle">Sub Item 2.1</div></li>
-                    <li class="dd-item" data-id="4"><div class="dd-handle">Sub Item 2.2</div></li>
-                    <li class="dd-item" data-id="5">
-                        <div class="dd-handle">Sub Item 2.3</div>
-                        <ol>
-                            <li class="dd-item" data-id="6"><div class="dd-handle">Sub Item 3.1</div></li>
-                            <li class="dd-item" data-id="7"><div class="dd-handle">Sub Item 3.2</div></li>
-                            <li class="dd-item" data-id="8"><div class="dd-handle">Sub Item 3.3</div></li>
-                        </ol>
-                    </li>
-                    <li class="dd-item" data-id="9"><div class="dd-handle">Sub Item 2.4</div></li>
-                    <li class="dd-item" data-id="10"><div class="dd-handle">Sub Item 2.5</div></li>
-                </ol>
-            </li>
-            <li class="dd-item" data-id="11">
-                <div class="dd-handle">Item 3</div>
-                <ol>
-                    <li class="dd-item" data-id="12"><div class="dd-handle">Sub Item 3.1</div></li>
-                    <li class="dd-item" data-id="13"><div class="dd-handle">Sub Item 3.2</div></li>
-                    <li class="dd-item" data-id="14"><div class="dd-handle">Sub Item 3.3</div></li>
-                </ol>
-            </li>
-            <li class="dd-item" data-id="15">
-                <div class="dd-handle">Item 4</div>
-            </li>
-            <li class="dd-item" data-id="16">
-                <div class="dd-handle">Item 5</div>
-            </li>
-        </ol>
+    <div id="nestable-lists" class="cf">
+
+        <div class="dd" id="nestable">
+            <ol class="dd-list">
+                <li class="dd-item" data-id="1">
+                    <div class="dd-handle">Item 1</div>
+                </li>
+                <li class="dd-item" data-id="2">
+                    <div class="dd-handle">Item 2</div>
+                    <ol class="dd-list">
+                        <li class="dd-item" data-id="3"><div class="dd-handle">Item 3</div></li>
+                        <li class="dd-item" data-id="4"><div class="dd-handle">Item 4</div></li>
+                        <li class="dd-item" data-id="5">
+                            <div class="dd-handle">Item 5</div>
+                            <ol class="dd-list">
+                                <li class="dd-item" data-id="6"><div class="dd-handle">Item 6</div></li>
+                                <li class="dd-item" data-id="7"><div class="dd-handle">Item 7</div></li>
+                                <li class="dd-item" data-id="8"><div class="dd-handle">Item 8</div></li>
+                            </ol>
+                        </li>
+                        <li class="dd-item" data-id="9"><div class="dd-handle">Item 9</div></li>
+                        <li class="dd-item" data-id="10"><div class="dd-handle">Item 10</div></li>
+                    </ol>
+                </li>
+                <li class="dd-item" data-id="11">
+                    <div class="dd-handle">Item 11</div>
+                </li>
+                <li class="dd-item" data-id="12">
+                    <div class="dd-handle">Item 12</div>
+                </li>
+            </ol>
+        </div>
+
+        <div class="dd" id="nestable2">
+            <ol class="dd-list">
+                <li class="dd-item" data-id="13">
+                    <div class="dd-handle">Item 13</div>
+                </li>
+                <li class="dd-item" data-id="14">
+                    <div class="dd-handle">Item 14</div>
+                </li>
+                <li class="dd-item" data-id="15">
+                    <div class="dd-handle">Item 15</div>
+                    <ol class="dd-list">
+                        <li class="dd-item" data-id="16"><div class="dd-handle">Item 16</div></li>
+                        <li class="dd-item" data-id="17"><div class="dd-handle">Item 17</div></li>
+                        <li class="dd-item" data-id="18"><div class="dd-handle">Item 18</div></li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
+
     </div>
 
-    <p><strong>Serialised Output</strong></p>
+    <p><strong>Serialised Output (per list)</strong></p>
 
     <textarea id="nestable-output"></textarea>
+    <textarea id="nestable2-output"></textarea>
 
     <p class="small">Copyright &copy; <a href="http://dbushell.com/">David Bushell</a> | Made for <a href="http://www.browserlondon.com/">Browser</a></p>
 
@@ -129,35 +186,34 @@ p { line-height: 1.5em; }
 $(document).ready(function()
 {
 
-    var list   = $('#nestable'),
-        output = $('#nestable-output');
-
-    var updateList = function()
+    var updateOutput = function(e)
     {
-        var data = list.nestable('serialize');
+        var list   = e.length ? e : $(e.target),
+            output = list.data('output');
         if (window.JSON) {
-            output.val(window.JSON.stringify(data, null, 2));
+            output.val(window.JSON.stringify(list.nestable('serialize')));//, null, 2));
         } else {
             output.val('JSON browser support required for this demo.');
         }
     };
 
-    list.nestable({
-        listNodeName    : 'ol'
-    })
-    .on('change', updateList);
+    // activate Nestable plugin for both lists
+    $('#nestable').nestable().on('change', updateOutput);
+    $('#nestable2').nestable().on('change', updateOutput);
 
-    updateList();
+    // output initial serialised data
+    updateOutput($('#nestable').data('output', $('#nestable-output')));
+    updateOutput($('#nestable2').data('output', $('#nestable2-output')));
 
     $('#nestable-menu').on('click', function(e)
     {
         var target = $(e.target),
             action = target.data('action');
         if (action === 'expand-all') {
-            list.nestable('expandAll');
+            $('.dd').nestable('expandAll');
         }
         if (action === 'collapse-all') {
-            list.nestable('collapseAll');
+            $('.dd').nestable('collapseAll');
         }
     });
 
