@@ -45,7 +45,7 @@
             expandBtnHTML   : '<button data-action="expand">Expand></button>',
             collapseBtnHTML : '<button data-action="collapse">Collapse</button>',
             group           : 0,
-            maxdepth        : 3,
+            maxDepth        : 5,
             threshold       : 20
         };
 
@@ -183,6 +183,7 @@
             this.moving     = false;
             this.dragEl     = null;
             this.dragRootEl = null;
+            this.dragDepth  = 0;
             this.hasNewRoot = false;
             this.pointEl    = null;
         },
@@ -264,6 +265,15 @@
                 'left' : e.pageX - mouse.offsetX,
                 'top'  : e.pageY - mouse.offsetY
             });
+            // total depth of dragging item
+            var i, depth,
+                items = this.dragEl.find(this.options.itemNodeName);
+            for (i = 0; i < items.length; i++) {
+                depth = $(items[i]).parents(this.options.listNodeName).length;
+                if (depth > this.dragDepth) {
+                    this.dragDepth = depth;
+                }
+            }
         },
 
         dragStop: function(e)
@@ -279,7 +289,7 @@
 
         dragMove: function(e)
         {
-            var list, parent, prev, next,
+            var list, parent, prev, next, depth,
                 opt   = this.options,
                 mouse = this.mouse;
 
@@ -340,22 +350,20 @@
                 if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt.listNodeName + ':last');
-                    /*
-                    var depth = placeholder.parents('li').length;
-                    if (depth >= this.options.maxdepth) {
-                        return;
-                    }
-                    */
-                    // create new sub-level if one doesn't exist
-                    if (!list.length) {
-                        list = $('<' + opt.listNodeName + '/>');
-                        list.append(this.placeEl);
-                        prev.append(list);
-                        this.setParent(prev);
-                    } else {
-                        // else append to next level up
-                        list = prev.children(opt.listNodeName + ':last');
-                        list.append(this.placeEl);
+                    // check if depth limit has reached
+                    depth = this.placeEl.parents(opt.listNodeName).length;
+                    if (depth + this.dragDepth <= this.options.maxDepth) {
+                        // create new sub-level if one doesn't exist
+                        if (!list.length) {
+                            list = $('<' + opt.listNodeName + '/>').addClass(opt.listClass);
+                            list.append(this.placeEl);
+                            prev.append(list);
+                            this.setParent(prev);
+                        } else {
+                            // else append to next level up
+                            list = prev.children(opt.listNodeName + ':last');
+                            list.append(this.placeEl);
+                        }
                     }
                 }
                 // decrease horizontal level
@@ -400,7 +408,13 @@
              * move vertical
              */
             if (!mouse.dirAx || isNewRoot || isEmpty) {
+                // check if groups match if dragging over new root
                 if (isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
+                    return;
+                }
+                // check depth limit
+                depth = this.dragDepth - 1 + this.pointEl.parents(opt.listNodeName).length;
+                if (depth > opt.maxDepth) {
                     return;
                 }
                 var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
