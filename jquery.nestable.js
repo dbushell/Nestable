@@ -6,12 +6,6 @@
 {
     var hasTouch = 'ontouchstart' in window;
 
-/**
-
-TODO : empty placeholder
-
-**/
-
     /**
      * Detect CSS pointer-events property
      * events are normally disabled on the dragging element to avoid conflicts
