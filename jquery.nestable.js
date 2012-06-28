@@ -90,10 +90,11 @@
 
             var onStartEvent = function(e)
             {
-                if (!$(e.target).hasClass(list.options.handleClass)) {
-                    return;
+                var handle = $(e.target);
+                if (!handle.hasClass(list.options.handleClass)) {
+                    handle = handle.parents('.' + list.options.handleClass + ':first');
                 }
-                if (list.dragEl || (!hasTouch && e.button !== 0) || (hasTouch && e.touches.length !== 1)) {
+                if (!handle.length || list.dragEl || (!hasTouch && e.button !== 0) || (hasTouch && e.touches.length !== 1)) {
                     return;
                 }
                 e.preventDefault();
