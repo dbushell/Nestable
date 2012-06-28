@@ -42,7 +42,7 @@
             collapsedClass  : 'dd-collapsed',
             placeClass      : 'dd-placeholder',
             emptyClass      : 'dd-empty',
-            expandBtnHTML   : '<button data-action="expand">Expand></button>',
+            expandBtnHTML   : '<button data-action="expand">Expand</button>',
             collapseBtnHTML : '<button data-action="collapse">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
@@ -90,10 +90,11 @@
 
             var onStartEvent = function(e)
             {
-                if (!$(e.target).hasClass(list.options.handleClass)) {
-                    return;
+                var handle = $(e.target);
+                if (!handle.hasClass(list.options.handleClass)) {
+                    handle = handle.parents('.' + list.options.handleClass + ':first');
                 }
-                if (list.dragEl || (!hasTouch && e.button !== 0) || (hasTouch && e.touches.length !== 1)) {
+                if (!handle.length || list.dragEl || (!hasTouch && e.button !== 0) || (hasTouch && e.touches.length !== 1)) {
                     return;
                 }
                 e.preventDefault();
