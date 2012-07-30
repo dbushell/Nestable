@@ -276,8 +276,9 @@
 
         dragStop: function(e)
         {
-            this.placeEl.replaceWith(this.dragEl.html());
+            this.placeEl.replaceWith(this.dragEl.children());
             this.dragEl.remove();
+
             this.el.trigger('change');
             if (this.hasNewRoot) {
                 this.dragRootEl.trigger('change');
