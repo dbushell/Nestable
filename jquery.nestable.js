@@ -42,8 +42,8 @@
             collapsedClass  : 'dd-collapsed',
             placeClass      : 'dd-placeholder',
             emptyClass      : 'dd-empty',
-            expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
-            collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
+            expandBtnHTML   : '<button class="dd-toggle-btn" type="button" data-action="expand">Expand</button>',
+            collapseBtnHTML : '<button class="dd-toggle-btn" type="button" data-action="collapse">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
             threshold       : 20
@@ -276,8 +276,9 @@
 
         dragStop: function(e)
         {
-            this.placeEl.replaceWith(this.dragEl.html());
+            this.placeEl.replaceWith(this.dragEl.children());
             this.dragEl.remove();
+
             this.el.trigger('change');
             if (this.hasNewRoot) {
                 this.dragRootEl.trigger('change');
