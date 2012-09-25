@@ -1,7 +1,7 @@
 Nestable
 ========
 
-### Drag & drop hierarchical list with mouse and touch compatibility (jQuery plugin)
+### Drag & drop hierarchical list with mouse and touch compatibility (jQuery / Zepto plugin)
 
 [**Try Nestable Demo**](http://dbushell.github.com/Nestable/)
 
