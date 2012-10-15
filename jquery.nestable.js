@@ -92,7 +92,7 @@
             {
                 var handle = $(e.target);
                 if (!handle.hasClass(list.options.handleClass)) {
-                    handle = handle.parents('.' + list.options.handleClass + ':first');
+                    handle = handle.parents('.' + list.options.handleClass).first();
                 }
                 if (!handle.length || list.dragEl || (!hasTouch && e.button !== 0) || (hasTouch && e.touches.length !== 1)) {
                     return;
@@ -151,7 +151,7 @@
                     });
                     return array;
                 };
-            data = step(list.el.find(list.options.listNodeName + ':first'), depth);
+            data = step(list.el.find(list.options.listNodeName).first(), depth);
             return data;
         },
 
@@ -244,7 +244,7 @@
         {
             var mouse    = this.mouse,
                 target   = $(e.target),
-                dragItem = target.parents(this.options.itemNodeName + ':first');
+                dragItem = target.parents(this.options.itemNodeName).first();
 
             this.placeEl.css('height', dragItem.height());
 
@@ -257,7 +257,17 @@
 
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
+<<<<<<< HEAD
             dragItem.after(this.placeEl).detach().appendTo(this.dragEl);
+=======
+
+            // fix for zepto.js
+            //dragItem.after(this.placeEl).detach().appendTo(this.dragEl);
+            dragItem.after(this.placeEl);
+            dragItem[0].parentNode.removeChild(dragItem[0]);
+            dragItem.appendTo(this.dragEl);
+
+>>>>>>> master
             $(document.body).append(this.dragEl);
             this.dragEl.css({
                 'left' : e.pageX - mouse.offsetX,
@@ -276,7 +286,16 @@
 
         dragStop: function(e)
         {
+<<<<<<< HEAD
             this.placeEl.replaceWith(this.dragEl.children(this.options.itemNodeName + ':first').detach());
+=======
+            // fix for zepto.js
+            //this.placeEl.replaceWith(this.dragEl.children(this.options.itemNodeName + ':first').detach());
+            var el = this.dragEl.children(this.options.itemNodeName).first();
+            el[0].parentNode.removeChild(el[0]);
+            this.placeEl.replaceWith(el);
+
+>>>>>>> master
             this.dragEl.remove();
             this.el.trigger('change');
             if (this.hasNewRoot) {
@@ -347,7 +366,7 @@
                 // increase horizontal level if previous sibling exists and is not collapsed
                 if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
                     // cannot increase level when item above is collapsed
-                    list = prev.find(opt.listNodeName + ':last');
+                    list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached
                     depth = this.placeEl.parents(opt.listNodeName).length;
                     if (depth + this.dragDepth <= opt.maxDepth) {
@@ -359,7 +378,7 @@
                             this.setParent(prev);
                         } else {
                             // else append to next level up
-                            list = prev.children(opt.listNodeName + ':last');
+                            list = prev.children(opt.listNodeName).last();
                             list.append(this.placeEl);
                         }
                     }
@@ -370,7 +389,7 @@
                     next = this.placeEl.next(opt.itemNodeName);
                     if (!next.length) {
                         parent = this.placeEl.parent();
-                        this.placeEl.parents(opt.itemNodeName + ':first').after(this.placeEl);
+                        this.placeEl.parents(opt.itemNodeName).first().after(this.placeEl);
                         if (!parent.children().length) {
                             this.unsetParent(parent.parent());
                         }
@@ -384,7 +403,7 @@
             if (!hasPointerEvents) {
                 this.dragEl[0].style.visibility = 'hidden';
             }
-            this.pointEl = $(document.elementFromPoint(e.pageX - this.w.scrollLeft(), e.pageY - this.w.scrollTop()));
+            this.pointEl = $(document.elementFromPoint(e.pageX - document.body.scrollLeft, e.pageY - document.body.scrollTop));
             if (!hasPointerEvents) {
                 this.dragEl[0].style.visibility = 'visible';
             }
@@ -399,7 +418,7 @@
             }
 
             // find parent list of item under cursor
-            var pointElRoot = this.pointEl.parents('.' + opt.rootClass + ':first'),
+            var pointElRoot = this.pointEl.parents('.' + opt.rootClass).first(),
                 isNewRoot   = this.dragRootEl.data('nestable-id') !== pointElRoot.data('nestable-id');
 
             /**
@@ -452,10 +471,11 @@
 
         lists.each(function()
         {
-            var plugin = $.data(this, 'nestable');
+            var plugin = $(this).data("nestable");
+
             if (!plugin) {
-                $.data(this, 'nestable', new Plugin(this, params));
-                $.data(this, 'nestable-id', new Date().getTime());
+                $(this).data("nestable", new Plugin(this, params));
+                $(this).data("nestable-id", new Date().getTime());
             } else {
                 if (typeof params === 'string' && typeof plugin[params] === 'function') {
                     retval = plugin[params]();
@@ -466,4 +486,4 @@
         return retval || lists;
     };
 
-})(jQuery, window, document);
+})(window.jQuery || window.Zepto, window, document);
