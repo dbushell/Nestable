@@ -257,9 +257,6 @@
 
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
-<<<<<<< HEAD
-            dragItem.after(this.placeEl).detach().appendTo(this.dragEl);
-=======
 
             // fix for zepto.js
             //dragItem.after(this.placeEl).detach().appendTo(this.dragEl);
@@ -267,7 +264,6 @@
             dragItem[0].parentNode.removeChild(dragItem[0]);
             dragItem.appendTo(this.dragEl);
 
->>>>>>> master
             $(document.body).append(this.dragEl);
             this.dragEl.css({
                 'left' : e.pageX - mouse.offsetX,
@@ -286,16 +282,12 @@
 
         dragStop: function(e)
         {
-<<<<<<< HEAD
-            this.placeEl.replaceWith(this.dragEl.children(this.options.itemNodeName + ':first').detach());
-=======
             // fix for zepto.js
             //this.placeEl.replaceWith(this.dragEl.children(this.options.itemNodeName + ':first').detach());
             var el = this.dragEl.children(this.options.itemNodeName).first();
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
 
->>>>>>> master
             this.dragEl.remove();
             this.el.trigger('change');
             if (this.hasNewRoot) {
