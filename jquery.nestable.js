@@ -42,8 +42,8 @@
             collapsedClass  : 'dd-collapsed',
             placeClass      : 'dd-placeholder',
             emptyClass      : 'dd-empty',
-            expandBtnHTML   : '<button data-action="expand">Expand</button>',
-            collapseBtnHTML : '<button data-action="collapse">Collapse</button>',
+            expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
+            collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
             threshold       : 20
@@ -257,7 +257,7 @@
 
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
-            dragItem.replaceWith(this.placeEl).appendTo(this.dragEl);
+            dragItem.after(this.placeEl).detach().appendTo(this.dragEl);
             $(document.body).append(this.dragEl);
             this.dragEl.css({
                 'left' : e.pageX - mouse.offsetX,
@@ -276,7 +276,7 @@
 
         dragStop: function(e)
         {
-            this.placeEl.replaceWith(this.dragEl.html());
+            this.placeEl.replaceWith(this.dragEl.children(this.options.itemNodeName + ':first').detach());
             this.dragEl.remove();
             this.el.trigger('change');
             if (this.hasNewRoot) {
