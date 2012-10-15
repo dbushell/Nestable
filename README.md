@@ -79,6 +79,11 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 15th October 2012
+
+* Merge for Zepto.js support
+* Merge fix for remove/detach items
+
 ### 27th June 2012
 
 * Added `maxDepth` option (default to 5)
