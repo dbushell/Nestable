@@ -257,7 +257,7 @@
 
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
-            dragItem.replaceWith(this.placeEl).appendTo(this.dragEl);
+            dragItem.after(this.placeEl).detach().appendTo(this.dragEl);
             $(document.body).append(this.dragEl);
             this.dragEl.css({
                 'left' : e.pageX - mouse.offsetX,
@@ -276,8 +276,8 @@
 
         dragStop: function(e)
         {
-            this.placeEl.replaceWith(this.dragEl.html());
-            this.dragEl.remove();
+            this.placeEl.replaceWith(this.dragEl.children(this.options.itemNodeName + ':first').detach());
+    		this.dragEl.remove();
             this.el.trigger('change');
             if (this.hasNewRoot) {
                 this.dragRootEl.trigger('change');
