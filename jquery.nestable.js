@@ -277,7 +277,7 @@
         dragStop: function(e)
         {
             this.placeEl.replaceWith(this.dragEl.children(this.options.itemNodeName + ':first').detach());
-    		this.dragEl.remove();
+            this.dragEl.remove();
             this.el.trigger('change');
             if (this.hasNewRoot) {
                 this.dragRootEl.trigger('change');
