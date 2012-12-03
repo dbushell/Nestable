@@ -41,6 +41,7 @@
             handleClass     : 'dd-handle',
             collapsedClass  : 'dd-collapsed',
             placeClass      : 'dd-placeholder',
+            noDragClass     : 'dd-nodrag',
             emptyClass      : 'dd-empty',
             expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
@@ -92,6 +93,9 @@
             {
                 var handle = $(e.target);
                 if (!handle.hasClass(list.options.handleClass)) {
+                    if (handle.hasClass(list.options.noDragClass)) {
+                        return;
+                    }
                     handle = handle.parents('.' + list.options.handleClass).first();
                 }
                 if (!handle.length || list.dragEl || (!hasTouch && e.button !== 0) || (hasTouch && e.touches.length !== 1)) {
