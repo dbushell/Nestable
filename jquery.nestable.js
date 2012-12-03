@@ -93,10 +93,10 @@
             {
                 var handle = $(e.target);
                 if (!handle.hasClass(list.options.handleClass)) {
-                    if (handle.hasClass(list.options.noDragClass)) {
+                    if (handle.closest('.' + list.options.noDragClass).length) {
                         return;
                     }
-                    handle = handle.parents('.' + list.options.handleClass).first();
+                    handle = handle.closest('.' + list.options.handleClass);
                 }
                 if (!handle.length || list.dragEl || (!hasTouch && e.button !== 0) || (hasTouch && e.touches.length !== 1)) {
                     return;
@@ -248,7 +248,7 @@
         {
             var mouse    = this.mouse,
                 target   = $(e.target),
-                dragItem = target.parents(this.options.itemNodeName).first();
+                dragItem = target.closest(this.options.itemNodeName);
 
             this.placeEl.css('height', dragItem.height());
 
@@ -385,7 +385,7 @@
                     next = this.placeEl.next(opt.itemNodeName);
                     if (!next.length) {
                         parent = this.placeEl.parent();
-                        this.placeEl.parents(opt.itemNodeName).first().after(this.placeEl);
+                        this.placeEl.closest(opt.itemNodeName).after(this.placeEl);
                         if (!parent.children().length) {
                             this.unsetParent(parent.parent());
                         }
@@ -414,7 +414,7 @@
             }
 
             // find parent list of item under cursor
-            var pointElRoot = this.pointEl.parents('.' + opt.rootClass).first(),
+            var pointElRoot = this.pointEl.closest('.' + opt.rootClass),
                 isNewRoot   = this.dragRootEl.data('nestable-id') !== pointElRoot.data('nestable-id');
 
             /**
