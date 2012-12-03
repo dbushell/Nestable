@@ -395,7 +395,7 @@
             if (!hasPointerEvents) {
                 this.dragEl[0].style.visibility = 'hidden';
             }
-            this.pointEl = $(document.elementFromPoint(e.pageX - document.body.scrollLeft, e.pageY - document.body.scrollTop));
+            this.pointEl = $(document.elementFromPoint(e.pageX - document.body.scrollLeft, e.pageY - (window.pageYOffset || document.documentElement.scrollTop)));
             if (!hasPointerEvents) {
                 this.dragEl[0].style.visibility = 'visible';
             }
