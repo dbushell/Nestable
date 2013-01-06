@@ -452,8 +452,8 @@
                 }
                 // parent root list has changed
                 if (isNewRoot) {
-                    this.hasNewRoot = true;
                     this.dragRootEl = pointElRoot;
+                    this.hasNewRoot = this.el[0] !== this.dragRootEl[0];
                 }
             }
         }
