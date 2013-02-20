@@ -465,13 +465,23 @@
         var lists  = this,
             retval = this;
 
+        var generateUid = function (separator) {
+            var delim = separator || "-";
+
+            function S4() {
+                return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+            }
+
+            return (S4() + S4() + delim + S4() + delim + S4() + delim + S4() + delim + S4() + S4() + S4());
+        };
+
         lists.each(function()
         {
             var plugin = $(this).data("nestable");
 
             if (!plugin) {
                 $(this).data("nestable", new Plugin(this, params));
-                $(this).data("nestable-id", new Date().getTime());
+                $(this).data("nestable-id", generateUid());
             } else {
                 if (typeof params === 'string' && typeof plugin[params] === 'function') {
                     retval = plugin[params]();
