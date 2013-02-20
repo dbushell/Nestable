@@ -32,22 +32,31 @@
         eCancel = hasTouch ? 'touchcancel' : 'mouseup';
 
     var defaults = {
-            listNodeName    : 'ol',
-            itemNodeName    : 'li',
-            rootClass       : 'dd',
-            listClass       : 'dd-list',
-            itemClass       : 'dd-item',
-            dragClass       : 'dd-dragel',
-            handleClass     : 'dd-handle',
-            collapsedClass  : 'dd-collapsed',
-            placeClass      : 'dd-placeholder',
-            noDragClass     : 'dd-nodrag',
-            emptyClass      : 'dd-empty',
-            expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
-            collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
-            group           : 0,
-            maxDepth        : 5,
-            threshold       : 20
+            listNodeName        : 'ol',
+            itemNodeName        : 'li',
+            rootClass           : 'dd',
+            listClass           : 'dd-list',
+            itemClass           : 'dd-item',
+            dragClass           : 'dd-dragel',
+            handleClass         : 'dd-handle',
+            collapsedClass      : 'dd-collapsed',
+            placeClass          : 'dd-placeholder',
+            noDragClass         : 'dd-nodrag',
+            emptyClass          : 'dd-empty',
+            expandBtnHTML       : '<button data-action="expand" type="button">Expand</button>',
+            collapseBtnHTML     : '<button data-action="collapse" type="button">Collapse</button>',
+            group               : 0,
+            maxDepth            : 5,
+            threshold           : 20,
+            scroll              : false,
+            scrollSensitivity   : 1,
+            scrollSpeed         : 5,
+            scrollTriggers      : {
+                top: 40,
+                left: 40,
+                right: -40,
+                bottom: -40
+            }
         };
 
     function Plugin(element, options)
@@ -334,6 +343,41 @@
                 mouse.dirAx  = newAx;
                 mouse.moving = true;
                 return;
+            }
+
+            //Do scrolling
+            if (opt.scroll) {
+                var scrolled = false;
+                var scrollParent = this.el.scrollParent()[0];
+                if(scrollParent != document && scrollParent.tagName != 'HTML') {
+                    if((opt.scrollTriggers.bottom + scrollParent.offsetHeight) - e.pageY < opt.scrollSensitivity)
+                        scrollParent.scrollTop = scrolled = scrollParent.scrollTop + opt.scrollSpeed;
+                    else if(e.pageY - opt.scrollTriggers.top < opt.scrollSensitivity)
+                        scrollParent.scrollTop = scrolled = scrollParent.scrollTop - opt.scrollSpeed;
+
+                    if((opt.scrollTriggers.right + scrollParent.offsetWidth) - e.pageX < opt.scrollSensitivity)
+                        scrollParent.scrollLeft = scrolled = scrollParent.scrollLeft + opt.scrollSpeed;
+                    else if(e.pageX - opt.scrollTriggers.left < opt.scrollSensitivity)
+                        scrollParent.scrollLeft = scrolled = scrollParent.scrollLeft - opt.scrollSpeed;
+                } else {
+                    if(e.pageY - $(document).scrollTop() < opt.scrollSensitivity)
+                        scrolled = $(document).scrollTop($(document).scrollTop() - opt.scrollSpeed);
+                    else if($(window).height() - (e.pageY - $(document).scrollTop()) < opt.scrollSensitivity)
+                        scrolled = $(document).scrollTop($(document).scrollTop() + opt.scrollSpeed);
+
+                    if(e.pageX - $(document).scrollLeft() < opt.scrollSensitivity)
+                        scrolled = $(document).scrollLeft($(document).scrollLeft() - opt.scrollSpeed);
+                    else if($(window).width() - (e.pageX - $(document).scrollLeft()) < opt.scrollSensitivity)
+                        scrolled = $(document).scrollLeft($(document).scrollLeft() + opt.scrollSpeed);
+                }
+            }
+
+            if (this.scrollTimer)
+                clearTimeout(this.scrollTimer);
+            if (opt.scroll && scrolled) {
+                this.scrollTimer = setTimeout(function() {
+                    $(window).trigger(e);
+                }, 10);
             }
 
             // calc distance moved on this axis (and direction)
