@@ -42,7 +42,10 @@
             collapsedClass  : 'dd-collapsed',
             placeClass      : 'dd-placeholder',
             noDragClass     : 'dd-nodrag',
+            noChildrenClass : 'dd-nochildren',
             emptyClass      : 'dd-empty',
+            childrenInRoot  : false,
+            noChildrenClass : "children",
             expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
@@ -251,6 +254,9 @@
                 dragItem = target.closest(this.options.itemNodeName);
 
             this.placeEl.css('height', dragItem.height());
+	  
+	        // I need to assign it into the window object
+            window.drag_and_drop_e = target.parent();
 
             mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
             mouse.offsetY = e.offsetY !== undefined ? e.offsetY : e.pageY - target.offset().top;
@@ -356,15 +362,23 @@
              * move horizontal
              */
             if (mouse.dirAx && mouse.distAxX >= opt.threshold) {
+
+
                 // reset move distance on x-axis for new phase
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
-                // increase horizontal level if previous sibling exists and is not collapsed
-                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
+                
+                
+                // increase horizontal level if previous sibling exists and is not collapsed            
+                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass) && !prev.hasClass(opt.noChildrenClass) ) {
+                    
+
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt.listNodeName).last();
+
                     // check if depth limit has reached
                     depth = this.placeEl.parents(opt.listNodeName).length;
+
                     if (depth + this.dragDepth <= opt.maxDepth) {
                         // create new sub-level if one doesn't exist
                         if (!list.length) {
@@ -381,9 +395,11 @@
                 }
                 // decrease horizontal level
                 if (mouse.distX < 0) {
+
                     // we can't decrease a level if an item preceeds the current one
                     next = this.placeEl.next(opt.itemNodeName);
-                    if (!next.length) {
+
+                    if (!next.length && !(!opt.childrenInRoot && window.drag_and_drop_e.hasClass(opt.noChildrenClass) && next.length == 0) ) {
                         parent = this.placeEl.parent();
                         this.placeEl.closest(opt.itemNodeName).after(this.placeEl);
                         if (!parent.children().length) {
@@ -420,7 +436,8 @@
             /**
              * move vertical
              */
-            if (!mouse.dirAx || isNewRoot || isEmpty) {
+            if (!mouse.dirAx || isNewRoot || isEmpty) {                
+
                 // check if groups match if dragging over new root
                 if (isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
                     return;
@@ -430,6 +447,12 @@
                 if (depth > opt.maxDepth) {
                     return;
                 }
+                
+                // An activity cant be in deep 1
+                if(!opt.childrenInRoot && window.drag_and_drop_e.hasClass(opt.noChildrenClass) && depth == 1) {
+                    return;
+                }
+
                 var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
                     parent = this.placeEl.parent();
                 // if empty create new list to replace empty placeholder
