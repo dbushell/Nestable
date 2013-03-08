@@ -44,7 +44,7 @@
             noDragClass     : 'dd-nodrag',
             noChildrenClass : 'dd-nochildren',
             emptyClass      : 'dd-empty',
-            childrenInRoot  : false,
+            childrenInRoot  : true,
             noChildrenClass : "children",
             expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
@@ -253,10 +253,9 @@
                 target   = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName);
 
-            this.placeEl.css('height', dragItem.height());
-	  
-	        // I need to assign it into the window object
-            window.drag_and_drop_e = target.parent();
+            this.placeEl.css('height', dragItem.height());	  
+	        
+            window.drag_and_drop_e = target.parent(); // You can access anywhere to the alement moved using window.drag_and_drop_e
 
             mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
             mouse.offsetY = e.offsetY !== undefined ? e.offsetY : e.pageY - target.offset().top;
