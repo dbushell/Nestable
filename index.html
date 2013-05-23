@@ -85,11 +85,52 @@
 		</div>
     </div>
 
+	
+    <div class="cf nestable-lists-src-multi">
+		<h3>Drag &amp; drop two sources and one target (accepts only)</h3>
+		
+		<div class="serialised">
+			<p><strong>Serialised Output (per list)</strong></p>
+
+			<textarea id="nestable-src-1-output"></textarea>
+			<textarea id="nestable-src-2-output"></textarea>
+			<textarea id="nestable-target-output"></textarea>
+
+			<p>&nbsp;</p>
+		</div>
+		
+        <div class="dd" id="nestable-src-1">
+            <ol class="dd-list">
+                <li class="dd-item" data-id="1"><div class="dd-handle">Item 1</div></li>
+                <li class="dd-item" data-id="2"><div class="dd-handle">Item 2</div></li>
+                <li class="dd-item" data-id="3"><div class="dd-handle">Item 3</div></li>
+                <li class="dd-item" data-id="4"><div class="dd-handle">Item 4</div></li>
+            </ol>
+        </div>
+        <div class="dd" id="nestable-src-2">
+            <ol class="dd-list">
+                <li class="dd-item" data-id="5"><div class="dd-handle">Item 5</div></li>
+				<li class="dd-item" data-id="6"><div class="dd-handle">Item 6</div></li>
+				<li class="dd-item" data-id="7"><div class="dd-handle">Item 7</div></li>
+				<li class="dd-item" data-id="8"><div class="dd-handle">Item 8</div></li>
+            </ol>
+        </div>
+		<br>
+		<br>
+		<div style="clear:both"></div>
+        <div class="dd" id="nestable-target">
+            <ol class="dd-list">
+                <div class="dd-empty"></div>
+            </ol>
+        </div>
+		
+    </div>
+	
     <div class="cf nestable-lists">
 
-		<p><strong>Draggable Handles</strong></p>
+    <p><strong>Draggable Handles</strong></p>
 
-		<p>If you're clever with your CSS and markup this can be achieved without any JavaScript changes.</p>
+    <p>If you're clever with your CSS and markup this can be achieved without any JavaScript changes.</p>
 
         <div class="dd" id="nestable3">
             <ol class="dd-list">
@@ -152,6 +193,19 @@ $(document).ready(function()
     updateOutput($('#nestable2').data('output', $('#nestable2-output')));
 
 	// --- example 2 ---------
+	
+	// activate Nestable sources
+    $('#nestable-src-1').nestable({ group: 1 }).on('change', updateOutput);
+	$('#nestable-src-2').nestable({ group: 2 }).on('change', updateOutput);
+	$('#nestable-target').nestable({ group: 3, group_source:[1,2] }).on('change', updateOutput);
+
+    // output initial serialised data
+    updateOutput($('#nestable-src-1').data('output', $('#nestable-src-1-output')));
+	updateOutput($('#nestable-src-2').data('output', $('#nestable-src-2-output')));
+	updateOutput($('#nestable-target').data('output', $('#nestable-target-output')));
+	
+	
+	// --- example 3 ---------
     $('#nestable-menu').on('click', function(e)
     {
         var target = $(e.target),
