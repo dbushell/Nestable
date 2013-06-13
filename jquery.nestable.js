@@ -55,7 +55,7 @@
         this.w  = $(window);
         // Events need to be attached to the document instead of the window in IE8 and below.
         //if ($.browser.msie && $.browser.version <= 8) { // Deprecated in jQuery 1.9.
-	    var matches = navigator.userAgent.match(/MSIE ([\d+])/i);
+	    var matches = navigator.userAgent.match(/MSIE (\d+)/i);
 	    if (matches && matches[1] <= 8) {
 	        this.w = $(document);
 	    }
@@ -109,7 +109,7 @@
                 if (!hasTouch) {
 	                leftButton = e.button === 0; // Left button = 0, Middle button = 1, Right button = 2
 					//if ($.browser.msie && $.browser.version <= 8) { // Deprecated in jQuery 1.9.
-				    var matches = navigator.userAgent.match(/MSIE ([\d+])/i);
+				    var matches = navigator.userAgent.match(/MSIE (\d+)/i);
 				    if (matches && matches[1] <= 8) {
 					    leftButton = e.button === 1; // Left button = 1, Middle button = 4, Right button = 2
 					}
