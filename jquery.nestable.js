@@ -4,7 +4,7 @@
  */
 ;(function($, window, document, undefined)
 {
-    var hasTouch = 'ontouchstart' in window;
+    var hasTouch = 'ontouchstart' in document.documentElement;
 
     /**
      * Detect CSS pointer-events property
@@ -25,11 +25,6 @@
         docEl.removeChild(el);
         return !!supports;
     })();
-
-    var eStart  = hasTouch ? 'touchstart'  : 'mousedown',
-        eMove   = hasTouch ? 'touchmove'   : 'mousemove',
-        eEnd    = hasTouch ? 'touchend'    : 'mouseup';
-        eCancel = hasTouch ? 'touchcancel' : 'mouseup';
 
     var defaults = {
             listNodeName    : 'ol',
@@ -91,6 +86,7 @@
 
             var onStartEvent = function(e)
             {
+				var isTouch = e.type != 'mousedown';
                 var handle = $(e.target);
                 if (!handle.hasClass(list.options.handleClass)) {
                     if (handle.closest('.' + list.options.noDragClass).length) {
@@ -98,39 +94,40 @@
                     }
                     handle = handle.closest('.' + list.options.handleClass);
                 }
-                if (!handle.length || list.dragEl || (!hasTouch && e.button !== 0) || (hasTouch && e.touches.length !== 1)) {
+                if (!handle.length || list.dragEl || (!isTouch && e.button !== 0) || (isTouch && e.touches.length !== 1)) {
                     return;
                 }
                 e.preventDefault();
-                list.dragStart(hasTouch ? e.touches[0] : e);
+                list.dragStart(isTouch ? e.touches[0] : e);
             };
 
             var onMoveEvent = function(e)
             {
+				var isTouch = e.type != 'mousemove';
                 if (list.dragEl) {
                     e.preventDefault();
-                    list.dragMove(hasTouch ? e.touches[0] : e);
+                    list.dragMove(isTouch ? e.touches[0] : e);
                 }
             };
 
             var onEndEvent = function(e)
             {
+				var isTouch = e.type != 'mouseup';
                 if (list.dragEl) {
                     e.preventDefault();
-                    list.dragStop(hasTouch ? e.touches[0] : e);
+                    list.dragStop(isTouch ? e.touches[0] : e);
                 }
             };
 
             if (hasTouch) {
-                list.el[0].addEventListener(eStart, onStartEvent, false);
-                window.addEventListener(eMove, onMoveEvent, false);
-                window.addEventListener(eEnd, onEndEvent, false);
-                window.addEventListener(eCancel, onEndEvent, false);
-            } else {
-                list.el.on(eStart, onStartEvent);
-                list.w.on(eMove, onMoveEvent);
-                list.w.on(eEnd, onEndEvent);
+                list.el[0].addEventListener('touchstart', onStartEvent, false);
+                window.addEventListener('touchmove', onMoveEvent, false);
+                window.addEventListener('touchend', onEndEvent, false);
+                window.addEventListener('touchcancel', onEndEvent, false);
             }
+			list.el.on('mousedown', onStartEvent);
+			list.w.on('mousemove', onMoveEvent);
+			list.w.on('mouseup', onEndEvent);
 
         },
 
