@@ -8,6 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <title>Nestable</title>
+	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
     <style type="text/css">
 
 .cf:after { visibility: hidden; display: block; font-size: 0; content: " "; clear: both; height: 0; }
@@ -41,28 +42,64 @@ p { line-height: 1.5em; }
 .dd-placeholder { display: block; position: relative; margin: 0; padding: 0; min-height: 20px; font-size: 13px; line-height: 20px; }
 
 .dd-handle { display: block; height: 30px; margin: 5px 0; padding: 5px 10px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
-    background: #fafafa;
-    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
-    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
-    background:         linear-gradient(top, #fafafa 0%, #eee 100%);
+	background: rgb(250,250,250); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(250,250,250,1) 0%, rgba(216,216,216,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(250,250,250,1)), color-stop(100%,rgba(216,216,216,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(250,250,250,1) 0%,rgba(216,216,216,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(250,250,250,1) 0%,rgba(216,216,216,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(250,250,250,1) 0%,rgba(216,216,216,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(250,250,250,1) 0%,rgba(216,216,216,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#d8d8d8',GradientType=0 ); /* IE6-9 */
+
     -webkit-border-radius: 3px;
             border-radius: 3px;
     box-sizing: border-box; -moz-box-sizing: border-box;
 }
-.dd-handle:hover { color: #2ea8e5; background: #fff; }
+.dd-nonest .dd-handle {
+	background: rgb(247,198,131); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(254,252,234,1) 0%, rgba(247,198,131,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(254,252,234,1)), color-stop(100%,rgba(247,198,131,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(254,252,234,1) 0%,rgba(247,198,131,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(254,252,234,1) 0%,rgba(247,198,131,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(254,252,234,1) 0%,rgba(247,198,131,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(254,252,234,1) 0%,rgba(247,198,131,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefcea', endColorstr='#f7c683',GradientType=0 ); /* IE6-9 */
+}
 
-.dd-item > button { display: block; position: relative; cursor: pointer; float: left; width: 25px; height: 20px; margin: 5px 0; padding: 0; text-indent: 100%; white-space: nowrap; overflow: hidden; border: 0; background: transparent; font-size: 12px; line-height: 1; text-align: center; font-weight: bold; }
-.dd-item > button:before { content: '+'; display: block; position: absolute; width: 100%; text-align: center; text-indent: 0; }
-.dd-item > button[data-action="collapse"]:before { content: '-'; }
+.dd-handle:hover { color: #333;
+	background: rgb(250,250,250); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(250,250,250,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(250,250,250,1)), color-stop(100%,rgba(204,204,204,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(250,250,250,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(250,250,250,1) 0%,rgba(204,204,204,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(250,250,250,1) 0%,rgba(204,204,204,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(250,250,250,1) 0%,rgba(204,204,204,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+	cursor:move; }
+.dd-nonest .dd-handle:hover {
+	color:black;
+	background: rgb(254,252,234); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(254,252,234,1) 0%, rgba(242,164,62,1) 82%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(254,252,234,1)), color-stop(82%,rgba(242,164,62,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(254,252,234,1) 0%,rgba(242,164,62,1) 82%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(254,252,234,1) 0%,rgba(242,164,62,1) 82%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(254,252,234,1) 0%,rgba(242,164,62,1) 82%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(254,252,234,1) 0%,rgba(242,164,62,1) 82%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefcea', endColorstr='#f2a43e',GradientType=0 ); /* IE6-9 */
+
+}
+
+.dd-item > button { display: block; position: relative; cursor: pointer; float: left; width: 25px; height: 20px; margin: 5px 0; padding: 0; white-space: nowrap; overflow: hidden; border: 0; background: transparent; font-size: 12px; line-height: 1; text-align: center; font-weight: bold; }
+.dd-item > button.pull-right { float:right; }
 
 .dd-placeholder,
 .dd-empty { margin: 5px 0; padding: 0; min-height: 30px; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
 .dd-empty { border: 1px dashed #bbb; min-height: 100px; background-color: #e5e5e5;
-    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
                       -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image:    -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+    background-image:    -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
                          -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image:         linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+    background-image:         linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
                               linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
     background-size: 60px 60px;
     background-position: 0 0, 30px 30px;
@@ -97,7 +134,7 @@ p { line-height: 1.5em; }
 #nestable2 .dd-handle:hover { background: #bbb; }
 #nestable2 .dd-item > button:before { color: #fff; }
 
-@media only screen and (min-width: 700px) { 
+@media only screen and (min-width: 700px) {
 
     .dd { float: left; width: 48%; }
     .dd + .dd { margin-left: 2%; }
@@ -143,9 +180,22 @@ p { line-height: 1.5em; }
 
     <h1>Nestable</h1>
 
+	<div class='alert alert-danger'>This is a forked version of <a href='https://github.com/dbushell/Nestable'>DBushell's Nestable Project</a></div>
+
     <p>Drag &amp; drop hierarchical list with mouse and touch compatibility (jQuery plugin)</p>
 
-    <p><strong><a href="https://github.com/dbushell/Nestable">Code on GitHub</a></strong></p>
+    <p><strong><a href="https://github.com/kevinknelson/Nestable">Code on GitHub</a></strong></p>
+
+
+	<div class='alert alert-block'>
+		<h4>Deviations from Original</h4>
+		<ul>
+			<li>FIX: The mouse on touch-capable browsers would not work making the code unusable.  I changed the code to use BOTH touch and mouse events simultaneously rather than the original either/or approach.</li>
+			<li>FEATURE: I added the capability (as have other forks) to flag a draggable item as not being allowed to have nested items below it.</li>
+			<li>FEATURE: I added a data-action handler that allows you to place a delete button within an item which will remove the item and all children when clicked.</li>
+			<li>Simply for presentation, I added a CDN bootstrap link on this page to use icons for expand/collapse, and I modified the CSS for gradients.</li>
+		</ul>
+	</div>
 
     <menu id="nestable-menu">
         <button type="button" data-action="expand-all">Expand All</button>
@@ -157,29 +207,55 @@ p { line-height: 1.5em; }
         <div class="dd" id="nestable">
             <ol class="dd-list">
                 <li class="dd-item" data-id="1">
+					<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
                     <div class="dd-handle">Item 1</div>
                 </li>
                 <li class="dd-item" data-id="2">
+					<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
                     <div class="dd-handle">Item 2</div>
                     <ol class="dd-list">
-                        <li class="dd-item" data-id="3"><div class="dd-handle">Item 3</div></li>
-                        <li class="dd-item" data-id="4"><div class="dd-handle">Item 4</div></li>
+                        <li class="dd-item dd-nonest" data-id="3">
+							<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+							<div class="dd-handle">Item 3 (can't have children)</div>
+						</li>
+                        <li class="dd-item" data-id="4">
+							<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+							<div class="dd-handle">Item 4</div>
+						</li>
                         <li class="dd-item" data-id="5">
+							<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
                             <div class="dd-handle">Item 5</div>
                             <ol class="dd-list">
-                                <li class="dd-item" data-id="6"><div class="dd-handle">Item 6</div></li>
-                                <li class="dd-item" data-id="7"><div class="dd-handle">Item 7</div></li>
-                                <li class="dd-item" data-id="8"><div class="dd-handle">Item 8</div></li>
+                                <li class="dd-item dd-nonest" data-id="6">
+									<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+									<div class="dd-handle">Item 6 (can't have children)</div>
+								</li>
+                                <li class="dd-item dd-nonest" data-id="7">
+									<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+									<div class="dd-handle">Item 7 (can't have children)</div>
+								</li>
+                                <li class="dd-item dd-nonest" data-id="8">
+									<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+									<div class="dd-handle">Item 8 (can't have children)</div>
+								</li>
                             </ol>
                         </li>
-                        <li class="dd-item" data-id="9"><div class="dd-handle">Item 9</div></li>
-                        <li class="dd-item" data-id="10"><div class="dd-handle">Item 10</div></li>
+                        <li class="dd-item" data-id="9">
+							<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+							<div class="dd-handle">Item 9</div>
+						</li>
+                        <li class="dd-item" data-id="10">
+							<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+							<div class="dd-handle">Item 10</div>
+						</li>
                     </ol>
                 </li>
                 <li class="dd-item" data-id="11">
+					<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
                     <div class="dd-handle">Item 11</div>
                 </li>
                 <li class="dd-item" data-id="12">
+					<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
                     <div class="dd-handle">Item 12</div>
                 </li>
             </ol>
@@ -222,22 +298,22 @@ p { line-height: 1.5em; }
         <div class="dd" id="nestable3">
             <ol class="dd-list">
                 <li class="dd-item dd3-item" data-id="13">
-                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 13</div>
+                    <div class="dd-handle dd3-handle" title="Drag">&nbsp;</div><div class="dd3-content">Item 13</div>
                 </li>
                 <li class="dd-item dd3-item" data-id="14">
-                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 14</div>
+                    <div class="dd-handle dd3-handle" title="Drag">&nbsp;</div><div class="dd3-content">Item 14</div>
                 </li>
                 <li class="dd-item dd3-item" data-id="15">
-                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 15</div>
+                    <div class="dd-handle dd3-handle" title="Drag">&nbsp;</div><div class="dd3-content">Item 15</div>
                     <ol class="dd-list">
                         <li class="dd-item dd3-item" data-id="16">
-                            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 16</div>
+                            <div class="dd-handle dd3-handle" title="Drag">&nbsp;</div><div class="dd3-content">Item 16</div>
                         </li>
                         <li class="dd-item dd3-item" data-id="17">
-                            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 17</div>
+                            <div class="dd-handle dd3-handle" title="Drag">&nbsp;</div><div class="dd3-content">Item 17</div>
                         </li>
                         <li class="dd-item dd3-item" data-id="18">
-                            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 18</div>
+                            <div class="dd-handle dd3-handle" title="Drag">&nbsp;</div><div class="dd3-content">Item 18</div>
                         </li>
                     </ol>
                 </li>
@@ -268,10 +344,12 @@ $(document).ready(function()
 
     // activate Nestable for list 1
     $('#nestable').nestable({
-        group: 1
+        group: 1,
+		expandBtnHTML   : '<button data-action="expand" type="button"><i class="icon-chevron-right"></i></button>',
+		collapseBtnHTML : '<button data-action="collapse" type="button"><i class="icon-chevron-down"></i></button>'
     })
     .on('change', updateOutput);
-    
+
     // activate Nestable for list 2
     $('#nestable2').nestable({
         group: 1

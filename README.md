@@ -20,8 +20,9 @@ Write your nested HTML lists like so:
             <li class="dd-item" data-id="3">
                 <div class="dd-handle">Item 3</div>
                 <ol class="dd-list">
-                    <li class="dd-item" data-id="4">
-                        <div class="dd-handle">Item 4</div>
+                    <li class="dd-item dd-nonest" data-id="4">
+                    	<button type="button" data-action="remove" title="Remove">x</button>
+                        <div class="dd-handle">Item 4 (can't have children)</div>
                     </li>
                     <li class="dd-item" data-id="5">
                         <div class="dd-handle">Item 5</div>
@@ -72,12 +73,20 @@ These advanced config options are also available:
 * `collapsedClass` The class applied to lists that have been collapsed (default `'dd-collapsed'`)
 * `placeClass` The class of the placeholder element (default `'dd-placeholder'`)
 * `emptyClass` The class used for empty list placeholder elements (default `'dd-empty'`)
-* `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand></button>'`)
-* `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse">Collapse</button>'`)
+* `noNestClass` The class used to prohibit child items being dropped within tag (default `'dd-nonest'`)
+* `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand" title="Expand">+</button>'`)
+* `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse" title="Collapse">-</button>'`)
 
 **Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
 
 ## Change Log
+
+### 19th June 2013
+
+* FIX broken mouse actions on touch-capable browsers by making both touch and mouse work simultaneously
+* Added option noNestClass to allow items to be identified as not allowed to have children
+* Added handler that allows a button to be added with data-action="remove" to remove elements
+* Update example page to reflect above changes.
 
 ### 15th October 2012
 
