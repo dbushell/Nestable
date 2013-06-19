@@ -241,7 +241,8 @@
         unsetParent: function(li)
         {
             li.removeClass(this.options.collapsedClass);
-            li.children('[data-action]').remove();
+            li.children('[data-action="expand"]').remove();
+            li.children('[data-action="collapse"]').remove();
             li.children(this.options.listNodeName).remove();
         },
 
