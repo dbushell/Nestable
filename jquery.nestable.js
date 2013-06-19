@@ -83,6 +83,9 @@
                 if (action === 'expand') {
                     list.expandItem(item);
                 }
+				if (action === 'remove') {
+					item.remove();
+				}
             });
 
             var onStartEvent = function(e)
