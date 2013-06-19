@@ -3,7 +3,7 @@ Nestable
 
 ### Drag & drop hierarchical list with mouse and touch compatibility (jQuery / Zepto plugin)
 
-[**Try Nestable Demo**](http://dbushell.github.com/Nestable/)
+[**Try Nestable Demo**](https://rawgithub.com/kevinknelson/Nestable/master/index.html)
 
 ## Usage
 
@@ -77,7 +77,7 @@ These advanced config options are also available:
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand" title="Expand">+</button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse" title="Collapse">-</button>'`)
 
-**Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
+**Inspect the [Nestable Demo](https://rawgithub.com/kevinknelson/Nestable/master/index.html) for guidance.**
 
 ## Change Log
 
@@ -104,5 +104,6 @@ These advanced config options are also available:
 * * *
 
 Author: David Bushell [http://dbushell.com](http://dbushell.com/) [@dbushell](http://twitter.com/dbushell/)
+Contributer: Kevin K. Nelson [http://xingcreative.com](http://xingcreative.com/)
 
 Copyright © 2012 David Bushell | BSD & MIT license
