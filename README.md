@@ -36,6 +36,16 @@ Then activate with jQuery like so:
 
     $('.dd').nestable({ /* config options */ });
 
+### Custom Actions
+
+The `change` event is fired when items are reordered.
+
+    $('.dd').nestable({
+		customActions   : {
+			'remove'    : function(item,button) { item.remove(); }
+		}
+    });
+
 ### Events
 
 The `change` event is fired when items are reordered.
@@ -74,12 +84,18 @@ These advanced config options are also available:
 * `placeClass` The class of the placeholder element (default `'dd-placeholder'`)
 * `emptyClass` The class used for empty list placeholder elements (default `'dd-empty'`)
 * `noNestClass` The class used to prohibit child items being dropped within tag (default `'dd-nonest'`)
+* `customActions` An object that can have actions defined for buttons with custom callbacks (default `{}`)
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand" title="Expand">+</button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse" title="Collapse">-</button>'`)
 
 **Inspect the [Nestable Demo](https://rawgithub.com/kevinknelson/Nestable/master/index.html) for guidance.**
 
 ## Change Log
+
+### 20th June 2013
+
+* Added option customActions that allows buttons with any data-action to call methods defined in initialization
+* Removed handler for data-action="remove" (replaced with customActions since it is more flexible)
 
 ### 19th June 2013
 

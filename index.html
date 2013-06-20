@@ -174,6 +174,13 @@ p { line-height: 1.5em; }
 .dd3-handle:before { content: '≡'; display: block; position: absolute; left: 0; top: 3px; width: 100%; text-align: center; text-indent: 0; color: #fff; font-size: 20px; font-weight: normal; }
 .dd3-handle:hover { background: #ddd; }
 
+/** ONLY FOR CUSTOM DELETE ACTION **/
+.dd-deleted .dd-handle { opacity:.3;background:none white;filter:none; }
+.dd-deleted button { z-index:100; }
+.dd-deleted button i { opacity:.3; }
+.dd-deleted > button[data-action="remove"] { width:50px;border:1px solid #666;border-radius:3px; }
+.dd-deleted > button[data-action="remove"]:hover { background-color:#EEE; }
+
     </style>
 </head>
 <body>
@@ -192,7 +199,7 @@ p { line-height: 1.5em; }
 		<ul>
 			<li>FIX: The mouse on touch-capable browsers would not work making the code unusable.  I changed the code to use BOTH touch and mouse events simultaneously rather than the original either/or approach.</li>
 			<li>FEATURE: I added the capability (as have other forks) to flag a draggable item as not being allowed to have nested items below it.</li>
-			<li>FEATURE: I added a data-action handler that allows you to place a delete button within an item which will remove the item and all children when clicked.</li>
+			<li>FEATURE: I added a customActions option where buttons with custom "data-action" attributes can call methods defined during initialization (see "remove" custom action in the example below).</li>
 			<li>Simply for presentation, I added a CDN bootstrap link on this page to use icons for expand/collapse, and I modified the CSS for gradients.</li>
 		</ul>
 	</div>
@@ -346,7 +353,19 @@ $(document).ready(function()
     $('#nestable').nestable({
         group: 1,
 		expandBtnHTML   : '<button data-action="expand" type="button"><i class="icon-chevron-right"></i></button>',
-		collapseBtnHTML : '<button data-action="collapse" type="button"><i class="icon-chevron-down"></i></button>'
+		collapseBtnHTML : '<button data-action="collapse" type="button"><i class="icon-chevron-down"></i></button>',
+		customActions   : {
+			'remove'    : function(item,button) {
+				if( item.hasClass('dd-deleted') ) {
+					item.data('isDeleted',false).removeClass('dd-deleted');
+					button.html('<i class="icon-remove"></i>');
+				}
+				else {
+					item.data('isDeleted',true).addClass('dd-deleted');
+					button.html('undo');
+				}
+			}
+		}
     })
     .on('change', updateOutput);
 

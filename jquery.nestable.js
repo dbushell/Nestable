@@ -39,6 +39,7 @@
             noDragClass     : 'dd-nodrag',
 			noNestClass		: 'dd-nonest',
             emptyClass      : 'dd-empty',
+			customActions	: {},
             expandBtnHTML   : '<button data-action="expand" type="button" title="Expand">+</button>',
             collapseBtnHTML : '<button data-action="collapse" type="button" title="Collapse">-</button>',
             group           : 0,
@@ -80,11 +81,13 @@
                 if (action === 'collapse') {
                     list.collapseItem(item);
                 }
-                if (action === 'expand') {
+                else if (action === 'expand') {
                     list.expandItem(item);
                 }
-				if (action === 'remove') {
-					item.remove();
+				else {
+					if( typeof list.options.customActions != 'undefined' && list.options.customActions.hasOwnProperty(action) ) {
+						list.options.customActions[action]( item, target );
+					}
 				}
             });
 
