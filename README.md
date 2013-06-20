@@ -38,11 +38,14 @@ Then activate with jQuery like so:
 
 ### Custom Actions
 
-The `change` event is fired when items are reordered.
+When initializing a list, you can provide customActions with callbacks.  In the below example, the "remove" action will remove the LI tag and it's children from the DOM.  To use this custom action
+all that is needed is to have a button with data-action="remove" as a child of the item.
+
+[**See the demo page for a more complete example**](https://rawgithub.com/kevinknelson/Nestable/master/index.html)
 
     $('.dd').nestable({
 		customActions   : {
-			'remove'    : function(item,button) { item.remove(); }
+			"remove"    : function(item,button) { item.remove(); }
 		}
     });
 
