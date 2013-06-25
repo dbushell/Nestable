@@ -27,7 +27,7 @@
     })();
 
     var defaults = {
-    	    actionClass     : 'dd-action'
+    	    actionClass     : 'dd-action',
             listNodeName    : 'ol',
             itemNodeName    : 'li',
             rootClass       : 'dd',
