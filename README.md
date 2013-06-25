@@ -96,6 +96,10 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 25th June 2013
+
+* BREAKING CHANGE: ANY element can now trigger a customAction.  However, buttons no longer auto-trigger.  So, if you have a custom expand/collapse HTML, they will break with this change until you add class="dd-action", where "dd-action" can be configured with the new actionClass option. (contributed by @ThisIsAreku)
+
 ### 20th June 2013
 
 * Added option customActions that allows buttons with any data-action to call methods defined in initialization
