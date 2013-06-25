@@ -214,55 +214,55 @@ p { line-height: 1.5em; }
         <div class="dd" id="nestable">
             <ol class="dd-list">
                 <li class="dd-item" data-id="1">
-					<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+					<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
                     <div class="dd-handle">Item 1</div>
                 </li>
                 <li class="dd-item" data-id="2">
-					<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+					<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
                     <div class="dd-handle">Item 2</div>
                     <ol class="dd-list">
                         <li class="dd-item dd-nonest" data-id="3">
-							<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+							<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
 							<div class="dd-handle">Item 3 (can't have children)</div>
 						</li>
                         <li class="dd-item" data-id="4">
-							<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+							<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
 							<div class="dd-handle">Item 4</div>
 						</li>
                         <li class="dd-item" data-id="5">
-							<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+							<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
                             <div class="dd-handle">Item 5</div>
                             <ol class="dd-list">
                                 <li class="dd-item dd-nonest" data-id="6">
-									<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+									<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
 									<div class="dd-handle">Item 6 (can't have children)</div>
 								</li>
                                 <li class="dd-item dd-nonest" data-id="7">
-									<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+									<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
 									<div class="dd-handle">Item 7 (can't have children)</div>
 								</li>
                                 <li class="dd-item dd-nonest" data-id="8">
-									<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+									<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
 									<div class="dd-handle">Item 8 (can't have children)</div>
 								</li>
                             </ol>
                         </li>
                         <li class="dd-item" data-id="9">
-							<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+							<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
 							<div class="dd-handle">Item 9</div>
 						</li>
                         <li class="dd-item" data-id="10">
-							<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+							<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
 							<div class="dd-handle">Item 10</div>
 						</li>
                     </ol>
                 </li>
                 <li class="dd-item" data-id="11">
-					<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+					<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
                     <div class="dd-handle">Item 11</div>
                 </li>
                 <li class="dd-item" data-id="12">
-					<button class='pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
+					<button class='dd-action pull-right' type='button' data-action='remove' title='Remove'><i class='icon-remove'></i></button>
                     <div class="dd-handle">Item 12</div>
                 </li>
             </ol>
@@ -352,8 +352,8 @@ $(document).ready(function()
     // activate Nestable for list 1
     $('#nestable').nestable({
         group: 1,
-		expandBtnHTML   : '<button data-action="expand" type="button"><i class="icon-chevron-right"></i></button>',
-		collapseBtnHTML : '<button data-action="collapse" type="button"><i class="icon-chevron-down"></i></button>',
+		expandBtnHTML   : '<button class="dd-action" data-action="expand" type="button"><i class="icon-chevron-right"></i></button>',
+		collapseBtnHTML : '<button class="dd-action" data-action="collapse" type="button"><i class="icon-chevron-down"></i></button>',
 		customActions   : {
 			'remove'    : function(item,button) {
 				if( item.hasClass('dd-deleted') ) {
