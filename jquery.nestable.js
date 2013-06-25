@@ -27,6 +27,7 @@
     })();
 
     var defaults = {
+    	    actionClass     : 'dd-action'
             listNodeName    : 'ol',
             itemNodeName    : 'li',
             rootClass       : 'dd',
@@ -40,8 +41,8 @@
 			noNestClass		: 'dd-nonest',
             emptyClass      : 'dd-empty',
 			customActions	: {},
-            expandBtnHTML   : '<button data-action="expand" type="button" title="Expand">+</button>',
-            collapseBtnHTML : '<button data-action="collapse" type="button" title="Collapse">-</button>',
+            expandBtnHTML   : '<button class="dd-action" data-action="expand" type="button" title="Expand">+</button>',
+            collapseBtnHTML : '<button class="dd-action" data-action="collapse" type="button" title="Collapse">-</button>',
             group           : 0,
             maxDepth        : 5,
             threshold       : 20
@@ -71,7 +72,7 @@
                 list.setParent($(el));
             });
 
-            list.el.on('click', 'button', function(e) {
+            list.el.on('click', '.' + list.options.actionClass, function(e) {
                 if (list.dragEl || (!hasTouch && e.button !== 0)) {
                     return;
                 }
