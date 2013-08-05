@@ -27,26 +27,27 @@
     })();
 
     var defaults = {
-    	    actionClass     : 'dd-action',
-            listNodeName    : 'ol',
-            itemNodeName    : 'li',
-            rootClass       : 'dd',
-            listClass       : 'dd-list',
-            itemClass       : 'dd-item',
-            dragClass       : 'dd-dragel',
-            handleClass     : 'dd-handle',
-            collapsedClass  : 'dd-collapsed',
-            placeClass      : 'dd-placeholder',
-            noDragClass     : 'dd-nodrag',
-			noNestClass		: 'dd-nonest',
-            emptyClass      : 'dd-empty',
-			customActions	: {},
-            expandBtnHTML   : '<button class="dd-action" data-action="expand" type="button" title="Expand">+</button>',
-            collapseBtnHTML : '<button class="dd-action" data-action="collapse" type="button" title="Collapse">-</button>',
-            group           : 0,
-            maxDepth        : 5,
-            threshold       : 20
-        };
+        actionClass     : 'dd-action',
+        listNodeName    : 'ol',
+        itemNodeName    : 'li',
+        rootClass       : 'dd',
+        listClass       : 'dd-list',
+        itemClass       : 'dd-item',
+        dragClass       : 'dd-dragel',
+        handleClass     : 'dd-handle',
+        collapsedClass  : 'dd-collapsed',
+        placeClass      : 'dd-placeholder',
+        noDragClass     : 'dd-nodrag',
+        noNestClass		: 'dd-nonest',
+        emptyClass      : 'dd-empty',
+        customActions	: {},
+        expandBtnHTML   : '<button class="dd-action" data-action="expand" type="button" title="Expand">+</button>',
+        collapseBtnHTML : '<button class="dd-action" data-action="collapse" type="button" title="Collapse">-</button>',
+        group           : 0,
+        maxDepth        : 5,
+        threshold       : 20,
+        isNestAllowed   : function(parent,item) { return true; }
+    };
 
     function Plugin(element, options)
     {
@@ -370,8 +371,9 @@
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached
-                    depth = this.placeEl.parents(opt.listNodeName).length;
-                    if (!prev.hasClass(opt.noNestClass) && depth + this.dragDepth <= opt.maxDepth) {
+                    depth = this.placeEl.parents(opt.listNodeName).length;//this.dragEl.children(this.options.itemNodeName).first()
+                    if (!prev.hasClass(opt.noNestClass) && depth + this.dragDepth <= opt.maxDepth
+                            && opt.isNestAllowed(prev,this.dragEl.children(this.options.itemNodeName).first() ) ) {
                         // create new sub-level if one doesn't exist
                         if (!list.length) {
                             list = $('<' + opt.listNodeName + '/>').addClass(opt.listClass);
