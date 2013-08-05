@@ -97,6 +97,10 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 5th August 2013
+
+* Added option for an isNestAllowed($parent,$item) callback that will allow the developer to specify logical business rules for whether or not an item can be nested within a parent.  It's currently buggy in that if it's not allowed to be nested on multiple levels, trying to nest it in the deepest level may allow it into a level just above it which is also not allowed but doesn't get checked since it's only checking one level at a time.
+
 ### 25th June 2013
 
 * BREAKING CHANGE: ANY element can now trigger a customAction.  However, buttons no longer auto-trigger.  So, if you have a custom expand/collapse HTML, they will break with this change until you add class="dd-action", where "dd-action" can be configured with the new actionClass option. (contributed by @ThisIsAreku)
