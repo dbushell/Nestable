@@ -91,6 +91,7 @@ These advanced config options are also available:
 * `customActions` An object that can have actions defined for buttons with custom callbacks (default `{}`)
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button class="dd-action" data-action="expand" title="Expand">+</button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button class="dd-action" data-action="collapse" title="Collapse">-</button>'`)
+* `isNestAllowed` customizable callback which allows you to specify logical rules for nesting.  `Currently buggy`
 
 **Inspect the [Nestable Demo](https://rawgithub.com/kevinknelson/Nestable/master/index.html) for guidance.**
 
