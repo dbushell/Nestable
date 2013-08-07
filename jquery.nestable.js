@@ -306,12 +306,30 @@
             }
             this.reset();
         },
-
+        canDrop: function(prev, opt) {
+            var depth = this.placeEl.parents(opt.listNodeName).length;
+            return !prev.hasClass(opt.noNestClass) && depth + this.dragDepth <= opt.maxDepth
+                && opt.isNestAllowed(prev,this.dragEl.children(opt.itemNodeName).first() )
+        },
+        addToList: function( dropPoint, opt ) {
+            var list = dropPoint.find(opt.listNodeName).last();
+            if (!list.length) {
+                list = $('<' + opt.listNodeName + '/>').addClass(opt.listClass);
+                list.append(this.placeEl);
+                dropPoint.append(list);
+                this.setParent(dropPoint);
+            } else {
+                // else append to next level up
+                list = dropPoint.children(opt.listNodeName).last();
+                list.append(this.placeEl);
+            }
+        },
         dragMove: function(e)
         {
-            var list, parent, prev, next, depth,
+            var list, parent, next, depth,
                 opt   = this.options,
-                mouse = this.mouse;
+                mouse = this.mouse,
+                prev  = this.placeEl.prev(opt.itemNodeName);
 
             this.dragEl.css({
                 'left' : e.pageX - mouse.offsetX,
@@ -365,38 +383,13 @@
             if (mouse.dirAx && mouse.distAxX >= opt.threshold) {
                 // reset move distance on x-axis for new phase
                 mouse.distAxX = 0;
-                prev = this.placeEl.prev(opt.itemNodeName);
                 // increase horizontal level if previous sibling exists and is not collapsed
                 if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
                     // cannot increase level when item above is collapsed
-                    list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached
-                    depth = this.placeEl.parents(opt.listNodeName).length;//this.dragEl.children(this.options.itemNodeName).first()
-                    if (!prev.hasClass(opt.noNestClass) && depth + this.dragDepth <= opt.maxDepth
-                            && opt.isNestAllowed(prev,this.dragEl.children(this.options.itemNodeName).first() ) ) {
+                    if ( this.canDrop(prev,opt) ) {
                         // create new sub-level if one doesn't exist
-                        if (!list.length) {
-                            list = $('<' + opt.listNodeName + '/>').addClass(opt.listClass);
-                            list.append(this.placeEl);
-                            prev.append(list);
-                            this.setParent(prev);
-                        } else {
-                            // else append to next level up
-                            list = prev.children(opt.listNodeName).last();
-                            list.append(this.placeEl);
-                        }
-                    }
-                }
-                // decrease horizontal level
-                if (mouse.distX < 0) {
-                    // we can't decrease a level if an item preceeds the current one
-                    next = this.placeEl.next(opt.itemNodeName);
-                    if (!next.length) {
-                        parent = this.placeEl.parent();
-                        this.placeEl.closest(opt.itemNodeName).after(this.placeEl);
-                        if (!parent.children().length) {
-                            this.unsetParent(parent.parent());
-                        }
+                        this.addToList( prev, opt );
                     }
                 }
             }
@@ -438,19 +431,23 @@
                 if (depth > opt.maxDepth) {
                     return;
                 }
-                var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
-                    parent = this.placeEl.parent();
+                var before      = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2),
+                    dropPoint   = this.pointEl.parents(opt.itemNodeName).first();
+                    parent      = this.placeEl.parent();
                 // if empty create new list to replace empty placeholder
                 if (isEmpty) {
                     list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
                     list.append(this.placeEl);
                     this.pointEl.replaceWith(list);
                 }
-                else if (before) {
+                else if (before && this.canDrop(dropPoint,opt)) {
                     this.pointEl.before(this.placeEl);
                 }
-                else {
+                else if( this.canDrop(dropPoint,opt) ) {
                     this.pointEl.after(this.placeEl);
+                }
+                else if( this.canDrop(this.pointEl,opt) ) {
+                    this.addToList(this.pointEl,opt);
                 }
                 if (!parent.children().length) {
                     this.unsetParent(parent.parent());

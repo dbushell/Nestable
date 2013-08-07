@@ -49,6 +49,18 @@ all that is needed is to have a button with data-action="remove" as a child of t
 		}
     });
 
+### Custom Nestable Callbacks
+
+Adding a `noNestClass` to an element that can't have any children may work for some cases, but sometimes you need to decide whether an element can be nested based on business rules.  In such cases, you can provide a custom callback for the `isNestAllowed` method which should return true if the item can be nested within the parent or false otherwise.  Two parameters (both jQuery objects) will be passed to the callback, the $parent itemNodeName (default <li>) tag to be nested within, and the $item itemNodeName (default <li>) tag the user is trying to nest:
+
+`NOTE: this currently won't check at the root level, the root is always nestable`
+
+    $('.dd').nestable({
+		isNestAllowed   : function($parent, $item) {
+		    return matchesBusinessRules($parent,$item) ? true : false; `//yes I know ? true : false is redundant :)`
+		}
+    });
+
 ### Events
 
 The `change` event is fired when items are reordered.
@@ -91,11 +103,15 @@ These advanced config options are also available:
 * `customActions` An object that can have actions defined for buttons with custom callbacks (default `{}`)
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button class="dd-action" data-action="expand" title="Expand">+</button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button class="dd-action" data-action="collapse" title="Collapse">-</button>'`)
-* `isNestAllowed` customizable callback which allows you to specify logical rules for nesting.  `Currently buggy`
+* `isNestAllowed` customizable callback which allows you to specify logical rules for nesting.
 
 **Inspect the [Nestable Demo](https://rawgithub.com/kevinknelson/Nestable/master/index.html) for guidance.**
 
 ## Change Log
+
+### 7th August 2013
+
+* Some fixes to handle the isNestAllowed callback better including a fix to allow nesting within a subgroup when the item is not able to be dropped in the parent group by hovering over the sub-group tag.
 
 ### 5th August 2013
 
