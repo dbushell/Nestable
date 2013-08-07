@@ -51,13 +51,14 @@ all that is needed is to have a button with data-action="remove" as a child of t
 
 ### Custom Nestable Callbacks
 
-Adding a `noNestClass` to an element that can't have any children may work for some cases, but sometimes you need to decide whether an element can be nested based on business rules.  In such cases, you can provide a custom callback for the `isNestAllowed` method which should return true if the item can be nested within the parent or false otherwise.  Two parameters (both jQuery objects) will be passed to the callback, the $parent itemNodeName (default <li>) tag to be nested within, and the $item itemNodeName (default <li>) tag the user is trying to nest:
+Adding a `noNestClass` to an element that can't have any children may work for some cases, but sometimes you need to decide whether an element can be nested based on business rules.  In such cases, you can provide a custom callback for the `isNestAllowed` method which should return true if the item can be nested within the parent or false otherwise.  Two parameters (both jQuery objects) will be passed to the callback, the $parent itemNodeName (default LI) tag to be nested within, and the $item itemNodeName (default LI) tag the user is trying to nest:
 
 `NOTE: this currently won't check at the root level, the root is always nestable`
 
     $('.dd').nestable({
 		isNestAllowed   : function($parent, $item) {
-		    return matchesBusinessRules($parent,$item) ? true : false; `//yes I know ? true : false is redundant :)`
+            //yes I know bool ? true : false is redundant :)
+		    return matchesBusinessRules($parent,$item) ? true : false;
 		}
     });
 
