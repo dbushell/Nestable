@@ -159,6 +159,56 @@
             return data;
         },
 
+        toArray: function()
+        {
+
+            var list = this,
+                o = list.options,
+                sDepth = 0,
+                ret = [],
+                left = 1
+
+            var items = list.el.find(o.listNodeName).first().children(o.itemNodeName);
+
+            items.each(function () {
+                left = _recursiveArray(this, sDepth + 1, left);
+            });
+
+            ret = ret.sort(function(a,b){ return (a.left - b.left); });
+
+            return ret;
+
+            function _recursiveArray(item, depth, left) {
+
+                var right = left + 1,
+                    id,
+                    pid;
+
+                if ($(item).children(o.listNodeName).children(o.itemNodeName).length > 0) {
+                    depth ++;
+                    $(item).children(o.listNodeName).children(o.itemNodeName).each(function () {
+                        right = _recursiveArray($(this), depth, right);
+                    });
+                    depth --;
+                }
+
+                id = $(item).attr('data-id');
+
+                if (depth === sDepth + 1) {
+                    pid = o.rootID;
+                } else {
+                    var pid = $(item).parent(o.listNodeName).parent(o.itemNodeName).attr('data-id');
+                }
+
+                if (id) {
+                    ret.push({"item_id": id, "parent_id": pid, "depth": depth, "left": left, "right": right});
+                }
+
+                left = right + 1;
+                return left;
+            }
+        },
+
         serialise: function()
         {
             return this.serialize();
