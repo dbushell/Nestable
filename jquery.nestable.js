@@ -451,8 +451,9 @@
                     this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
                 }
                 // parent root list has changed
+                this.dragRootEl = pointElRoot; // By Mario
                 if (isNewRoot) {
-                    this.dragRootEl = pointElRoot;
+                    // this.dragRootEl = pointElRoot; // By Mario
                     this.hasNewRoot = this.el[0] !== this.dragRootEl[0];
                 }
             }
