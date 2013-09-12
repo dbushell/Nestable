@@ -404,7 +404,7 @@
                 this.dragEl[0].style.visibility = 'visible';
             }
             if (this.pointEl.hasClass(opt.handleClass)) {
-                this.pointEl = this.pointEl.parent(opt.itemNodeName);
+                this.pointEl = this.pointEl.closest( opt.itemNodeName );
             }
             if (this.pointEl.hasClass(opt.emptyClass)) {
                 isEmpty = true;
