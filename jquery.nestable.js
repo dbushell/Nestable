@@ -465,13 +465,13 @@
         var lists  = this,
             retval = this;
 
-        lists.each(function()
+        lists.each(function(i)
         {
             var plugin = $(this).data("nestable");
 
             if (!plugin) {
                 $(this).data("nestable", new Plugin(this, params));
-                $(this).data("nestable-id", new Date().getTime());
+                $(this).data("nestable-id", i);
             } else {
                 if (typeof params === 'string' && typeof plugin[params] === 'function') {
                     retval = plugin[params]();
