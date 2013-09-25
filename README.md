@@ -45,7 +45,7 @@ all that is needed is to have a button with data-action="remove" as a child of t
 
     $('.dd').nestable({
 		customActions   : {
-			"remove"    : function(item,button) { item.remove(); }
+			"remove"    : function(item,button,e) { item.remove(); }
 		}
     });
 
@@ -109,6 +109,10 @@ These advanced config options are also available:
 **Inspect the [Nestable Demo](https://rawgithub.com/kevinknelson/Nestable/master/index.html) for guidance.**
 
 ## Change Log
+
+### 25th Sept 2013
+
+* Merged ThisIsAreku's change to also pass the mouse event to the customAction.
 
 ### 7th August 2013
 
