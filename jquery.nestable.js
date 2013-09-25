@@ -88,7 +88,7 @@
                 }
 				else {
 					if( typeof list.options.customActions != 'undefined' && list.options.customActions.hasOwnProperty(action) ) {
-						list.options.customActions[action]( item, target );
+						list.options.customActions[action]( item, target, e );
 					}
 				}
             });
