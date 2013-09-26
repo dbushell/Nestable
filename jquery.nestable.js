@@ -306,8 +306,9 @@
               }
             }
             else {
+              var nestableDragEl = el.clone(true);
               this.dragRootEl.html(this.nestableCopy.children().clone(true));
-              this.options.revertAction.apply(this.dragRootEl, this.dragEl);
+              this.options.revertAction.apply(this.dragRootEl, nestableDragEl);
             }
 
             this.dragEl.remove();
