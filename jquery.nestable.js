@@ -5,6 +5,7 @@
 ;(function($, window, document, undefined)
 {
     var hasTouch = 'ontouchstart' in window;
+    var nestableCopy;
 
     /**
      * Detect CSS pointer-events property
@@ -47,7 +48,9 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            accept          : function() { return true; },
+            revertAction    : function() { }   
         };
 
     function Plugin(element, options)
@@ -92,6 +95,9 @@
             var onStartEvent = function(e)
             {
                 var handle = $(e.target);
+                
+                list.nestableCopy = handle.closest('.'+list.options.rootClass).clone(true);
+                
                 if (!handle.hasClass(list.options.handleClass)) {
                     if (handle.closest('.' + list.options.noDragClass).length) {
                         return;
@@ -292,11 +298,19 @@
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
 
-            this.dragEl.remove();
-            this.el.trigger('change');
-            if (this.hasNewRoot) {
-                this.dragRootEl.trigger('change');
+            var dragAccepted = this.options.accept.apply(this.dragRootEl);
+            if (dragAccepted) {
+              this.el.trigger('change');
+              if (this.hasNewRoot) {
+                  this.dragRootEl.trigger('change');
+              }
             }
+            else {
+              this.dragRootEl.html(this.nestableCopy.children().clone(true));
+              this.options.revertAction.apply(this.dragRootEl, this.dragEl);
+            }
+
+            this.dragEl.remove();
             this.reset();
         },
 
