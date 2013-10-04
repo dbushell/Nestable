@@ -49,8 +49,7 @@
             group           : 0,
             maxDepth        : 5,
             threshold       : 20,
-            accept          : function() { return true; },
-            revertAction    : function() { }   
+            reject          : []   
         };
 
     function Plugin(element, options)
@@ -298,19 +297,24 @@
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
 
-            var dragAccepted = this.options.accept.apply(this.dragRootEl);
-            if (dragAccepted) {
-              this.el.trigger('change');
-              if (this.hasNewRoot) {
-                  this.dragRootEl.trigger('change');
+            var i;
+            for (i in this.options.reject) {
+              var reject = this.options.reject[i];
+              var isRejected = reject.rule.apply(this.dragRootEl);
+              if (isRejected) {
+                var nestableDragEl = el.clone(true);
+                this.dragRootEl.html(this.nestableCopy.children().clone(true));
+                if (reject.action) {
+                  reject.action.apply(this.dragRootEl, nestableDragEl);
+                }
+              }
+              else {
+                this.el.trigger('change');
+                if (this.hasNewRoot) {
+                    this.dragRootEl.trigger('change');
+                }
               }
             }
-            else {
-              var nestableDragEl = el.clone(true);
-              this.dragRootEl.html(this.nestableCopy.children().clone(true));
-              this.options.revertAction.apply(this.dragRootEl, nestableDragEl);
-            }
-
             this.dragEl.remove();
             this.reset();
         },
