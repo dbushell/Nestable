@@ -300,12 +300,12 @@
             var i;
             for (i in this.options.reject) {
               var reject = this.options.reject[i];
-              var isRejected = reject.rule.apply(this.dragRootEl);
+              var isRejected = reject.rule.apply([this.dragRootEl]);
               if (isRejected) {
                 var nestableDragEl = el.clone(true);
                 this.dragRootEl.html(this.nestableCopy.children().clone(true));
                 if (reject.action) {
-                  reject.action.apply(this.dragRootEl, nestableDragEl);
+                  reject.action.apply([this.dragRootEl, nestableDragEl]);
                 }
               }
               else {
