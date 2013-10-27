@@ -9,32 +9,36 @@ Nestable
 
 Write your nested HTML lists like so:
 
-    <div class="dd">
-        <ol class="dd-list">
-            <li class="dd-item" data-id="1">
-                <div class="dd-handle">Item 1</div>
-            </li>
-            <li class="dd-item" data-id="2">
-                <div class="dd-handle">Item 2</div>
-            </li>
-            <li class="dd-item" data-id="3">
-                <div class="dd-handle">Item 3</div>
-                <ol class="dd-list">
-                    <li class="dd-item dd-nonest" data-id="4">
-                    	<button type="button" data-action="remove" title="Remove">x</button>
-                        <div class="dd-handle">Item 4 (can't have children)</div>
-                    </li>
-                    <li class="dd-item" data-id="5">
-                        <div class="dd-handle">Item 5</div>
-                    </li>
-                </ol>
-            </li>
-        </ol>
-    </div>
+```html
+<div class="dd">
+    <ol class="dd-list">
+        <li class="dd-item" data-id="1">
+            <div class="dd-handle">Item 1</div>
+        </li>
+        <li class="dd-item" data-id="2">
+            <div class="dd-handle">Item 2</div>
+        </li>
+        <li class="dd-item" data-id="3">
+            <div class="dd-handle">Item 3</div>
+            <ol class="dd-list">
+                <li class="dd-item dd-nonest" data-id="4">
+                	<button type="button" data-action="remove" title="Remove">x</button>
+                    <div class="dd-handle">Item 4 (can't have children)</div>
+                </li>
+                <li class="dd-item" data-id="5">
+                    <div class="dd-handle">Item 5</div>
+                </li>
+            </ol>
+        </li>
+    </ol>
+</div>
+```
 
 Then activate with jQuery like so:
 
-    $('.dd').nestable({ /* config options */ });
+```js
+$('.dd').nestable({ /* config options */ });
+```
 
 ### Custom Actions
 
@@ -43,11 +47,13 @@ all that is needed is to have a button with data-action="remove" as a child of t
 
 [**See the demo page for a more complete example**](https://rawgithub.com/kevinknelson/Nestable/master/index.html)
 
-    $('.dd').nestable({
-		customActions   : {
-			"remove"    : function(item,button,e) { item.remove(); }
-		}
-    });
+```js
+$('.dd').nestable({
+    customActions   : {
+        "remove"    : function(item,button,e) { item.remove(); }
+    }
+});
+```
 
 ### Custom Nestable Callbacks
 
@@ -55,26 +61,32 @@ Adding a `noNestClass` to an element that can't have any children may work for s
 
 `NOTE: this currently won't check at the root level, the root is always nestable`
 
-    $('.dd').nestable({
-		isNestAllowed   : function($parent, $item) {
-            //yes I know bool ? true : false is redundant :)
-		    return matchesBusinessRules($parent,$item) ? true : false;
-		}
-    });
+```js
+$('.dd').nestable({
+    isNestAllowed   : function($parent, $item) {
+        //yes I know bool ? true : false is redundant :)
+        return matchesBusinessRules($parent,$item) ? true : false;
+    }
+});
+```
 
 ### Events
 
 The `change` event is fired when items are reordered.
 
-    $('.dd').on('change', function() {
-        /* on change event */
-    });
+```js
+$('.dd').on('change', function() {
+    /* on change event */
+});
+```
 
 ### Methods
 
 You can get a serialised object with all `data-*` attributes for each item.
 
-    $('.dd').nestable('serialize');
+```js
+$('.dd').nestable('serialize');
+```
 
 The serialised JSON for the example above would be:
 
