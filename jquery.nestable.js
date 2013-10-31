@@ -132,6 +132,31 @@
                 list.w.on(eEnd, onEndEvent);
             }
 
+            var destroyNestable = function()
+            {
+                if (hasTouch) {
+                    list.el[0].removeEventListener(eStart, onStartEvent, false);
+                    window.removeEventListener(eMove, onMoveEvent, false);
+                    window.removeEventListener(eEnd, onEndEvent, false);
+                    window.removeEventListener(eCancel, onEndEvent, false);
+                } else {
+                    list.el.off(eStart, onStartEvent);
+                    list.w.off(eMove, onMoveEvent);
+                    list.w.off(eEnd, onEndEvent);
+                }
+
+                list.el.off('click');
+                list.el.unbind('destroy-nestable');
+
+                list.el.data("nestable", null);
+            };
+
+            list.el.bind('destroy-nestable', destroyNestable);
+        },
+
+        destroy: function ()
+        {
+            this.el.trigger('destroy-nestable');
         },
 
         serialize: function()
