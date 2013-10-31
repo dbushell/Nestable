@@ -61,6 +61,11 @@ The serialised JSON for the example above would be:
 
     [{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]
 
+You can deactivate the plugin by running
+
+    $('.dd').nestable('destroy');
+
+
 ### Configuration
 
 You can change the follow options:
