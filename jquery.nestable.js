@@ -199,6 +199,8 @@
             li.children('[data-action="expand"]').hide();
             li.children('[data-action="collapse"]').show();
             li.children(this.options.listNodeName).show();
+            this.el.trigger('expand', [li]);
+            li.trigger('expand');
         },
 
         collapseItem: function(li)
@@ -210,6 +212,8 @@
                 li.children('[data-action="expand"]').show();
                 li.children(this.options.listNodeName).hide();
             }
+            this.el.trigger('collapse', [li]);
+            li.trigger('collapse');
         },
 
         expandAll: function()
