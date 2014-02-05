@@ -67,6 +67,7 @@
             list.reset();
 
             list.el.data('nestable-group', this.options.group);
+            list.el.data('nestable-group_source', this.options.group_source);
 
             list.placeEl = $('<div class="' + list.options.placeClass + '"/>');
 
@@ -423,8 +424,19 @@
             if (!mouse.dirAx || isNewRoot || isEmpty) {
                 // check if groups match if dragging over new root
                 if (isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
-                    return;
+				
+                    // lets check if the target collection has defined a group source
+                    if(typeof pointElRoot.data('nestable-group_source') === "undefined"){
+                        return;
+                    }
+					
+                    // lets check the source group id is there..
+                    accepts = pointElRoot.data('nestable-group_source').indexOf(opt.group) > -1;
+					
+                    // if it was not found return
+                    if(!accepts){ return; }
                 }
+				
                 // check depth limit
                 depth = this.dragDepth - 1 + this.pointEl.parents(opt.listNodeName).length;
                 if (depth > opt.maxDepth) {
