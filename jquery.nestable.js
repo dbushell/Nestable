@@ -28,7 +28,7 @@
 
     var eStart  = hasTouch ? 'touchstart'  : 'mousedown',
         eMove   = hasTouch ? 'touchmove'   : 'mousemove',
-        eEnd    = hasTouch ? 'touchend'    : 'mouseup';
+        eEnd    = hasTouch ? 'touchend'    : 'mouseup',
         eCancel = hasTouch ? 'touchcancel' : 'mouseup';
 
     var defaults = {
@@ -43,11 +43,20 @@
             placeClass      : 'dd-placeholder',
             noDragClass     : 'dd-nodrag',
             emptyClass      : 'dd-empty',
-            expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
-            collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
+            expandBtnHTML   : '<button data-action ="expand" type="button">Expand</button>',
+            collapseBtnHTML : '<button data-action ="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            scroll              : false,
+            scrollSensitivity   : 1,
+            scrollSpeed         : 5,
+            scrollTriggers      : {
+                top: 40,
+                left: 40,
+                right: -40,
+                bottom: -40
+            }
         };
 
     function Plugin(element, options)
@@ -55,7 +64,7 @@
         this.w  = $(window);
         this.el = $(element);
         this.rtl = this.el.css('direction') == "rtl";
-        console.log('this.rtl',this.rtl);
+        // console.log('this.rtl',this.rtl);
         this.options = $.extend({}, defaults, options);
         this.init();
     }
@@ -201,6 +210,8 @@
             li.children('[data-action="expand"]').hide();
             li.children('[data-action="collapse"]').show();
             li.children(this.options.listNodeName).show();
+            this.el.trigger('expand', [li]);
+            li.trigger('expand');
         },
 
         collapseItem: function(li)
@@ -212,6 +223,8 @@
                 li.children('[data-action="expand"]').show();
                 li.children(this.options.listNodeName).hide();
             }
+            this.el.trigger('collapse', [li]);
+            li.trigger('collapse');
         },
 
         expandAll: function()
@@ -248,10 +261,13 @@
 
         dragStart: function(e)
         {
-            var mouse    = this.mouse,
+            var mouse    = this.mouse, 
                 target   = $(e.target),
-                dragItem = target.closest(this.options.itemNodeName);
-
+                // dragItem = target.closest(this.options.itemNodeName);
+                dragItem = target.closest('.' + this.options.handleClass).closest(this.options.itemNodeName);
+            
+            this.target_width = target.width(); // for rtl
+            
             this.placeEl.css('height', dragItem.height());
 
             mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
@@ -270,9 +286,23 @@
             dragItem[0].parentNode.removeChild(dragItem[0]);
             dragItem.appendTo(this.dragEl);
 
+
+            
+            
+            var rtlFix = 0;
+            if( this.rtl )
+                rtlFix = this.dragEl.width() - this.target_width;
+            
+            // console.log( 'rtl:', this.rtl );
+            // console.log( 'e.pageX: ', e.pageX, 'e.pageY: ', e.pageY, 'mouse.offsetX: ', mouse.offsetX, 'mouse.offsetY: ', mouse.offsetY );
+            // console.log( 'left:', e.pageX - mouse.offsetX + rtlFix, 'top:', e.pageY - mouse.offsetY , 'rtlFix:', + rtlFix, 'this.dragEl.W:', this.dragEl.width(), 'target.w', target_width );
+            // console.log('target:', target);
+            // console.log('target.w',target_width );
+             
+            
             $(document.body).append(this.dragEl);
             this.dragEl.css({
-                'left' : e.pageX - mouse.offsetX,
+                'left' : e.pageX - mouse.offsetX - rtlFix,
                 'top'  : e.pageY - mouse.offsetY
             });
             // total depth of dragging item
@@ -307,9 +337,15 @@
             var list, parent, prev, next, depth,
                 opt   = this.options,
                 mouse = this.mouse;
+                
+            
+            var rtlFix = 0;
+            if( this.rtl )
+                rtlFix = this.dragEl.width() - this.target_width;
+            
 
             this.dragEl.css({
-                'left' : e.pageX - mouse.offsetX,
+                'left' : e.pageX - mouse.offsetX - rtlFix,
                 'top'  : e.pageY - mouse.offsetY
             });
 
@@ -336,6 +372,41 @@
                 mouse.dirAx  = newAx;
                 mouse.moving = true;
                 return;
+            }
+
+            //Do scrolling
+            if (opt.scroll) {
+                var scrolled = false;
+                var scrollParent = this.el.scrollParent()[0];
+                if(scrollParent != document && scrollParent.tagName != 'HTML') {
+                    if((opt.scrollTriggers.bottom + scrollParent.offsetHeight) - e.pageY < opt.scrollSensitivity)
+                        scrollParent.scrollTop = scrolled = scrollParent.scrollTop + opt.scrollSpeed;
+                    else if(e.pageY - opt.scrollTriggers.top < opt.scrollSensitivity)
+                        scrollParent.scrollTop = scrolled = scrollParent.scrollTop - opt.scrollSpeed;
+
+                    if((opt.scrollTriggers.right + scrollParent.offsetWidth) - e.pageX < opt.scrollSensitivity)
+                        scrollParent.scrollLeft = scrolled = scrollParent.scrollLeft + opt.scrollSpeed;
+                    else if(e.pageX - opt.scrollTriggers.left < opt.scrollSensitivity)
+                        scrollParent.scrollLeft = scrolled = scrollParent.scrollLeft - opt.scrollSpeed;
+                } else {
+                    if(e.pageY - $(document).scrollTop() < opt.scrollSensitivity)
+                        scrolled = $(document).scrollTop($(document).scrollTop() - opt.scrollSpeed);
+                    else if($(window).height() - (e.pageY - $(document).scrollTop()) < opt.scrollSensitivity)
+                        scrolled = $(document).scrollTop($(document).scrollTop() + opt.scrollSpeed);
+
+                    if(e.pageX - $(document).scrollLeft() < opt.scrollSensitivity)
+                        scrolled = $(document).scrollLeft($(document).scrollLeft() - opt.scrollSpeed);
+                    else if($(window).width() - (e.pageX - $(document).scrollLeft()) < opt.scrollSensitivity)
+                        scrolled = $(document).scrollLeft($(document).scrollLeft() + opt.scrollSpeed);
+                }
+            }
+
+            if (this.scrollTimer)
+                clearTimeout(this.scrollTimer);
+            if (opt.scroll && scrolled) {
+                this.scrollTimer = setTimeout(function() {
+                    $(window).trigger(e);
+                }, 10);
             }
 
             // calc distance moved on this axis (and direction)
@@ -366,7 +437,7 @@
                 //! rtl?
                 var distX_direction = true;
 
-                console.log('this.rtl',this.rtl);
+                // console.log('this.rtl',this.rtl);
                 if( this.rtl && mouse.distX > 0 ){
                     distX_direction = false;
                 } 
@@ -375,7 +446,7 @@
                 }
 
                 if ( distX_direction && prev.length && !prev.hasClass(opt.collapsedClass)) {
-                    console.log('moving right');
+                    // console.log('moving right');
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached
@@ -396,7 +467,7 @@
                 }
                 // decrease horizontal level
                 if ( !distX_direction ) {
-                    console.log('moving left');
+                    // console.log('moving left');
                     // we can't decrease a level if an item preceeds the current one
                     next = this.placeEl.next(opt.itemNodeName);
                     if (!next.length) {
@@ -415,12 +486,13 @@
             if (!hasPointerEvents) {
                 this.dragEl[0].style.visibility = 'hidden';
             }
-            this.pointEl = $(document.elementFromPoint(e.pageX - document.body.scrollLeft, e.pageY - (window.pageYOffset || document.documentElement.scrollTop)));
+            this.pointEl = $(document.elementFromPoint(e.pageX - document.documentElement.scrollLeft, e.pageY - (window.pageYOffset || document.documentElement.scrollTop)));
             if (!hasPointerEvents) {
                 this.dragEl[0].style.visibility = 'visible';
             }
             if (this.pointEl.hasClass(opt.handleClass)) {
-                this.pointEl = this.pointEl.parent(opt.itemNodeName);
+                // this.pointEl = this.pointEl.parent(opt.itemNodeName);
+                this.pointEl = this.pointEl.closest(opt.itemNodeName);
             }
             if (this.pointEl.hasClass(opt.emptyClass)) {
                 isEmpty = true;
@@ -464,11 +536,13 @@
                     this.unsetParent(parent.parent());
                 }
                 if (!this.dragRootEl.find(opt.itemNodeName).length) {
+                    //console.log('nest add empty placeholder');
                     this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
                 }
                 // parent root list has changed
+                this.dragRootEl = pointElRoot;
                 if (isNewRoot) {
-                    this.dragRootEl = pointElRoot;
+                    //this.dragRootEl = pointElRoot;
                     this.hasNewRoot = this.el[0] !== this.dragRootEl[0];
                 }
             }
@@ -481,13 +555,14 @@
         var lists  = this,
             retval = this;
 
-        lists.each(function()
+        lists.each(function(iel)
         {
             var plugin = $(this).data("nestable");
 
             if (!plugin) {
                 $(this).data("nestable", new Plugin(this, params));
-                $(this).data("nestable-id", new Date().getTime());
+                // $(this).data("nestable-id", new Date().getTime());
+                $(this).data("nestable-id", iel);
             } else {
                 if (typeof params === 'string' && typeof plugin[params] === 'function') {
                     retval = plugin[params]();
