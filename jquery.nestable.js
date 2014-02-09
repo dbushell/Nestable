@@ -211,7 +211,7 @@
             li.children('[data-action="collapse"]').show();
             li.children(this.options.listNodeName).show();
             this.el.trigger('expand', [li]);
-            li.trigger('expand');
+            //li.trigger('expand');
         },
 
         collapseItem: function(li)
@@ -224,7 +224,7 @@
                 li.children(this.options.listNodeName).hide();
             }
             this.el.trigger('collapse', [li]);
-            li.trigger('collapse');
+            //li.trigger('collapse');
         },
 
         expandAll: function()
@@ -266,7 +266,16 @@
                 // dragItem = target.closest(this.options.itemNodeName);
                 dragItem = target.closest('.' + this.options.handleClass).closest(this.options.itemNodeName);
             
-            this.target_width = target.width(); // for rtl
+            
+            this.handle = target.closest('.' + this.options.handleClass);
+            // line 110
+            
+            mouse.handleOffsetX = e.pageX - this.handle.offset().left;
+            mouse.handleOffsetY = e.pageY - this.handle.offset().top;
+            
+            this.target_width = this.handle.width(); // for rtl
+            
+            
             
             this.placeEl.css('height', dragItem.height());
 
@@ -293,18 +302,27 @@
             if( this.rtl )
                 rtlFix = this.dragEl.width() - this.target_width;
             
+            
+            // console.log( 'HoffsetX:',mouse.handleOffsetX,'HoffsetY:',mouse.handleOffsetY );
             // console.log( 'rtl:', this.rtl );
             // console.log( 'e.pageX: ', e.pageX, 'e.pageY: ', e.pageY, 'mouse.offsetX: ', mouse.offsetX, 'mouse.offsetY: ', mouse.offsetY );
-            // console.log( 'left:', e.pageX - mouse.offsetX + rtlFix, 'top:', e.pageY - mouse.offsetY , 'rtlFix:', + rtlFix, 'this.dragEl.W:', this.dragEl.width(), 'target.w', target_width );
+            // console.log( 'left:', e.pageX - mouse.offsetX + rtlFix, 'top:', e.pageY - mouse.offsetY , 'rtlFix:', + rtlFix, 'this.dragEl.W:', this.dragEl.width(), 'target.w', this.target_width );
             // console.log('target:', target);
-            // console.log('target.w',target_width );
+            // console.log('target.w',this.target_width );
              
             
             $(document.body).append(this.dragEl);
             this.dragEl.css({
-                'left' : e.pageX - mouse.offsetX - rtlFix,
-                'top'  : e.pageY - mouse.offsetY
+                //'left' : e.pageX - mouse.offsetX - rtlFix,
+                //'top'  : e.pageY - mouse.offsetY
+                
+                // if elements (icons) inside .dd-handle
+                'left' : e.pageX - mouse.handleOffsetX - rtlFix,
+                'top'  : e.pageY - mouse.handleOffsetY
+                
             });
+            
+            
             // total depth of dragging item
             var i, depth,
                 items = this.dragEl.find(this.options.itemNodeName);
@@ -345,8 +363,13 @@
             
 
             this.dragEl.css({
-                'left' : e.pageX - mouse.offsetX - rtlFix,
-                'top'  : e.pageY - mouse.offsetY
+                //'left' : e.pageX - mouse.offsetX - rtlFix,
+                //'top'  : e.pageY - mouse.offsetY
+                
+                // if elements (icons) inside .dd-handle
+                'left' : e.pageX - mouse.handleOffsetX - rtlFix,
+                'top'  : e.pageY - mouse.handleOffsetY
+                
             });
 
             // mouse position last events
