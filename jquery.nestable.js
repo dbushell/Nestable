@@ -26,29 +26,28 @@
         return !!supports;
     })();
 
-    var eStart  = hasTouch ? 'touchstart'  : 'mousedown',
-        eMove   = hasTouch ? 'touchmove'   : 'mousemove',
-        eEnd    = hasTouch ? 'touchend'    : 'mouseup';
-        eCancel = hasTouch ? 'touchcancel' : 'mouseup';
-
     var defaults = {
-            listNodeName    : 'ol',
-            itemNodeName    : 'li',
-            rootClass       : 'dd',
-            listClass       : 'dd-list',
-            itemClass       : 'dd-item',
-            dragClass       : 'dd-dragel',
-            handleClass     : 'dd-handle',
-            collapsedClass  : 'dd-collapsed',
-            placeClass      : 'dd-placeholder',
-            noDragClass     : 'dd-nodrag',
-            emptyClass      : 'dd-empty',
-            expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
-            collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
-            group           : 0,
-            maxDepth        : 5,
-            threshold       : 20
-        };
+        actionClass     : 'dd-action',
+        listNodeName    : 'ol',
+        itemNodeName    : 'li',
+        rootClass       : 'dd',
+        listClass       : 'dd-list',
+        itemClass       : 'dd-item',
+        dragClass       : 'dd-dragel',
+        handleClass     : 'dd-handle',
+        collapsedClass  : 'dd-collapsed',
+        placeClass      : 'dd-placeholder',
+        noDragClass     : 'dd-nodrag',
+        noNestClass		: 'dd-nonest',
+        emptyClass      : 'dd-empty',
+        customActions	: {},
+        expandBtnHTML   : '<button class="dd-action" data-action="expand" type="button" title="Expand">+</button>',
+        collapseBtnHTML : '<button class="dd-action" data-action="collapse" type="button" title="Collapse">-</button>',
+        group           : 0,
+        maxDepth        : 5,
+        threshold       : 20,
+        isNestAllowed   : function(parent,item) { return true; }
+    };
 
     function Plugin(element, options)
     {
@@ -74,7 +73,7 @@
                 list.setParent($(el));
             });
 
-            list.el.on('click', 'button', function(e) {
+            list.el.on('click', '.' + list.options.actionClass, function(e) {
                 if (list.dragEl || (!hasTouch && e.button !== 0)) {
                     return;
                 }
@@ -84,13 +83,19 @@
                 if (action === 'collapse') {
                     list.collapseItem(item);
                 }
-                if (action === 'expand') {
+                else if (action === 'expand') {
                     list.expandItem(item);
                 }
+				else {
+					if( typeof list.options.customActions != 'undefined' && list.options.customActions.hasOwnProperty(action) ) {
+						list.options.customActions[action]( item, target, e );
+					}
+				}
             });
 
             var onStartEvent = function(e)
             {
+                var isTouch = e.type != 'mousedown';
                 var handle = $(e.target);
                 if (!handle.hasClass(list.options.handleClass)) {
                     if (handle.closest('.' + list.options.noDragClass).length) {
@@ -98,39 +103,40 @@
                     }
                     handle = handle.closest('.' + list.options.handleClass);
                 }
-                if (!handle.length || list.dragEl || (!hasTouch && e.button !== 0) || (hasTouch && e.touches.length !== 1)) {
+                if (!handle.length || list.dragEl || (!isTouch && e.button !== 0) || (isTouch && e.touches.length !== 1)) {
                     return;
                 }
                 e.preventDefault();
-                list.dragStart(hasTouch ? e.touches[0] : e);
+                list.dragStart(isTouch ? e.touches[0] : e);
             };
 
             var onMoveEvent = function(e)
             {
+                var isTouch = e.type != 'mousemove';
                 if (list.dragEl) {
                     e.preventDefault();
-                    list.dragMove(hasTouch ? e.touches[0] : e);
+                    list.dragMove(isTouch ? e.touches[0] : e);
                 }
             };
 
             var onEndEvent = function(e)
             {
+                var isTouch = e.type != 'mouseup';
                 if (list.dragEl) {
                     e.preventDefault();
-                    list.dragStop(hasTouch ? e.touches[0] : e);
+                    list.dragStop(isTouch ? e.touches[0] : e);
                 }
             };
 
             if (hasTouch) {
-                list.el[0].addEventListener(eStart, onStartEvent, false);
-                window.addEventListener(eMove, onMoveEvent, false);
-                window.addEventListener(eEnd, onEndEvent, false);
-                window.addEventListener(eCancel, onEndEvent, false);
-            } else {
-                list.el.on(eStart, onStartEvent);
-                list.w.on(eMove, onMoveEvent);
-                list.w.on(eEnd, onEndEvent);
+                list.el[0].addEventListener('touchstart', onStartEvent, false);
+                window.addEventListener('touchmove', onMoveEvent, false);
+                window.addEventListener('touchend', onEndEvent, false);
+                window.addEventListener('touchcancel', onEndEvent, false);
             }
+            list.el.on('mousedown', onStartEvent);
+            list.w.on('mousemove', onMoveEvent);
+            list.w.on('mouseup', onEndEvent);
 
         },
 
@@ -138,7 +144,7 @@
         {
             var data,
                 depth = 0,
-                list  = this;
+                list  = this,
                 step  = function(level, depth)
                 {
                     var array = [ ],
@@ -240,7 +246,8 @@
         unsetParent: function(li)
         {
             li.removeClass(this.options.collapsedClass);
-            li.children('[data-action]').remove();
+            li.children('[data-action="expand"]').remove();
+            li.children('[data-action="collapse"]').remove();
             li.children(this.options.listNodeName).remove();
         },
 
@@ -299,12 +306,30 @@
             }
             this.reset();
         },
-
+        canDrop: function(prev, opt) {
+            var depth = this.placeEl.parents(opt.listNodeName).length;
+            return !prev.hasClass(opt.noNestClass) && depth + this.dragDepth <= opt.maxDepth
+                && opt.isNestAllowed(prev,this.dragEl.children(opt.itemNodeName).first() )
+        },
+        addToList: function( dropPoint, opt ) {
+            var list = dropPoint.find(opt.listNodeName).last();
+            if (!list.length) {
+                list = $('<' + opt.listNodeName + '/>').addClass(opt.listClass);
+                list.append(this.placeEl);
+                dropPoint.append(list);
+                this.setParent(dropPoint);
+            } else {
+                // else append to next level up
+                list = dropPoint.children(opt.listNodeName).last();
+                list.append(this.placeEl);
+            }
+        },
         dragMove: function(e)
         {
-            var list, parent, prev, next, depth,
+            var list, parent, next, depth,
                 opt   = this.options,
-                mouse = this.mouse;
+                mouse = this.mouse,
+                prev  = this.placeEl.prev(opt.itemNodeName);
 
             this.dragEl.css({
                 'left' : e.pageX - mouse.offsetX,
@@ -358,37 +383,13 @@
             if (mouse.dirAx && mouse.distAxX >= opt.threshold) {
                 // reset move distance on x-axis for new phase
                 mouse.distAxX = 0;
-                prev = this.placeEl.prev(opt.itemNodeName);
                 // increase horizontal level if previous sibling exists and is not collapsed
                 if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
                     // cannot increase level when item above is collapsed
-                    list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached
-                    depth = this.placeEl.parents(opt.listNodeName).length;
-                    if (depth + this.dragDepth <= opt.maxDepth) {
+                    if ( this.canDrop(prev,opt) ) {
                         // create new sub-level if one doesn't exist
-                        if (!list.length) {
-                            list = $('<' + opt.listNodeName + '/>').addClass(opt.listClass);
-                            list.append(this.placeEl);
-                            prev.append(list);
-                            this.setParent(prev);
-                        } else {
-                            // else append to next level up
-                            list = prev.children(opt.listNodeName).last();
-                            list.append(this.placeEl);
-                        }
-                    }
-                }
-                // decrease horizontal level
-                if (mouse.distX < 0) {
-                    // we can't decrease a level if an item preceeds the current one
-                    next = this.placeEl.next(opt.itemNodeName);
-                    if (!next.length) {
-                        parent = this.placeEl.parent();
-                        this.placeEl.closest(opt.itemNodeName).after(this.placeEl);
-                        if (!parent.children().length) {
-                            this.unsetParent(parent.parent());
-                        }
+                        this.addToList( prev, opt );
                     }
                 }
             }
@@ -430,19 +431,23 @@
                 if (depth > opt.maxDepth) {
                     return;
                 }
-                var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
-                    parent = this.placeEl.parent();
+                var before      = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2),
+                    dropPoint   = this.pointEl.parents(opt.itemNodeName).first();
+                    parent      = this.placeEl.parent();
                 // if empty create new list to replace empty placeholder
                 if (isEmpty) {
                     list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
                     list.append(this.placeEl);
                     this.pointEl.replaceWith(list);
                 }
-                else if (before) {
+                else if (before && this.canDrop(dropPoint,opt)) {
                     this.pointEl.before(this.placeEl);
                 }
-                else {
+                else if( this.canDrop(dropPoint,opt) ) {
                     this.pointEl.after(this.placeEl);
+                }
+                else if( this.canDrop(this.pointEl,opt) ) {
+                    this.addToList(this.pointEl,opt);
                 }
                 if (!parent.children().length) {
                     this.unsetParent(parent.parent());
