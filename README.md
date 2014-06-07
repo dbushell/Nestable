@@ -63,6 +63,8 @@ The serialised JSON for the example above would be:
 
 ### Configuration
 
+You can add `data-move-in` attribute to `item`, the value is a list no, which defined in `list` object, using `data-list-no` attribute, see example list-2, these item can only move up/down in theirs list range.
+
 You can change the follow options:
 
 * `maxDepth` number of levels an item can be nested (default `5`)
@@ -86,6 +88,10 @@ These advanced config options are also available:
 **Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
 
 ## Change Log
+
+### 7th June 2014
+
+* add `data-move-in` and `data-list-no` for `item` and `list`, `item` only can be move in that `list`
 
 ### 15th October 2012
 
