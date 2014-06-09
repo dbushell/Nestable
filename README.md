@@ -89,6 +89,10 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 9th June 2014
+
+* add `enableHMove` to options for enable horizontal move or not, default `true`
+
 ### 7th June 2014
 
 * add `data-move-in` and `data-list-no` for `item` and `list`, `item` only can be move in that `list`

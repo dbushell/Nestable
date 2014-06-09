@@ -47,7 +47,8 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            enableHMove     : true
         };
 
     function Plugin(element, options)
@@ -356,6 +357,9 @@
              * move horizontal
              */
             if (mouse.dirAx && mouse.distAxX >= opt.threshold) {
+                if (!opt.enableHMove) {
+                    return;
+                }
                 // reset move distance on x-axis for new phase
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
@@ -419,7 +423,7 @@
                 var itemMoveIn = this.dragEl.find(opt.itemNodeName).data('moveIn');
                 var listNo = this.pointEl.closest('.dd-list').data('listNo');
                 if (itemMoveIn !== listNo) {
-                    return;  
+                    return;
                 }
             /**
              * move vertical
