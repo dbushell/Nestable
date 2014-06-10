@@ -73,6 +73,7 @@
 
             $.each(this.el.find(list.options.itemNodeName), function(k, el) {
                 list.setParent($(el));
+                $(el).data('state', 'opened');
             });
 
             list.el.on('click', 'button', function(e) {
@@ -196,6 +197,7 @@
 
         expandItem: function(li)
         {
+            li.data('state', 'opened');
             li.removeClass(this.options.collapsedClass);
             li.children('[data-action="expand"]').hide();
             li.children('[data-action="collapse"]').show();
@@ -206,6 +208,7 @@
         {
             var lists = li.children(this.options.listNodeName);
             if (lists.length) {
+                li.data('state', 'closed');
                 li.addClass(this.options.collapsedClass);
                 li.children('[data-action="collapse"]').hide();
                 li.children('[data-action="expand"]').show();
@@ -227,6 +230,36 @@
             list.el.find(list.options.itemNodeName).each(function() {
                 list.collapseItem($(this));
             });
+        },
+
+        restore: function (serialized_obj) {
+            var list = this;
+            var stateBitmap = list.extractState(serialized_obj);
+            list.el.find(list.options.itemNodeName).each(function(i, el){
+                el = $(el);
+                if (stateBitmap[i] === 'opened') {
+                    list.expandItem(el);
+                } else if (stateBitmap[i] === 'closed') {
+                    list.collapseItem(el);
+                }
+            });
+        },
+
+        extractState: function(nodeList) {
+            var ret = [];
+            if (!nodeList) {
+                return ret;
+            }
+            for (var i in nodeList) {
+                if (nodeList.hasOwnProperty(i)) {
+                    var o = nodeList[i];
+                    if (o.state) {
+                        ret.push(o.state);
+                        $.merge(ret, this.extractState(o.children));
+                    }
+                }
+            }
+            return ret;
         },
 
         setParent: function(li)
@@ -468,7 +501,7 @@
 
     };
 
-    $.fn.nestable = function(params)
+    $.fn.nestable = function(option_or_command, args)
     {
         var lists  = this,
             retval = this;
@@ -478,11 +511,14 @@
             var plugin = $(this).data("nestable");
 
             if (!plugin) {
-                $(this).data("nestable", new Plugin(this, params));
+                if (option_or_command && typeof option_or_command !== 'object') {
+                    option_or_command = {}
+                }
+                $(this).data("nestable", new Plugin(this, option_or_command));
                 $(this).data("nestable-id", new Date().getTime());
             } else {
-                if (typeof params === 'string' && typeof plugin[params] === 'function') {
-                    retval = plugin[params]();
+                if (typeof option_or_command === 'string' && typeof plugin[option_or_command] === 'function') {
+                    retval = plugin[option_or_command](args);
                 }
             }
         });

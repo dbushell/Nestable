@@ -90,6 +90,10 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 10th June 2014
+
+* add restore feature, it can restores the state of nestable list, it accepts serialized object and extract item state('opened' or 'closed'), usage: `$('#root').nestable().nestable('restore', serialized_obj)`
+
 ### 9th June 2014
 
 * add `enableHMove` to options for enable horizontal move or not, default `true`
