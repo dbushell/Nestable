@@ -47,7 +47,8 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            disableNest     : false
         };
 
     function Plugin(element, options)
@@ -269,10 +270,12 @@
             dragItem.appendTo(this.dragEl);
 
             $(document.body).append(this.dragEl);
+
             this.dragEl.css({
                 'left' : e.pageX - mouse.offsetX,
                 'top'  : e.pageY - mouse.offsetY
             });
+
             // total depth of dragging item
             var i, depth,
                 items = this.dragEl.find(this.options.itemNodeName);
@@ -306,10 +309,16 @@
                 opt   = this.options,
                 mouse = this.mouse;
 
-            this.dragEl.css({
-                'left' : e.pageX - mouse.offsetX,
-                'top'  : e.pageY - mouse.offsetY
-            });
+            if (opt.disableNest) {
+                this.dragEl.css({
+                    'top'  : e.pageY - mouse.offsetY
+                });
+            } else {
+                this.dragEl.css({
+                    'left' : e.pageX - mouse.offsetX,
+                    'top'  : e.pageY - mouse.offsetY
+                });
+            }
 
             // mouse position last events
             mouse.lastX = mouse.nowX;

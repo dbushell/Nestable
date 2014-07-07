@@ -82,6 +82,7 @@ These advanced config options are also available:
 * `emptyClass` The class used for empty list placeholder elements (default `'dd-empty'`)
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand></button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse">Collapse</button>'`)
+* `disableNest` Prevent drag an element to children or parent elements. That is to say you can only drag an element vertically. ( default `false` )
 
 **Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
 
