@@ -88,6 +88,10 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 7th July 2014
+
+* Added `disableNest` option (default to `false`)
+
 ### 15th October 2012
 
 * Merge for Zepto.js support
