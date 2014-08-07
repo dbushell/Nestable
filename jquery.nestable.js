@@ -261,6 +261,7 @@
 
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
+            this.type1 = dragItem.attr('data-rel')
 
             // fix for zepto.js
             //dragItem.after(this.placeEl).detach().appendTo(this.dragEl);
@@ -410,6 +411,11 @@
                 isEmpty = true;
             }
             else if (!this.pointEl.length || !this.pointEl.hasClass(opt.itemClass)) {
+                return;
+            }
+
+            var type2 = $(this.pointEl[0]).attr('data-rel')
+            if (this.type1 !== type2) {
                 return;
             }
 
