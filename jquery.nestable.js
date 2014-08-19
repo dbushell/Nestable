@@ -4,7 +4,10 @@
  */
 ;(function($, window, document, undefined)
 {
-    var hasTouch = 'ontouchstart' in window;
+    var hasTouch = 'ontouchstart' in document;
+
+    // This is for making it touch and mouse available hybrid laptops
+    var hasMouse = 'onmousedown' in document;
 
     /**
      * Detect CSS pointer-events property
@@ -52,7 +55,9 @@
 
     function Plugin(element, options)
     {
-        this.w  = $(window);
+        // The below code is original, and hence was failing IE7 and 8 as window has no mousedown and up events
+        // this.w  = $(window);
+        this.w  = $(document);
         this.el = $(element);
         this.options = $.extend({}, defaults, options);
         this.init();
@@ -98,18 +103,34 @@
                     }
                     handle = handle.closest('.' + list.options.handleClass);
                 }
-                if (!handle.length || list.dragEl || (!hasTouch && e.button !== 0) || (hasTouch && e.touches.length !== 1)) {
+                // This is original, e.button definitions are different in IE7 and 8 browsers 
+                // Also made condition to handle touch and mouse available hybrid laptops
+
+                // if (!handle.length || list.dragEl || (!hasTouch && e.button !== 0) || (hasTouch && e.touches.length !== 1)) {
+                if (!handle.length || list.dragEl || (!hasTouch && e.button && e.button > 1) || (hasTouch && e.touches && e.touches.length !== 1)) {
                     return;
                 }
                 e.preventDefault();
-                list.dragStart(hasTouch ? e.touches[0] : e);
+
+                // list.dragStart(hasTouch ? e.touches[0] : e);
+                if (hasTouch && hasMouse) {
+                    list.dragStart(e.touches ? e.touches[0] : e);
+                } else {
+                    list.dragStart(hasTouch ? e.touches[0] : e);
+                }
             };
 
             var onMoveEvent = function(e)
             {
                 if (list.dragEl) {
                     e.preventDefault();
-                    list.dragMove(hasTouch ? e.touches[0] : e);
+                    
+                    //list.dragMove(hasTouch ? e.touches[0] : e);
+                    if (hasTouch && hasMouse) {
+                        list.dragMove(e.touches ? e.touches[0] : e);
+                    } else {
+                        list.dragMove(hasTouch ? e.touches[0] : e);
+                    }
                 }
             };
 
@@ -117,19 +138,41 @@
             {
                 if (list.dragEl) {
                     e.preventDefault();
-                    list.dragStop(hasTouch ? e.touches[0] : e);
+                    
+                    //list.dragStop(hasTouch ? e.touches[0] : e);
+                    if (hasTouch && hasMouse) {
+                        list.dragStop(e.touches ? e.touches[0] : e);
+                    } else {
+                        list.dragStop(hasTouch ? e.touches[0] : e);
+                    }
                 }
             };
+
+            // In order to support touch and mouse available hybrid laptops
+            // we need to listen for both touch and mouse events
+
+            // if (hasTouch) {
+            //     list.el[0].addEventListener(eStart, onStartEvent, false);
+            //     window.addEventListener(eMove, onMoveEvent, false);
+            //     window.addEventListener(eEnd, onEndEvent, false);
+            //     window.addEventListener(eCancel, onEndEvent, false);
+            // } else {
+            //     list.el.on(eStart, onStartEvent);
+            //     list.w.on(eMove, onMoveEvent);
+            //     list.w.on(eEnd, onEndEvent);
+            // }
 
             if (hasTouch) {
                 list.el[0].addEventListener(eStart, onStartEvent, false);
                 window.addEventListener(eMove, onMoveEvent, false);
                 window.addEventListener(eEnd, onEndEvent, false);
                 window.addEventListener(eCancel, onEndEvent, false);
-            } else {
-                list.el.on(eStart, onStartEvent);
-                list.w.on(eMove, onMoveEvent);
-                list.w.on(eEnd, onEndEvent);
+            }
+
+            if (hasMouse) {
+                list.el.on('mousedown', onStartEvent);
+                list.w.on('mousemove', onMoveEvent);
+                list.w.on('mouseup', onEndEvent);
             }
 
         },
