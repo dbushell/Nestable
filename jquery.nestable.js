@@ -4,7 +4,7 @@
  */
 ;(function($, window, document, undefined)
 {
-    var hasTouch = 'ontouchstart' in window;
+    var hasTouch = 'ontouchstart' in document;
 
     /**
      * Detect CSS pointer-events property
@@ -47,7 +47,7 @@
 
     function Plugin(element, options)
     {
-        this.w  = $(window);
+        this.w  = $(document);
         this.el = $(element);
         this.options = $.extend({}, defaults, options);
         this.init();
