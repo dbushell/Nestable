@@ -93,6 +93,7 @@
                     }
                     handle = handle.closest('.' + list.options.handleClass);
                 }
+
                 if (!handle.length || list.dragEl) {
                     return;
                 }
