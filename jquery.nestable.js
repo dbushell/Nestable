@@ -38,6 +38,7 @@
             placeClass      : 'dd-placeholder',
             noDragClass     : 'dd-nodrag',
             emptyClass      : 'dd-empty',
+            emptyText       : '',
             expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
@@ -447,7 +448,7 @@
                     this.unsetParent(parent.parent());
                 }
                 if (!this.dragRootEl.find(opt.itemNodeName).length) {
-                    this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
+                    this.dragRootEl.append('<div class="' + opt.emptyClass + '">' + opt.emptyText + '</div>');
                 }
                 // parent root list has changed
                 if (isNewRoot) {
