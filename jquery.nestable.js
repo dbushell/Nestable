@@ -134,6 +134,7 @@
             list.w.on('mousemove', onMoveEvent);
             list.w.on('mouseup', onEndEvent);
 
+            list.options.init(list.el);
         },
 
         serialize: function()
