@@ -82,6 +82,9 @@
                 if (action === 'expand') {
                     list.expandItem(item);
                 }
+                
+                e.preventDefault();
+                
             });
 
             var onStartEvent = function(e)
