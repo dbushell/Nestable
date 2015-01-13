@@ -42,7 +42,8 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            expanded        : true
         };
 
     function Plugin(element, options)
@@ -237,7 +238,13 @@
                 li.prepend($(this.options.expandBtnHTML));
                 li.prepend($(this.options.collapseBtnHTML));
             }
-            li.children('[data-action="expand"]').hide();
+
+            if (this.options.expanded) {
+                li.children('[data-action="expand"]').hide();
+            }
+            else {
+                li.addClass(this.options.collapsedClass).children('[data-action="collapse"]').hide();
+            }
         },
 
         unsetParent: function(li)
