@@ -292,7 +292,7 @@
             this.placeEl.replaceWith(el);
 
             this.dragEl.remove();
-            this.el.trigger('change');
+            el.trigger('change');
             if (this.hasNewRoot) {
                 this.dragRootEl.trigger('change');
             }
