@@ -65,9 +65,15 @@
 
             list.placeEl = $('<div class="' + list.options.placeClass + '"/>');
 
-            $.each(this.el.find(list.options.itemNodeName), function(k, el) {
+            // All list items
+            var items = this.el.find(list.options.itemNodeName);
+
+            $.each(items, function(k, el) {
                 list.setParent($(el));
             });
+
+            // Append the .dd-empty div if the list dont have any items on init
+            if(!items.length) { this.appendEmptyElement(this.el); }
 
             list.el.on('click', 'button', function(e) {
                 if (list.dragEl) {
@@ -447,7 +453,7 @@
                     this.unsetParent(parent.parent());
                 }
                 if (!this.dragRootEl.find(opt.itemNodeName).length) {
-                    this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
+                    this.appendEmptyElement(this.dragRootEl);
                 }
                 // parent root list has changed
                 if (isNewRoot) {
@@ -455,6 +461,14 @@
                     this.hasNewRoot = this.el[0] !== this.dragRootEl[0];
                 }
             }
+        },
+        /**
+         * Append the .dd-empty div to the list so it can be populated and styled
+         *
+         * @param  {element} element The list to apppend the empty div
+         */
+        appendEmptyElement: function(element) {
+            element.append('<div class="' + this.options.emptyClass + '"/>');
         }
 
     };
