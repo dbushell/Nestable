@@ -38,6 +38,7 @@
             placeClass      : 'dd-placeholder',
             noDragClass     : 'dd-nodrag',
             emptyClass      : 'dd-empty',
+            cursor          : 'move',
             expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
@@ -269,6 +270,9 @@
             dragItem[0].parentNode.removeChild(dragItem[0]);
             dragItem.appendTo(this.dragEl);
 
+            this._bodyCursor = $(document.body).css('cursor');
+            $(document.body).css('cursor', this.options.cursor);
+
             $(document.body).append(this.dragEl);
             this.dragEl.css({
                 'left' : e.pageX - mouse.offsetX,
@@ -290,6 +294,9 @@
             var el = this.dragEl.children(this.options.itemNodeName).first();
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
+
+            $(document.body).css('cursor', this._bodyCursor);
+            delete this._bodyCursor;
 
             this.dragEl.remove();
             this.el.trigger('change');
