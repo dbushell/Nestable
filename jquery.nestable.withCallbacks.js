@@ -3,9 +3,8 @@
  * Dual-licensed under the BSD or MIT licenses
  *
  * Modified(1 April 2015):
- * 		Added 2 callbacks
- * 			afterInit
- * 			onStartEvent
+ * 		Added 4 callbacks
+ * 			afterInit, onStartEvent, onMoveEvent, onEndEvent
  */
 ;(function($, window, document, undefined)
 {
@@ -51,6 +50,8 @@
             /* callback */
             afterInit: null,
             onStartEvent: null,
+            onMoveEvent: null,
+            onEndEvent: null,
         };
 
     function Plugin(element, options)
@@ -125,6 +126,10 @@
                 if (list.dragEl) {
                     e.preventDefault();
                     list.dragMove(e.touches ? e.touches[0] : e);
+                    /* callback for onMoveEvent */
+                    if (typeof this.options.onMoveEvent == 'function') {
+                    	this.options.onMoveEvent.call(e);
+                    }
                 }
             };
 
@@ -133,6 +138,10 @@
                 if (list.dragEl) {
                     e.preventDefault();
                     list.dragStop(e.touches ? e.touches[0] : e);
+                    /* callback for onEndEvent */
+                    if (typeof this.options.onEndEvent == 'function') {
+                    	this.options.onEndEvent.call(e);
+                    }
                 }
             };
 
