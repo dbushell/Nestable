@@ -3,8 +3,9 @@
  * Dual-licensed under the BSD or MIT licenses
  *
  * Modified(1 April 2015):
- * 		Added 4 callbacks
- * 			afterInit, onStartEvent, onMoveEvent, onEndEvent
+ * 		Added 2 callbacks
+ * 			afterInit
+ * 			onStartEvent
  */
 ;(function($, window, document, undefined)
 {
@@ -113,8 +114,8 @@
                 }
 
                 /* callback for onStartEvent */
-                if (typeof this.options.onStartEvent == 'function') {
-                	this.options.onStartEvent.call(e);
+                if (typeof list.options.onStartEvent == 'function') {
+                	list.options.onStartEvent.call(list, e);
                 }
 
                 e.preventDefault();
@@ -127,8 +128,8 @@
                     e.preventDefault();
                     list.dragMove(e.touches ? e.touches[0] : e);
                     /* callback for onMoveEvent */
-                    if (typeof this.options.onMoveEvent == 'function') {
-                    	this.options.onMoveEvent.call(e);
+                    if (typeof list.options.onMoveEvent == 'function') {
+                    	list.options.onMoveEvent.call(list, e);
                     }
                 }
             };
@@ -139,8 +140,8 @@
                     e.preventDefault();
                     list.dragStop(e.touches ? e.touches[0] : e);
                     /* callback for onEndEvent */
-                    if (typeof this.options.onEndEvent == 'function') {
-                    	this.options.onEndEvent.call(e);
+                    if (typeof list.options.onEndEvent == 'function') {
+                    	list.options.onEndEvent.call(list, e);
                     }
                 }
             };
@@ -157,7 +158,7 @@
             list.w.on('mouseup', onEndEvent);
 
             /* callback for init () */
-            if (typeof this.options.afterInit == 'function') {
+            if (typeof list.options.afterInit == 'function') {
             	list.options.afterInit.call(list);
             }
         },
