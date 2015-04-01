@@ -1,6 +1,11 @@
 /*!
  * Nestable jQuery Plugin - Copyright (c) 2012 David Bushell - http://dbushell.com/
  * Dual-licensed under the BSD or MIT licenses
+ *
+ * Modified(1 April 2015):
+ * 		Added 2 callbacks
+ * 			afterInit
+ * 			onStartEvent
  */
 ;(function($, window, document, undefined)
 {
@@ -42,7 +47,10 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            /* callback */
+            afterInit: null,
+            onStartEvent: null,
         };
 
     function Plugin(element, options)
@@ -103,6 +111,11 @@
                     return;
                 }
 
+                /* callback for onStartEvent */
+                if (typeof this.options.onStartEvent == 'function') {
+                	this.options.onStartEvent.call(e);
+                }
+
                 e.preventDefault();
                 list.dragStart(e.touches ? e.touches[0] : e);
             };
@@ -134,6 +147,10 @@
             list.w.on('mousemove', onMoveEvent);
             list.w.on('mouseup', onEndEvent);
 
+            /* callback for init () */
+            if (typeof this.options.afterInit == 'function') {
+            	list.options.afterInit.call(list);
+            }
         },
 
         serialize: function()
