@@ -165,9 +165,8 @@
             list.w.on('mousemove', onMoveEvent);
             list.w.on('mouseup', onEndEvent);
 
-			/* callback for init () */
+			/* callback for afterInit */
             if (typeof list.options.afterInit == 'function') {
-            	console.log(list);
             	list.options.afterInit.call(window, this);
             }
         },
