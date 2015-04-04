@@ -94,6 +94,7 @@
             var onStartEvent = function(e)
             {
                 var handle = $(e.target);
+
                 if (!handle.hasClass(list.options.handleClass)) {
                     if (handle.closest('.' + list.options.noDragClass).length) {
                         return;
@@ -110,16 +111,19 @@
                     return;
                 }
 
+               	/* callback for dragJustBeforeStart */
+                list.el.trigger('dragJustBeforeStart', [list]);
+
                 e.preventDefault();
                 list.dragStart(e.touches ? e.touches[0] : e);
 
-				/* callback for dragStart */
+                /* callback for dragStart */
                 var item = list.dragEl.find('.'+list.options.itemClass);
                 list.dragRootEl.trigger('dragStart', [
                 	list,
                     item,           // List item
                     list.el,        // Source list
-                    list.dragRootEl // Destination list
+                    list.dragRootEl, // Destination list
                 ]);
             };
 
