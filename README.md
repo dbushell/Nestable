@@ -8,19 +8,20 @@ Original can be found here: https://github.com/dbushell/Nestable
 ## Example
 ```
 $('#example-list-element').nestable({
-	afterInit: function () {
-		console.log('afterInit');
-	},
-	onStartEvent: function ( _event ) {
-		console.log('onStartEvent',_event);
-	},
-	onMoveEvent: function ( _event ) {
-		console.log('onMoveEvent',_event);
-	},
-	onEndEvent: function ( _event ) {
-		console.log('onEndEvent',_event);
-	},
-});
+	'maxDepth': 3,
+	afterInit: function ( event ) { 
+		console.log( event ); 
+	}
+})
+	.on('dragStart', function(event, item, source, destination) {
+		console.log('dragStart', item, source, destination);
+	})
+	.on('dragEnd', function(event, item, source, destination) {
+		console.log('dragEnd', item, source, destination);
+	})
+	.on('dragMove', function(event, item, source, destination) {
+		console.log('dragMove', item, source, destination);
+	});
 ```
 * * *
 
