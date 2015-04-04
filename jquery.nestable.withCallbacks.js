@@ -50,9 +50,6 @@
             threshold       : 20,
             /* callback */
             afterInit: null,
-            onStartEvent: null,
-            onMoveEvent: null,
-            onEndEvent: null,
         };
 
     function Plugin(element, options)
@@ -113,13 +110,16 @@
                     return;
                 }
 
-                /* callback for onStartEvent */
-                if (typeof list.options.onStartEvent == 'function') {
-                	list.options.onStartEvent.call(list, e);
-                }
-
                 e.preventDefault();
                 list.dragStart(e.touches ? e.touches[0] : e);
+
+				/* callback for dragStart */
+                var item = list.dragEl.find('.'+list.options.itemClass);
+                list.dragRootEl.trigger('dragStart', [
+                    item,           // List item
+                    list.el,        // Source list
+                    list.dragRootEl // Destination list
+                ]);
             };
 
             var onMoveEvent = function(e)
@@ -127,10 +127,13 @@
                 if (list.dragEl) {
                     e.preventDefault();
                     list.dragMove(e.touches ? e.touches[0] : e);
-                    /* callback for onMoveEvent */
-                    if (typeof list.options.onMoveEvent == 'function') {
-                    	list.options.onMoveEvent.call(list, e);
-                    }
+                    /* callback for dragMove */
+                    var item = list.dragEl.find('.'+list.options.itemClass);
+                    list.dragRootEl.trigger('dragMove', [
+                        item,           // List item
+                        list.el,        // Source list
+                        list.dragRootEl // Destination list
+                    ]);
                 }
             };
 
@@ -138,11 +141,16 @@
             {
                 if (list.dragEl) {
                     e.preventDefault();
+
+                    /* callback for dragEnd */
+                    var item = list.dragEl.find('.'+list.options.itemClass);
+                    list.dragRootEl.trigger('dragEnd', [
+                        item,           // List item
+                        list.el,        // Source list
+                        list.dragRootEl // Destination list
+                    ]);
+
                     list.dragStop(e.touches ? e.touches[0] : e);
-                    /* callback for onEndEvent */
-                    if (typeof list.options.onEndEvent == 'function') {
-                    	list.options.onEndEvent.call(list, e);
-                    }
                 }
             };
 
@@ -157,9 +165,10 @@
             list.w.on('mousemove', onMoveEvent);
             list.w.on('mouseup', onEndEvent);
 
-            /* callback for init () */
+			/* callback for init () */
             if (typeof list.options.afterInit == 'function') {
-            	list.options.afterInit.call(list);
+            	console.log(list);
+            	list.options.afterInit.call(window, this);
             }
         },
 
