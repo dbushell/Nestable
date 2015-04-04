@@ -13,8 +13,8 @@ $('#example-list-element').nestable({
 		console.log( event ); 
 	}
 })
-	.on('dragJustBeforeStart', function(event) {
-		console.log('dragStart', event);
+	.on('dragJustBeforeStart', function(handle) {
+		console.log('dragStart', handle);
 	})
 	.on('dragStart', function(event, item, source, destination) {
 		console.log('dragStart', event, item, source, destination);
