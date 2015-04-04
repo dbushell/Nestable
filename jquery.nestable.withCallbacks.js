@@ -121,8 +121,7 @@
                 var item = list.dragEl.find('.'+list.options.itemClass);
                 list.dragRootEl.trigger('dragStart', [
                     item,           // List item
-                    list.el,        // Source list
-                    list.dragRootEl, // Destination list
+                    list.el        // Source list
                 ]);
             };
 
