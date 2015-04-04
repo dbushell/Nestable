@@ -8,7 +8,6 @@ Original can be found here: https://github.com/dbushell/Nestable
 ## Example
 ```
 $('#example-list-element').nestable({
-	'maxDepth': 3,
 	afterInit: function ( event ) { 
 		console.log( event ); 
 	}
