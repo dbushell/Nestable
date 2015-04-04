@@ -16,14 +16,14 @@ $('#example-list-element').nestable({
 	.on('dragJustBeforeStart', function(handle) {
 		console.log('dragStart', handle);
 	})
-	.on('dragStart', function(event, item, source, destination) {
-		console.log('dragStart', event, item, source, destination);
+	.on('dragStart', function(event, item, source) {
+		console.log('dragStart', event, item, source);
 	})
 	.on('dragEnd', function(event, item, source, destination) {
 		console.log('dragEnd', event, item, source, destination);
 	})
 	.on('dragMove', function(event, item, source, destination) {
-		console.log('dragMove', event, item, source, destination);
+		console.log('dragMove', event, item, source);
 	});
 ```
 * * *
