@@ -95,6 +95,9 @@
             {
                 var handle = $(e.target);
 
+               	/* callback for dragJustBeforeStart */
+                list.el.trigger('dragJustBeforeStart', [handle]);
+
                 if (!handle.hasClass(list.options.handleClass)) {
                     if (handle.closest('.' + list.options.noDragClass).length) {
                         return;
@@ -111,16 +114,12 @@
                     return;
                 }
 
-               	/* callback for dragJustBeforeStart */
-                list.el.trigger('dragJustBeforeStart', [list]);
-
                 e.preventDefault();
                 list.dragStart(e.touches ? e.touches[0] : e);
 
                 /* callback for dragStart */
                 var item = list.dragEl.find('.'+list.options.itemClass);
                 list.dragRootEl.trigger('dragStart', [
-                	list,
                     item,           // List item
                     list.el,        // Source list
                     list.dragRootEl, // Destination list
@@ -135,7 +134,6 @@
                     /* callback for dragMove */
                     var item = list.dragEl.find('.'+list.options.itemClass);
                     list.dragRootEl.trigger('dragMove', [
-                    	list,
                         item,           // List item
                         list.el,        // Source list
                         list.dragRootEl // Destination list
@@ -151,7 +149,6 @@
                     /* callback for dragEnd */
                     var item = list.dragEl.find('.'+list.options.itemClass);
                     list.dragRootEl.trigger('dragEnd', [
-                    	list,
                         item,           // List item
                         list.el,        // Source list
                         list.dragRootEl // Destination list
