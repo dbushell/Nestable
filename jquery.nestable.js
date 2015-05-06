@@ -5,7 +5,7 @@
  * Modified :
  * 		Added a few callbacks
  * 			afterInit
- * 			dragJustBeforeStart
+ * 			beforeDragStart
  *			dragStart
  *			beforeDragEnd
  *			dragEnd
@@ -99,8 +99,8 @@
 			{
 				var handle = $(e.target);
 
-				/* callback for dragJustBeforeStart */
-				list.el.trigger('dragJustBeforeStart', [handle]);
+				/* callback for beforeDragStart */
+				list.el.trigger('beforeDragStart', [handle]);
 
 				if (!handle.hasClass(list.options.handleClass)) {
 					if (handle.closest('.' + list.options.noDragClass).length) {
