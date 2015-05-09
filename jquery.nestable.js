@@ -100,7 +100,10 @@
 				var handle = $(e.target);
 
 				/* callback for beforeDragStart */
-				list.el.trigger('beforeDragStart', [handle]);
+				list.el.trigger('beforeDragStart', [
+					item,           // List item
+					list.el        // Source list
+				]);
 
 				if (!handle.hasClass(list.options.handleClass)) {
 					if (handle.closest('.' + list.options.noDragClass).length) {
