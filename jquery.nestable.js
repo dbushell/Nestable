@@ -38,12 +38,13 @@
             placeClass      : 'dd-placeholder',
             noDragClass     : 'dd-nodrag',
             emptyClass      : 'dd-empty',
+            origPosClass    : 'dd-origpos',
             expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
             threshold       : 20,
-            onDrop          : function (item) {}
+            onDrop          : function (item) { return false; }
         };
 
     function Plugin(element, options)
@@ -250,9 +251,10 @@
 
         dragStart: function(e)
         {
-            var mouse    = this.mouse,
-                target   = $(e.target),
-                dragItem = target.closest(this.options.itemNodeName);
+            var mouse       = this.mouse,
+                target      = $(e.target),
+                dragItemPos = target.closest(this.options.itemNodeName),
+                dragItem    = dragItemPos.clone();
 
             this.placeEl.css('height', dragItem.height());
 
@@ -266,8 +268,11 @@
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
 
-            dragItem.after(this.placeEl);
-            dragItem[0].parentNode.removeChild(dragItem[0]);
+            // Replace the (actual) original item with a placeholder item (locateable by our origPosClass).
+            // This way, we'll know where the item was (after dropping).
+            dragItemPos.replaceWith("<li class='" + this.options.origPosClass + "'></li>");
+            dragItemPos.after(this.placeEl);
+
             dragItem.appendTo(this.dragEl);
 
             $(document.body).append(this.dragEl);
@@ -293,13 +298,29 @@
             this.placeEl.replaceWith(el);
 
             this.dragEl.remove();
-            this.el.trigger('change');
-            if (this.hasNewRoot) {
-                this.dragRootEl.trigger('change');
+
+            // Did we revert? (Callback function, return true = revert)
+            // If so, find the origPosClass (attached to our placeholder) and replace it with out original item.
+            if (this.options.onDrop(el)) {
+                this.dragRootEl.find("." + this.options.origPosClass).replaceWith(el);
+            } else {
+                // Looks like we're not reverting.. Let's remove the placeholder (and if neccessary, it's parent)
+                placeholder = this.dragRootEl.find("." + this.options.origPosClass);
+                parentList = placeholder.parent();
+                placeholder.remove();
+
+                // Hm, no children? Let's give the unset function another chance.
+                // This will not remove the 'parent of our parent' as the name suggests, but it will remove our (now) empty list ('the' parent)
+                if (!parentList.children().length) {
+                    this.unsetParent(parentList.parent());
+                }
+                this.el.trigger('change');
+                if (this.hasNewRoot) {
+                    this.dragRootEl.trigger('change');
+                }
             }
+
             this.reset();
-            
-            this.options.onDrop(el);
         },
 
         dragMove: function(e)
@@ -362,7 +383,7 @@
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
                 // increase horizontal level if previous sibling exists and is not collapsed
-                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
+                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass) && !prev.hasClass(opt.origPosClass)) {
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached
