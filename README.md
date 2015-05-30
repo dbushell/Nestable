@@ -95,6 +95,7 @@ These advanced config options are also available:
 
 ### 30th May 2015
 * Added revert-to-original-position functionality to previously introduced `onDrop`.
+* Added minified version for easier usage.
 
 ### 3rd December 2014
 * Added functionality to `onDrop` (introduced by `ohaag/Nestable`)
