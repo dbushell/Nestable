@@ -38,12 +38,13 @@
             placeClass      : 'dd-placeholder',
             noDragClass     : 'dd-nodrag',
             emptyClass      : 'dd-empty',
+            origPosClass    : 'dd-origpos',
             expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
             threshold       : 20,
-            onDrop          : function (item) {}
+            onDrop          : function (item) { return true; }
         };
 
     function Plugin(element, options)
@@ -193,6 +194,7 @@
             this.dragEl     = null;
             this.dragRootEl = null;
             this.dragDepth  = 0;
+            this.origPos    = null;
             this.hasNewRoot = false;
             this.pointEl    = null;
         },
@@ -254,6 +256,7 @@
                 target   = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName);
 
+            this.origPos = dragItem.after("<div class='" + this.options.origPosClass + "'></div>").next();
             this.placeEl.css('height', dragItem.height());
 
             mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
@@ -291,15 +294,21 @@
             var el = this.dragEl.children(this.options.itemNodeName).first();
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
-
             this.dragEl.remove();
-            this.el.trigger('change');
-            if (this.hasNewRoot) {
-                this.dragRootEl.trigger('change');
+
+            if (!!this.options.onDrop(el)) {
+                this.origPos.remove();
+
+                this.el.trigger('change');
+                if (this.hasNewRoot) {
+                    this.dragRootEl.trigger('change');
+                }
+            } else {
+                this.origPos.replaceWith(el.clone());
+                el.remove();
             }
+
             this.reset();
-            
-            this.options.onDrop(el);
         },
 
         dragMove: function(e)
