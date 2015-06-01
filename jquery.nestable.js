@@ -256,7 +256,7 @@
                 target   = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName);
 
-            this.origPos = dragItem.after("<div class='" + this.options.origPosClass + "'></div>").next();
+            this.origPos = dragItem.after("<li class='" + this.options.origPosClass + "'></li>").next();
             this.placeEl.css('height', dragItem.height());
 
             mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
@@ -297,7 +297,11 @@
             this.dragEl.remove();
 
             if (!!this.options.onDrop(el)) {
+                parent = this.origPos.parent();
                 this.origPos.remove();
+                if (!parent.children().length) {
+                    this.unsetParent(parent.parent());
+                }
 
                 this.el.trigger('change');
                 if (this.hasNewRoot) {
@@ -371,7 +375,7 @@
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
                 // increase horizontal level if previous sibling exists and is not collapsed
-                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
+                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass) && !prev.hasClass(opt.origPosClass)) {
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached
