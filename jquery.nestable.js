@@ -86,25 +86,27 @@
 
             var onStartEvent = function(e)
             {
-                var handle = $(e.target);
-                if (!handle.hasClass(list.options.handleClass)) {
-                    if (handle.closest('.' + list.options.noDragClass).length) {
+                if (e.which == 1) {
+                    var handle = $(e.target);
+                    if (!handle.hasClass(list.options.handleClass)) {
+                        if (handle.closest('.' + list.options.noDragClass).length) {
+                            return;
+                        }
+                        handle = handle.closest('.' + list.options.handleClass);
+                    }
+
+                    if (!handle.length || list.dragEl) {
                         return;
                     }
-                    handle = handle.closest('.' + list.options.handleClass);
-                }
 
-                if (!handle.length || list.dragEl) {
-                    return;
-                }
+                    list.isTouch = /^touch/.test(e.type);
+                    if (list.isTouch && e.touches.length !== 1) {
+                        return;
+                    }
 
-                list.isTouch = /^touch/.test(e.type);
-                if (list.isTouch && e.touches.length !== 1) {
-                    return;
-                }
-
-                e.preventDefault();
-                list.dragStart(e.touches ? e.touches[0] : e);
+                    e.preventDefault();
+                    list.dragStart(e.touches ? e.touches[0] : e);
+                };
             };
 
             var onMoveEvent = function(e)
