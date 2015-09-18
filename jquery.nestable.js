@@ -42,7 +42,9 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            clone           : false,
+            insertable      : true
         };
 
     function Plugin(element, options)
@@ -62,6 +64,7 @@
             list.reset();
 
             list.el.data('nestable-group', this.options.group);
+            list.el.data('nestable-insertable', this.options.insertable);
 
             list.placeEl = $('<div class="' + list.options.placeClass + '"/>');
 
@@ -265,9 +268,16 @@
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
 
-            dragItem.after(this.placeEl);
-            dragItem[0].parentNode.removeChild(dragItem[0]);
-            dragItem.appendTo(this.dragEl);
+            if(this.options.insertable){
+                dragItem.after(this.placeEl);
+            }
+            if(this.options.clone){
+                dragItem.clone().appendTo(this.dragEl);
+            } else {
+                /* appendTo(obj) also remove obj
+                dragItem[0].parentNode.removeChild(dragItem[0]); */
+                dragItem.appendTo(this.dragEl);
+            }
 
             $(document.body).append(this.dragEl);
             this.dragEl.css({
@@ -415,6 +425,10 @@
             // find parent list of item under cursor
             var pointElRoot = this.pointEl.closest('.' + opt.rootClass),
                 isNewRoot   = this.dragRootEl.data('nestable-id') !== pointElRoot.data('nestable-id');
+
+            if(!pointElRoot.data('nestable-insertable')) {
+                return;
+            }
 
             /**
              * move vertical
