@@ -1,0 +1,33 @@
+{
+  "name": "nestable-fork",
+  "version": "1.0.0",
+  "homepage": "https://github.com/ozdemirburak/nestable-fork",
+  "authors": [
+    "Burak Ozdemir <https://github.com/ozdemirburak>",
+    "Ramon Smit <@_RamonSmit>",
+    "David Bushell <@dbushell>"
+  ],
+  "main": "./dist",
+  "description": "Drag & drop hierarchical list with mouse and touch compatibility",
+  "main": ["jquery.nestable.js", "jquery.nestable.css"],
+  "keywords": [
+    "jquery",
+    "tree",
+    "list",
+    "sortable",
+    "nestable",
+    "drag",
+    "drop"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "jquery": ">= 1.7.2"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

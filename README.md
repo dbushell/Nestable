@@ -1,9 +1,10 @@
 Nestable
 ========
 
-### Drag & drop hierarchical list with mouse and touch compatibility
+Just another fork of Nestable jQuery plugin developed by David Bushell then updated by Ramon Smit who deleted the repository later.
 
-Just another fork of <a href="https://github.com/dbushell/Nestable">Nestable jQuery plugin developed by David Bushell</a>
+This covers the latest version. Some features may be added in the near future.
+
 [**Try Nestable Demo**](http://dbushell.github.com/Nestable/)
 
 ## Usage
@@ -53,7 +54,7 @@ You can get a serialised object with all `data-*` attributes for each item.
 The serialised JSON for the example above would be:
 
     [{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]
-    
+
 You can get a hierarchical nested set model like below.
 
     $('.dd').nestable('asNestedSet');
