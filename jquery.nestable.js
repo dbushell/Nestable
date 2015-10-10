@@ -42,7 +42,8 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            autoCollapseClass  : 'dd-auto-collapse'
         };
 
     function Plugin(element, options)
@@ -202,6 +203,18 @@
             li.children('[data-action="expand"]').hide();
             li.children('[data-action="collapse"]').show();
             li.children(this.options.listNodeName).show();
+
+            var autoCollapse = li.hasClass(this.options.autoCollapseClass);
+            if(autoCollapse) {
+                var neiphbors = li.siblings().not(li).not('.dd-collapsed');
+                var listNodeName = this.options.listNodeName;
+                neiphbors.addClass(this.options.collapsedClass);
+                neiphbors.each(function(){
+                    $(this).children('[data-action="collapse"]').hide();
+                    $(this).children('[data-action="expand"]').show();
+                    $(this).children(listNodeName).hide();
+                });
+            }
         },
 
         collapseItem: function(li)
