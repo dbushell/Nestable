@@ -432,8 +432,6 @@
                 var currentDepth = this.placeEl.parents(opt.listNodeName).length;
                 depth = this.dragDepth - 1 + this.pointEl.parents(opt.listNodeName).length;
 
-                console.log("depth", currentDepth, depth);
-
                 if (depth > opt.maxDepth) {
                     return;
                 }
