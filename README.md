@@ -7,6 +7,16 @@ This covers the latest version. Some features may be added in the near future.
 
 [**Try Nestable Demo**](http://dbushell.github.com/Nestable/)
 
+## Installation
+
+Via bower:
+
+    $ bower install --save nestable-fork
+
+Via npm:
+
+    $ npm install --save nestable-fork
+
 ## Usage
 
 Write your nested HTML lists like so:
@@ -95,10 +105,16 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 6th January 2016
+
+* [ozdemirburak] IE CSS Fix
+* [ozdemirburak] Added npm installation.
+
 ### 25th September 2015
 
 * [ozdemirburak] Fork of disappeared repository of Ramon Smit
 * [ozdemirburak] Added asNestedSet method.
+* [ozdemirburak] Added bower installation.
 
 ### 6th October 2014
 
