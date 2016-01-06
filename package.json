@@ -2,16 +2,13 @@
   "name": "nestable-fork",
   "version": "1.0.2",
   "description": "Drag & drop hierarchical list with mouse and touch compatibility",
-  "main": [
-    "dist/jquery.nestable.min.js",
-    "dist/jquery.nestable.min.css"
-  ],
+  "main": "./dist/jquery.nestable.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ozdemirburak/Nestable.git"
   },
   "devDependencies": {
-    "jquery": ">= 1.7.2"
+    "jquery": ">=1.7.2"
   },
   "keywords": [
     "jquery",
