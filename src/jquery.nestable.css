@@ -171,5 +171,5 @@
   cursor: move;
   background: #f6f6f6;
   background: linear-gradient(to bottom, #fff 0, #f6f6f6 47%, #ededed 100%);
-  filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed', GradientType=0)
+  filter: "progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed', GradientType=0)";
 }
