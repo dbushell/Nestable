@@ -141,6 +141,11 @@
 
             var onStartEvent = function(e) {
                 var handle = $(e.target);
+                
+                if (handle.hasClass(list.options.noDragClass)) {
+					return;
+				}
+                
                 if(!handle.hasClass(list.options.handleClass)) {
                     if(handle.closest('.' + list.options.noDragClass).length) {
                         return;
