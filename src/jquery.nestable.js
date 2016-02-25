@@ -142,19 +142,17 @@
             var onStartEvent = function(e) {
                 var handle = $(e.target);
                 
-                if (handle.hasClass(list.options.noDragClass)) {
-					return;
-				}
-                
-                if(!handle.hasClass(list.options.handleClass)) {
+                if (!handle.hasClass(list.options.handleClass)) {
                     if(handle.closest('.' + list.options.noDragClass).length) {
                         return;
                     }
                     handle = handle.closest('.' + list.options.handleClass);
                 }
-                if(!handle.length || list.dragEl || (!hasTouch && e.which !== 1) || (hasTouch && e.touches.length !== 1)) {
+
+                if (handle.hasClass(list.options.noDragClass) || !handle.length || list.dragEl || (!hasTouch && e.which !== 1) || (hasTouch && e.touches.length !== 1)) {
                     return;
                 }
+
                 e.preventDefault();
                 list.dragStart(hasTouch ? e.touches[0] : e);
             };
