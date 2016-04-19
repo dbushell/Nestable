@@ -87,6 +87,8 @@ These advanced config options are also available:
 **Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
 
 ## Change Log
+### 10th October 2015
+* support auto-collapse on itemNode. auto collapse others itemNode.
 
 ### 15th October 2012
 
