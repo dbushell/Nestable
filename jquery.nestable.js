@@ -142,9 +142,8 @@
             }
             var list = this,
                 opt = list.options,
-                new_el = $('<li class="' + opt.itemClass + '" ><div class="' + opt.handleClass + '"></div></li>');
-
-            new_el.find('.'+opt.handleClass).text(el.text);
+                new_el = $('<'+opt.listNodeName+'>');
+            new_el.addClass(opt.itemClass).append($('<div>').addClass(opt.handleClass).text(el.text));
             new_el.attr('data-id', el.id);
             for (var key in el) {
                 if (el.hasOwnProperty(key) && key != 'id' && key != 'text'){
