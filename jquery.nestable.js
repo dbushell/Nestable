@@ -136,6 +136,68 @@
 
         },
 
+        
+
+        add: function(el)
+        {
+            if(!el.id || !el.text) {
+                return;
+            }
+            var list = this;
+            if(el.parent) {
+                list.addChild(el);
+            }
+            else {
+                var new_el = $('<'+list.options.itemNodeName+'>');
+                new_el.addClass(list.options.itemClass).append($('<div>').addClass(list.options.handleClass).text(el.text));
+                new_el.attr('data-id', el.id);
+                for (var key in el) {
+                    if (el.hasOwnProperty(key) && key != 'id' && key != 'text') {
+                        new_el.attr('data-'+key, el[key]);
+                    }
+                }
+                list.el.children('.' + list.options.listClass).first().append(new_el);
+            }
+        },
+
+        addChild: function(child){
+            var list = this;
+            var new_item = $('<'+list.options.itemNodeName+'>');
+            new_item.addClass(list.options.itemClass).append($('<div>').addClass(list.options.handleClass).text(child.text));
+            new_item.attr('data-id', child.id);
+            for (var key in child) {
+                if (child.hasOwnProperty(key) && key != 'id' && key != 'text'){
+                    new_item.attr('data-'+key, child[key]);
+                }
+            }
+            $.each(list.el.find(list.options.itemNodeName), function(k, el) {
+                if($(el).attr('data-id') == child.parent){
+                    if($(el).children(list.options.listNodeName).length){
+                        $(el).find(list.options.listNodeName).append(new_item);
+                    }
+                    else{
+                        var new_list = $('<'+list.options.listNodeName+'>').addClass(list.options.listClass);
+                        new_list.append(new_item);
+                        $(el).append(new_list);
+                        list.setParent($(el));
+                    }
+                    return;
+                }
+            });
+
+        },
+
+        remove: function(id)
+        {
+            var list = this;
+            $.each(list.el.find(list.options.itemNodeName), function(k, el) {
+                if($(el).attr('data-id') == id){
+                    $(el).remove();
+                    return;
+                }
+            });
+        },
+
         serialize: function()
         {
             var data,
@@ -473,7 +535,11 @@
                 $(this).data("nestable-id", new Date().getTime());
             } else {
                 if (typeof params === 'string' && typeof plugin[params] === 'function') {
-                    retval = plugin[params]();
+                    if (typeof val !== 'undefined') {
+                        retval = plugin[params](val);
+                    }else{
+                        retval = plugin[params]();
+                    }
                 }
             }
         });
