@@ -194,6 +194,7 @@
             this.dragEl     = null;
             this.dragRootEl = null;
             this.dragDepth  = 0;
+            this.dragLevel  = 0;
             this.hasNewRoot = false;
             this.pointEl    = null;
         },
@@ -269,8 +270,8 @@
             mouse.startX = mouse.lastX = e.pageX;
             mouse.startY = mouse.lastY = e.pageY;
 
+            this.dragLevel = dragItem.parents(this.options.listNodeName).length;
             this.dragRootEl = this.el;
-
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
 
@@ -443,26 +444,27 @@
                     return;
                 }
                 // check depth limit
-                var currentDepth = this.placeEl.parents(opt.listNodeName).length;
+                var currentLevel = this.pointEl.parents(opt.listNodeName).length;
                 depth = this.dragDepth - 1 + this.pointEl.parents(opt.listNodeName).length;
 
                 if (depth > opt.maxDepth) {
                     return;
                 }
-
-                if (!opt.allowIncrease && currentDepth < depth) {
+                if (!opt.allowIncrease && this.dragLevel < currentLevel) {
                     return;
                 }
-                
-                if (!opt.allowDecrease && currentDepth > depth) {
+                if (!opt.allowDecrease && this.dragLevel > currentLevel && (this.dragLevel - currentLevel != 1)) {
+                    return;
+                }
+                if ((!opt.allowDecrease || !opt.allowIncrease) && (this.dragLevel - currentLevel == 1)) {
                     // set parent for currently hovered element
                     list = this.pointEl.find(opt.listNodeName).last();
                     if (!list.length) {
                         list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
+                        list.append(this.placeEl);
+                        this.pointEl.append(list);
+                        this.setParent(this.pointEl);
                     }
-                    list.append(this.placeEl);
-                    this.pointEl.append(list);
-                    this.setParent(this.pointEl);
                     
                     // unset parent for previously hovered element
                     if (prev != undefined && this.isParent(prev) && prev.find(opt.listNodeName).children().length == 0) {
