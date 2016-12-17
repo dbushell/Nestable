@@ -156,6 +156,8 @@ p { line-height: 1.5em; }
 
     <div class="cf nestable-lists">
 
+        <p>The first example contains a rejection rule to prevent the user from dropping items into first-level children of the Nestable</p>
+
         <div class="dd" id="nestable">
             <ol class="dd-list">
                 <li class="dd-item" data-id="1">
@@ -269,9 +271,17 @@ $(document).ready(function()
     };
 
     // activate Nestable for list 1
-    $('#nestable').nestable({
-        group: 1
-    })
+	$('#nestable').nestable({
+		reject: [{
+			rule: function(draggedElement) { // The this object refers to dragRootEl i.e. the nestable root element. The drag action is cancelled if this function returns true
+				return $(draggedElement).parentsUntil('.dd', 'ol').length <= 1; // The rule here is that it is forbidden drag elements to first-level children
+			},
+			action: function(draggedElement) { // This optional function defines what to do when such a rule applies
+				alert('You can\'t do that !');
+			}
+		}
+		]
+	})
     .on('change', updateOutput);
 
     // activate Nestable for list 2
