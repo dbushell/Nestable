@@ -1,0 +1,11 @@
+{
+	"name": "kosikcz/jquery-nestable",
+	"description": "Drag & drop hierarchical list with mouse and touch compatibility",
+	"homepage": "http://dbushell.github.io/Nestable",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "David Bushell",
+		}
+	]
+}
