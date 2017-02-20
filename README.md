@@ -1,6 +1,8 @@
 Nestable
 ========
 
+[![npm][npm-image]][npm-url] [![downloads][downloads-image]][npm-url]
+
 Just another fork of Nestable jQuery plugin developed by David Bushell then updated by Ramon Smit who deleted the repository later.
 
 This covers the latest version. Some features may be added in the near future.
@@ -166,6 +168,20 @@ These advanced config options are also available:
 * Updated CSS class structure with options for `listClass` and `itemClass`.
 * Fixed to allow drag and drop between multiple Nestable instances (off by default).
 * Added `group` option to enabled the above.
+
+## Generating Minified Files
+
+Install node and npm following one of the techniques explained within 
+this [link](https://gist.github.com/isaacs/579814) and run the commands below.
+
+``` bash
+$ npm install --global gulp-cli && npm install
+$ gulp
+```
+
+[downloads-image]: https://img.shields.io/npm/dm/nestable-fork.svg
+[npm-image]: https://img.shields.io/npm/v/nestable-fork.svg
+[npm-url]: https://www.npmjs.com/package/nestable-fork
 
 * * *
 
