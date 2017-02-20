@@ -105,6 +105,10 @@ These advanced config options are also available:
 
 ## Change Log
 
+### 20th February 2017
+
+* [ozdemirburak] Support Hash ID
+
 ### 6th January 2016
 
 * [ozdemirburak] IE CSS Fix
