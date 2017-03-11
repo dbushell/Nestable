@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<title>Nestable</title>
+<link rel="stylesheet" href="../src/jquery.nestable.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a target="_blank" href="https://github.com/ozdemirburak/Nestable"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<h1>Nestable</h1>
+<p>Just another fork of <a href="https://github.com/dbushell/Nestable">Nestable jQuery plugin developed by David Bushell</a></p>
+
+<p>Drag &amp; drop hierarchical list with mouse and touch compatibility (jQuery plugin)</p>
+
+<menu id="nestable-menu">
+    <button type="button" data-action="expand-all">Expand All</button>
+    <button type="button" data-action="collapse-all">Collapse All</button>
+</menu>
+
+<div class="cf nestable-lists">
+
+    <div class="dd" id="nestable"></div>
+
+    <div class="dd" id="nestable2">
+        <ol class="dd-list">
+            <li class="dd-item" data-id="10">
+                <div class="dd-handle">Item 10</div>
+            </li>
+            <li class="dd-item" data-id="11">
+                <div class="dd-handle">Item 11</div>
+            </li>
+            <li class="dd-item" data-id="12">
+                <div class="dd-handle">Item 12</div>
+                <ol class="dd-list">
+                    <li class="dd-item" data-id="13">
+                        <div class="dd-handle">Item 13</div>
+                    </li>
+                    <li class="dd-item" data-id="14">
+                        <div class="dd-handle">Item 14</div>
+                    </li>
+                    <li class="dd-item" data-id="15">
+                        <div class="dd-handle">Item 15</div>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+</div>
+<p><strong>Serialised Output (per list)</strong></p>
+<textarea class="textarea-output" id="nestable-output"></textarea>
+<textarea class="textarea-output" id="nestable2-output"></textarea>
+
+<p><strong>Nested List Output (per list)</strong></p>
+<textarea class="textarea-output" id="nestable-output-array"></textarea>
+<textarea class="textarea-output" id="nestable2-output-array"></textarea>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="../src/jquery.nestable.js"></script>
+<script>
+    $(function() {
+        var updateOutput = function(e, method) {
+            var list = e.length ? e : $(e.target),
+                    output = list.data('output'),
+                    value  = window.JSON ? window.JSON.stringify(list.nestable(method)) : 'JSON support is required.';
+            output.val(value);
+        };
+
+        var json = [
+            {
+                "id": 1,
+                "content": "Item 1"
+            },
+            {
+                "id": 2,
+                "content": "Item 2",
+                "children": [
+                    {
+                        "id": 3,
+                        "content": "Item 3"
+                    },
+                    {
+                        "id": 4,
+                        "content": "Item 4"
+                    },
+                    {
+                        "id": 5,
+                        "content": "Item 5",
+                        "children": [
+                            {
+                                "id": 6,
+                                "content": "Item 6"
+                            },
+                            {
+                                "id": 7,
+                                "content": "Item 7"
+                            },
+                            {
+                                "id": 8,
+                                "content": "Item 8"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 9,
+                "content": "Item 9"
+            }
+        ];
+
+        // activate Nestable for list 1
+        $('#nestable').nestable({
+            group: 1,
+            json: json,
+            contentCallback: function(item) {
+                var content = item.content || '' ? item.content : item.id;
+                content += ' <i>(id = ' + item.id + ')</i>';
+                return content;
+            }
+        }).on('change', updateOutput);
+
+        // activate Nestable for list 2
+        $('#nestable2').nestable({
+            group: 1
+        }).on('change', updateOutput);
+
+        // output initial serialised data
+        updateOutput($('#nestable').data('output', $('#nestable-output')), 'serialize');
+        updateOutput($('#nestable2').data('output', $('#nestable2-output')), 'serialize');
+        // asNestedSet
+        updateOutput($('#nestable').data('output', $('#nestable-output-array')), 'asNestedSet');
+        updateOutput($('#nestable2').data('output', $('#nestable2-output-array')), 'asNestedSet');
+
+        $('#nestable-menu').on('click', function(e) {
+            var target = $(e.target),
+                action = target.data('action');
+            if(action === 'expand-all') {
+                $('.dd').nestable('expandAll');
+            }
+            if(action === 'collapse-all') {
+                $('.dd').nestable('collapseAll');
+            }
+        });
+
+    });
+</script>
+</body>
+</html>
