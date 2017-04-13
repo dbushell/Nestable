@@ -140,7 +140,7 @@
 
         add: function(el)
         {
-            if(!el.id || !el.text) {
+            if(!el || !el.id || !el.text) {
                 return;
             }
             var list = this;
