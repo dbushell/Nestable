@@ -42,7 +42,8 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            onDrop          : function (item) {}
         };
 
     function Plugin(element, options)
@@ -297,6 +298,8 @@
                 this.dragRootEl.trigger('change');
             }
             this.reset();
+            
+            this.options.onDrop(el);
         },
 
         dragMove: function(e)
