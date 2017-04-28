@@ -165,6 +165,98 @@
         {
             return this.serialize();
         },
+        
+        toHierarchy: function(options) {
+
+            var o = $.extend({}, this.options, options),
+                sDepth = o.startDepthCount || 0,
+                ret = [];
+
+            $(this.element).children(o.items).each(function() {
+                var level = _recursiveItems(this);
+                ret.push(level);
+            });
+
+            return ret;
+
+            function _recursiveItems(item) {
+                var id = ($(item).attr(o.attribute || 'id') || '').match(o.expression || (/(.+)[-=_](.+)/));
+                if (id) {
+                    var currentItem = {
+                        "id": id[2]
+                    };
+                    if ($(item).children(o.listType).children(o.items).length > 0) {
+                        currentItem.children = [];
+                        $(item).children(o.listType).children(o.items).each(function() {
+                            var level = _recursiveItems(this);
+                            currentItem.children.push(level);
+                        });
+                    }
+                    return currentItem;
+                }
+            }
+        },
+
+        toArray: function() {
+
+            var o = $.extend({}, this.options, this),
+                sDepth = o.startDepthCount || 0,
+                ret = [],
+                left = 2,
+                list = this,
+                element = list.el.find(list.options.listNodeName).first();
+
+            var items = element.children(list.options.itemNodeName);
+            items.each(function() {
+                left = _recursiveArray($(this), sDepth + 1, left);
+            });
+
+            ret = ret.sort(function(a, b) {
+                return (a.left - b.left);
+            });
+
+            return ret;
+            
+            function _recursiveArray(item, depth, left) {
+
+                var right = left + 1,
+                    id,
+                    pid;
+                var new_item = item.children(o.options.listNodeName).children(o.options.itemNodeName); /// .data()
+
+                if (item.children(o.options.listNodeName).children(o.options.itemNodeName).length > 0) {
+                    depth++;
+                    item.children(o.options.listNodeName).children(o.options.itemNodeName).each(function() {
+                        right = _recursiveArray($(this), depth, right);
+                    });
+                    depth--;
+                }
+                
+                id = item.data().id;
+                
+                if (depth === sDepth + 1) {
+                    pid = o.rootID;
+                } else {
+                    var parentItem = (item.parent(o.options.listNodeName)
+                        .parent(o.options.itemNodeName)
+                        .data());
+                    pid = parentItem.id;
+                }
+                
+                if (id) {
+                    ret.push({
+                        "id": id,
+                        "parent_id": pid,
+                        "depth": depth,
+                        "left": left,
+                        "right": right
+                    });
+                }
+                left = right + 1;
+                return left;
+            }
+
+        },
 
         reset: function()
         {
