@@ -27,23 +27,25 @@
     })();
 
     var defaults = {
-            listNodeName    : 'ol',
-            itemNodeName    : 'li',
-            rootClass       : 'dd',
-            listClass       : 'dd-list',
-            itemClass       : 'dd-item',
-            dragClass       : 'dd-dragel',
-            handleClass     : 'dd-handle',
-            collapsedClass  : 'dd-collapsed',
-            placeClass      : 'dd-placeholder',
-            noDragClass     : 'dd-nodrag',
-            emptyClass      : 'dd-empty',
-            expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
-            collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
-            group           : 0,
-            maxDepth        : 5,
-            threshold       : 20
-        };
+        listNodeName    : 'ol',
+        itemNodeName    : 'li',
+        rootClass       : 'dd',
+        listClass       : 'dd-list',
+        itemClass       : 'dd-item',
+        dragClass       : 'dd-dragel',
+        handleClass     : 'dd-handle',
+        collapsedClass  : 'dd-collapsed',
+        placeClass      : 'dd-placeholder',
+        noDragClass     : 'dd-nodrag',
+        emptyClass      : 'dd-empty',
+        expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
+        collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
+        group           : 0,
+        maxDepth        : 5,
+        threshold       : 20,
+        allowDecrease   : true,
+        allowIncrease   : true
+    };
 
     function Plugin(element, options)
     {
@@ -141,22 +143,22 @@
             var data,
                 depth = 0,
                 list  = this;
-                step  = function(level, depth)
+            step  = function(level, depth)
+            {
+                var array = [ ],
+                    items = level.children(list.options.itemNodeName);
+                items.each(function()
                 {
-                    var array = [ ],
-                        items = level.children(list.options.itemNodeName);
-                    items.each(function()
-                    {
-                        var li   = $(this),
-                            item = $.extend({}, li.data()),
-                            sub  = li.children(list.options.listNodeName);
-                        if (sub.length) {
-                            item.children = step(sub, depth + 1);
-                        }
-                        array.push(item);
-                    });
-                    return array;
-                };
+                    var li   = $(this),
+                        item = $.extend({}, li.data()),
+                        sub  = li.children(list.options.listNodeName);
+                    if (sub.length) {
+                        item.children = step(sub, depth + 1);
+                    }
+                    array.push(item);
+                });
+                return array;
+            };
             data = step(list.el.find(list.options.listNodeName).first(), depth);
             return data;
         },
@@ -358,8 +360,9 @@
                 // reset move distance on x-axis for new phase
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
+
                 // increase horizontal level if previous sibling exists and is not collapsed
-                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
+                if (opt.allowIncrease && mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached
@@ -378,8 +381,9 @@
                         }
                     }
                 }
+
                 // decrease horizontal level
-                if (mouse.distX < 0) {
+                if (opt.allowDecrease && mouse.distX < 0) {
                     // we can't decrease a level if an item preceeds the current one
                     next = this.placeEl.next(opt.itemNodeName);
                     if (!next.length) {
@@ -425,12 +429,24 @@
                     return;
                 }
                 // check depth limit
+                var currentDepth = this.placeEl.parents(opt.listNodeName).length;
                 depth = this.dragDepth - 1 + this.pointEl.parents(opt.listNodeName).length;
+
                 if (depth > opt.maxDepth) {
                     return;
                 }
+
+                if(!opt.allowDecrease && currentDepth > depth){
+                    return;
+                }
+
+                if(!opt.allowIncrease && currentDepth + 1 < depth){
+                    return;
+                }
+
+
                 var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
-                    parent = this.placeEl.parent();
+                parent = this.placeEl.parent();
                 // if empty create new list to replace empty placeholder
                 if (isEmpty) {
                     list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
