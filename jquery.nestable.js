@@ -134,6 +134,7 @@
             list.w.on('mousemove', onMoveEvent);
             list.w.on('mouseup', onEndEvent);
 
+            list.options.init(list.el);
         },
 
         serialize: function()
@@ -237,7 +238,12 @@
                 li.prepend($(this.options.expandBtnHTML));
                 li.prepend($(this.options.collapseBtnHTML));
             }
-            li.children('[data-action="expand"]').hide();
+
+            if (li.hasClass(this.options.collapsedClass)) {
+                li.children('[data-action="collapse"]').hide();
+            } else {
+                li.children('[data-action="expand"]').hide();
+            }
         },
 
         unsetParent: function(li)
@@ -272,7 +278,7 @@
             $(document.body).append(this.dragEl);
             this.dragEl.css({
                 'left' : e.pageX - mouse.offsetX,
-                'top'  : e.pageY - mouse.offsetY
+                'top'  : e.pageY - mouse.offsetY - 30.0
             });
             // total depth of dragging item
             var i, depth,
@@ -307,7 +313,7 @@
 
             this.dragEl.css({
                 'left' : e.pageX - mouse.offsetX,
-                'top'  : e.pageY - mouse.offsetY
+                'top'  : e.pageY - mouse.offsetY - 30.0
             });
 
             // mouse position last events
