@@ -1,0 +1,25 @@
+{
+  "name": "nestable",
+  "description": "Nestable is an experimental example and not under active development. If it suits your requirements feel free to expand upon it!",
+  "keywords": [
+    "drag",
+    "drop",
+    "mouse",
+    "hierarchical list",
+    "jQuery"
+  ],
+  "homepage": "http://dbushell.github.io/Nestable/",
+  "author": {
+    "name": "David Bushell",
+    "url": "http://dbushell.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blueimp/JavaScript-Load-Image.git"
+  },
+  "bugs": "https://github.com/blueimp/JavaScript-Load-Image/issues",
+  "licenses": [
+    "MIT",
+    "BSD"
+  ]
+}
