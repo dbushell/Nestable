@@ -43,6 +43,30 @@ Then activate with jQuery like so:
 
     $('.dd').nestable({ /* config options */ });
 
+### Callbacks
+
+The `onDrop` callback function is called when the dragged element is dropped.
+The dropped element is passed in parameter in his current state.
+
+When `true` is returned in this callback, dropping at the current location is allowed.
+When `false` is returned, the item is returned to it's original pick-up position.
+This allows custom logic that can 'deny' a dropping. For example:
+
+    $('.dd').nestable({
+        onDrop: function (item) {
+            var existingBrand = false;
+            item.siblings().each(function () {
+                if ($(this).data("brand") == item.data("brand")) {
+                    existingBrand = true;
+                    alert('"' + item.data("brand") + '" is already in this sublist!');
+                }
+            });
+            return !existingBrand;
+        }
+    });
+
+Please note that the `change` event is only fired when a dropping is allowed (return `true`).
+
 ### Events
 
 The `change` event is fired when items are reordered.
@@ -80,12 +104,22 @@ These advanced config options are also available:
 * `collapsedClass` The class applied to lists that have been collapsed (default `'dd-collapsed'`)
 * `placeClass` The class of the placeholder element (default `'dd-placeholder'`)
 * `emptyClass` The class used for empty list placeholder elements (default `'dd-empty'`)
+* `origPosClass` The class used for the item's original position placeholder (default `'dd-origpos'`)
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand></button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse">Collapse</button>'`)
+* `onDrop` callback function used when the dragged element is dropped (default `function (item) { return true; }`).
 
 **Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
 
 ## Change Log
+
+### 1st June 2015
+
+* Added allowing/denying of dropping an item at it's current position by using the (previously implemented) `onDrop` callback.
+
+### 3rd December 2014
+
+* Added `onDrop` callback function which is called when the dragged element is dropped.
 
 ### 15th October 2012
 
