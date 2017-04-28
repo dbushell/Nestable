@@ -27,23 +27,25 @@
     })();
 
     var defaults = {
-            listNodeName    : 'ol',
-            itemNodeName    : 'li',
-            rootClass       : 'dd',
-            listClass       : 'dd-list',
-            itemClass       : 'dd-item',
-            dragClass       : 'dd-dragel',
-            handleClass     : 'dd-handle',
-            collapsedClass  : 'dd-collapsed',
-            placeClass      : 'dd-placeholder',
-            noDragClass     : 'dd-nodrag',
-            emptyClass      : 'dd-empty',
-            expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
-            collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
-            group           : 0,
-            maxDepth        : 5,
-            threshold       : 20
-        };
+        listNodeName    : 'ol',
+        itemNodeName    : 'li',
+        rootClass       : 'dd',
+        listClass       : 'dd-list',
+        itemClass       : 'dd-item',
+        dragClass       : 'dd-dragel',
+        handleClass     : 'dd-handle',
+        collapsedClass  : 'dd-collapsed',
+        placeClass      : 'dd-placeholder',
+        noDragClass     : 'dd-nodrag',
+        emptyClass      : 'dd-empty',
+        expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
+        collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
+        group           : 0,
+        maxDepth        : 5,
+        threshold       : 20,
+        allowDecrease   : true,
+        allowIncrease   : true
+    };
 
     function Plugin(element, options)
     {
@@ -140,7 +142,7 @@
         {
             var data,
                 depth = 0,
-                list  = this;
+                list  = this,
                 step  = function(level, depth)
                 {
                     var array = [ ],
@@ -192,6 +194,7 @@
             this.dragEl     = null;
             this.dragRootEl = null;
             this.dragDepth  = 0;
+            this.dragLevel  = 0;
             this.hasNewRoot = false;
             this.pointEl    = null;
         },
@@ -231,13 +234,20 @@
             });
         },
 
+        isParent: function(li)
+        {
+            return (li.find('button[data-action]').length != 0);
+        },
+        
         setParent: function(li)
         {
-            if (li.children(this.options.listNodeName).length) {
-                li.prepend($(this.options.expandBtnHTML));
-                li.prepend($(this.options.collapseBtnHTML));
+            if (!this.isParent(li)) {
+                if (li.children(this.options.listNodeName).length) {
+                    li.prepend($(this.options.expandBtnHTML));
+                    li.prepend($(this.options.collapseBtnHTML));
+                }
+                li.children('[data-action="expand"]').hide();
             }
-            li.children('[data-action="expand"]').hide();
         },
 
         unsetParent: function(li)
@@ -260,8 +270,8 @@
             mouse.startX = mouse.lastX = e.pageX;
             mouse.startY = mouse.lastY = e.pageY;
 
+            this.dragLevel = dragItem.parents(this.options.listNodeName).length;
             this.dragRootEl = this.el;
-
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
 
@@ -358,8 +368,9 @@
                 // reset move distance on x-axis for new phase
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
+
                 // increase horizontal level if previous sibling exists and is not collapsed
-                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
+                if (opt.allowIncrease && mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached
@@ -378,8 +389,9 @@
                         }
                     }
                 }
+
                 // decrease horizontal level
-                if (mouse.distX < 0) {
+                if (opt.allowDecrease && mouse.distX < 0) {
                     // we can't decrease a level if an item preceeds the current one
                     next = this.placeEl.next(opt.itemNodeName);
                     if (!next.length) {
@@ -420,17 +432,50 @@
              * move vertical
              */
             if (!mouse.dirAx || isNewRoot || isEmpty) {
+            	// get previously hovered element based on direction of mouse movement
+                if (mouse.dirY == 1) {
+                    prev = this.pointEl.prev(opt.itemNodeName);
+                } else if (mouse.dirY == -1) {
+                    prev = this.pointEl.next(opt.itemNodeName);
+                }
+                
                 // check if groups match if dragging over new root
                 if (isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
                     return;
                 }
                 // check depth limit
+                var currentLevel = this.pointEl.parents(opt.listNodeName).length;
                 depth = this.dragDepth - 1 + this.pointEl.parents(opt.listNodeName).length;
+
                 if (depth > opt.maxDepth) {
                     return;
                 }
+                if (!opt.allowIncrease && this.dragLevel < currentLevel) {
+                    return;
+                }
+                if (!opt.allowDecrease && this.dragLevel > currentLevel && (this.dragLevel - currentLevel != 1)) {
+                    return;
+                }
+                if ((!opt.allowDecrease || !opt.allowIncrease) && (this.dragLevel - currentLevel == 1)) {
+                    // set parent for currently hovered element
+                    list = this.pointEl.find(opt.listNodeName).last();
+                    if (!list.length) {
+                        list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
+                        list.append(this.placeEl);
+                        this.pointEl.append(list);
+                        this.setParent(this.pointEl);
+                    }
+                    
+                    // unset parent for previously hovered element
+                    if (prev != undefined && this.isParent(prev) && prev.find(opt.listNodeName).children().length == 0) {
+                        this.unsetParent(prev);
+                    }
+                    
+                    return;
+                }
+
                 var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
-                    parent = this.placeEl.parent();
+                parent = this.placeEl.parent();
                 // if empty create new list to replace empty placeholder
                 if (isEmpty) {
                     list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
