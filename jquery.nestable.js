@@ -446,7 +446,7 @@
                 if (!parent.children().length) {
                     this.unsetParent(parent.parent());
                 }
-                if (!this.dragRootEl.find(opt.itemNodeName).length) {
+                if (!this.dragRootEl.find(opt.itemNodeName).length && !this.dragRootEl.find('.' + opt.emptyClass).length) {
                     this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
                 }
                 // parent root list has changed
