@@ -82,6 +82,16 @@ These advanced config options are also available:
 * `emptyClass` The class used for empty list placeholder elements (default `'dd-empty'`)
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand></button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse">Collapse</button>'`)
+* `dropCallback` The callback method which is called when an item has been successfully moved. It has 1 argument: object with all details (default `null`)
+
+`dropCallback` details object:
+
+* `sourceId` - id of moved element
+* `destId` - id of destination parent or null if element was moved directly as root
+* `sourceEl` - whole moved element if you want to gather additional info about it
+* `destParent` - whole destination parent element (if root, then it returns direct container)
+* `destRoot` - contains destination group where element was dropped
+* `sourceRoot` - contains source group where element belonged to before user started dragging it
 
 **Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
 

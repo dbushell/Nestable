@@ -42,7 +42,12 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+
+            //method for call when an item has been successfully dropped
+            //method has 1 argument in which sends an object containing all
+            //necessary details
+            dropCallback    : null
         };
 
     function Plugin(element, options)
@@ -194,6 +199,7 @@
             this.dragDepth  = 0;
             this.hasNewRoot = false;
             this.pointEl    = null;
+            this.sourceRoot = null;
         },
 
         expandItem: function(li)
@@ -253,6 +259,7 @@
                 target   = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName);
 
+            this.sourceRoot = target.closest('.' + this.options.rootClass);
             this.placeEl.css('height', dragItem.height());
 
             mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
@@ -293,6 +300,25 @@
 
             this.dragEl.remove();
             this.el.trigger('change');
+
+            //Let's find out new parent id
+            var parentItem = el.parent().parent();
+            var parentId = null;
+            if(parentItem !== null && !parentItem.is('.' + this.options.rootClass))
+                parentId = parentItem.data('id');
+
+            if($.isFunction(this.options.dropCallback)) {
+              var details = {
+                sourceId   : el.data('id'),
+                destId     : parentId,
+                sourceEl   : el,
+                destParent : parentItem,
+                destRoot   : el.closest('.' + this.options.rootClass),
+                sourceRoot : this.sourceRoot
+              };
+              this.options.dropCallback.call(this, details);
+            }
+
             if (this.hasNewRoot) {
                 this.dragRootEl.trigger('change');
             }
