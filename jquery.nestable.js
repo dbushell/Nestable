@@ -147,9 +147,29 @@
                         items = level.children(list.options.itemNodeName);
                     items.each(function()
                     {
-                        var li   = $(this),
-                            item = $.extend({}, li.data()),
-                            sub  = li.children(list.options.listNodeName);
+                        var li = $(this);
+                        
+                        /*
+                         * Bug fix related to jQuery's .data() caching
+                         * see https://forum.jquery.com/topic/jquery-data-caching-of-data-attributes
+                         * 
+                         * The .data() method caches the initial 'data-' attribute values, so 
+                         * subsequent calls to serialize() would return the old data.  The right
+                         * approach to this is to get directly the DOM attribute values.
+                         */
+                        var data = {};
+                        [].forEach.call(li[0].attributes, function(attr) {
+                            if (/^data-/.test(attr.name)) {
+                                var camelCaseName = attr.name.substr(5).replace(/-(.)/g, function ($0, $1) {
+                                    return $1.toUpperCase();
+                                });
+                                data[camelCaseName] = attr.value;
+                            }
+                        });
+
+                        var item = $.extend({}, data);
+                        var sub  = li.children(list.options.listNodeName);
+                        
                         if (sub.length) {
                             item.children = step(sub, depth + 1);
                         }
