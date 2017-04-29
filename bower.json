@@ -1,0 +1,26 @@
+{
+  "name": "Nestable",
+  "version": "0.0.1",
+  "homepage": "http://dbushell.github.io/Nestable/",
+  "authors": [
+    "David Bushell <hi@dbushell.com>"
+  ],
+  "description": "Drag & drop hierarchical list with mouse and touch compatibility (jQuery plugin).",
+  "main": "./jquery.nestable.js",
+  "keywords": [
+    "drag",
+    "drop",
+    "jquery"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">= 1.7.2"
+  }
+}
