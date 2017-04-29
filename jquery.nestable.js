@@ -38,11 +38,13 @@
             placeClass      : 'dd-placeholder',
             noDragClass     : 'dd-nodrag',
             emptyClass      : 'dd-empty',
+            origPosClass    : 'dd-origpos',
             expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            onDrop          : function (item) { return true; }
         };
 
     function Plugin(element, options)
@@ -192,6 +194,7 @@
             this.dragEl     = null;
             this.dragRootEl = null;
             this.dragDepth  = 0;
+            this.origPos    = null;
             this.hasNewRoot = false;
             this.pointEl    = null;
         },
@@ -253,6 +256,7 @@
                 target   = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName);
 
+            this.origPos = dragItem.after("<li class='" + this.options.origPosClass + "'></li>").next();
             this.placeEl.css('height', dragItem.height());
 
             mouse.offsetX = e.offsetX !== undefined ? e.offsetX : e.pageX - target.offset().left;
@@ -290,12 +294,24 @@
             var el = this.dragEl.children(this.options.itemNodeName).first();
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
-
             this.dragEl.remove();
-            this.el.trigger('change');
-            if (this.hasNewRoot) {
-                this.dragRootEl.trigger('change');
+
+            if (!!this.options.onDrop(el)) {
+                parent = this.origPos.parent();
+                this.origPos.remove();
+                if (!parent.children().length) {
+                    this.unsetParent(parent.parent());
+                }
+
+                this.el.trigger('change');
+                if (this.hasNewRoot) {
+                    this.dragRootEl.trigger('change');
+                }
+            } else {
+                this.origPos.replaceWith(el.clone());
+                el.remove();
             }
+
             this.reset();
         },
 
@@ -359,7 +375,7 @@
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
                 // increase horizontal level if previous sibling exists and is not collapsed
-                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
+                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass) && !prev.hasClass(opt.origPosClass)) {
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached

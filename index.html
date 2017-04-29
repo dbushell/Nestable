@@ -258,6 +258,41 @@ p { line-height: 1.5em; }
                 </li>
             </ol>
         </div>
+    </div>
+
+    <div class="cf nestable-lists">
+
+        <p><strong>`onDrop` Callback (+ denying items to be dropped)</strong></p>
+
+        <p>
+            With the new onDrop callback, you can implement custom logic for when an item is dropped.
+            You can also deny items by returning false, which will make it return to it's original position.
+        </p>
+
+        <div class="dd" id="nestable4">
+            <ol class="dd-list">
+                <li data-brand="Mercedes" class="dd-item dd3-item" data-id="13">
+                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Mercedes</div>
+                </li>
+                <li data-brand="BMW" class="dd-item dd3-item" data-id="14">
+                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">BMW</div>
+                </li>
+                <li data-brand="Audi" class="dd-item dd3-item" data-id="15">
+                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Audi</div>
+                    <ol class="dd-list">
+                        <li data-brand="Tesla" class="dd-item dd3-item" data-id="16">
+                            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Tesla</div>
+                        </li>
+                        <li data-brand="BMW" class="dd-item dd3-item" data-id="17">
+                            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">BMW</div>
+                        </li>
+                        <li data-brand="Toyota" class="dd-item dd3-item" data-id="18">
+                            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Toyota</div>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
 
     </div>
 
@@ -310,6 +345,20 @@ $(document).ready(function()
     });
 
     $('#nestable3').nestable();
+
+    // `onDrop` Callback (+ denying items to be dropped)
+    $('#nestable4').nestable({
+        onDrop: function (item) {
+            var existingBrand = false;
+            item.siblings().each(function () {
+                if ($(this).data("brand") == item.data("brand")) {
+                    existingBrand = true;
+                    alert('"' + item.data("brand") + '" is already in this sublist!');
+                }
+            });
+            return !existingBrand;
+        }
+    });
 
 });
 </script>
