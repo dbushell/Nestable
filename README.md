@@ -60,6 +60,16 @@ You can get a serialised object with all `data-*` attributes for each item.
 The serialised JSON for the example above would be:
 
     [{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}]
+    
+You can add any item by passing an object. New item will be appended to the list.
+The `id` and `text` indexes are mandatory, while any other index found will be added as `data-*` attribute
+
+    $('.dd').nestable('add', {"id": "item-ID", "text": "Text Here"});
+    $('.dd').nestable('add', {"id": "item-ID", "text": "Text Here", "attribute": "attr-value", ...});
+
+This will result in the following serialized JSON:
+
+    [{"id":1},{"id":2},{"id":3,"children":[{"id":4},{"id":5}]}, {"id":"item-ID", "attribute": "attr-value"}]
 
 ### Configuration
 
