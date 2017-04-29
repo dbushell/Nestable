@@ -136,6 +136,23 @@
 
         },
 
+        add: function(el){
+            if(!el.id || !el.text){
+                return;
+            }
+            var list = this,
+                opt = list.options,
+                new_el = $('<'+opt.listNodeName+'>');
+            new_el.addClass(opt.itemClass).append($('<div>').addClass(opt.handleClass).text(el.text));
+            new_el.attr('data-id', el.id);
+            for (var key in el) {
+                if (el.hasOwnProperty(key) && key != 'id' && key != 'text'){
+                    new_el.attr('data-'+key, el[key]);
+                }
+            }
+            list.el.find(opt.itemNodeName).last().after(new_el);
+        },
+
         serialize: function()
         {
             var data,
@@ -473,7 +490,11 @@
                 $(this).data("nestable-id", new Date().getTime());
             } else {
                 if (typeof params === 'string' && typeof plugin[params] === 'function') {
-                    retval = plugin[params]();
+                    if (typeof val === 'object') {
+                        retval = plugin[params](val);
+                    }else{
+                        retval = plugin[params]();
+                    }
                 }
             }
         });
