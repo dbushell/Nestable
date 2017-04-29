@@ -43,6 +43,11 @@ Then activate with jQuery like so:
 
     $('.dd').nestable({ /* config options */ });
 
+### Callbacks
+
+The `onDrop` callback function is called when the dragged element is dropped.
+The dropped element is passed in parameter in his current state.
+
 ### Events
 
 The `change` event is fired when items are reordered.
@@ -82,10 +87,18 @@ These advanced config options are also available:
 * `emptyClass` The class used for empty list placeholder elements (default `'dd-empty'`)
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand></button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse">Collapse</button>'`)
+* `onDrop` callback function used when the dragged element is dropped (default `function (item) { return false; }`). When this returns true, the item is returned to it's original (`startDrag`) position. Defaults to false.
 
 **Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
 
 ## Change Log
+
+### 30th May 2015
+* Added revert-to-original-position functionality to previously introduced `onDrop`.
+* Added minified version for easier usage.
+
+### 3rd December 2014
+* Added functionality to `onDrop` (introduced by `ohaag/Nestable`)
 
 ### 15th October 2012
 
