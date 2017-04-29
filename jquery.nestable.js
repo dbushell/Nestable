@@ -42,7 +42,8 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            expanded        : false
         };
 
     function Plugin(element, options)
@@ -86,25 +87,27 @@
 
             var onStartEvent = function(e)
             {
-                var handle = $(e.target);
-                if (!handle.hasClass(list.options.handleClass)) {
-                    if (handle.closest('.' + list.options.noDragClass).length) {
+                if (e.which == 1) {
+                    var handle = $(e.target);
+                    if (!handle.hasClass(list.options.handleClass)) {
+                        if (handle.closest('.' + list.options.noDragClass).length) {
+                            return;
+                        }
+                        handle = handle.closest('.' + list.options.handleClass);
+                    }
+
+                    if (!handle.length || list.dragEl) {
                         return;
                     }
-                    handle = handle.closest('.' + list.options.handleClass);
-                }
 
-                if (!handle.length || list.dragEl) {
-                    return;
-                }
+                    list.isTouch = /^touch/.test(e.type);
+                    if (list.isTouch && e.touches.length !== 1) {
+                        return;
+                    }
 
-                list.isTouch = /^touch/.test(e.type);
-                if (list.isTouch && e.touches.length !== 1) {
-                    return;
-                }
-
-                e.preventDefault();
-                list.dragStart(e.touches ? e.touches[0] : e);
+                    e.preventDefault();
+                    list.dragStart(e.touches ? e.touches[0] : e);
+                };
             };
 
             var onMoveEvent = function(e)
@@ -237,7 +240,12 @@
                 li.prepend($(this.options.expandBtnHTML));
                 li.prepend($(this.options.collapseBtnHTML));
             }
-            li.children('[data-action="expand"]').hide();
+            if (this.options.expanded) {
+                li.children('[data-action="expand"]').hide();
+            }
+            else {
+                li.addClass(this.options.collapsedClass).children('[data-action="collapse"]').hide();
+            }
         },
 
         unsetParent: function(li)
