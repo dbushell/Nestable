@@ -1,0 +1,8 @@
+{
+  "name": "jquery-nestable",
+  "version": "0.0.1",
+  "main": "jquery.nestable.js",
+  "dependencies": [
+    "jquery": ">=1.7.2"
+  ]
+}
