@@ -251,7 +251,7 @@
         {
             var mouse    = this.mouse,
                 target   = $(e.target),
-                dragItem = target.closest(this.options.itemNodeName);
+                dragItem = target.closest('.' + this.options.handleClass).closest(this.options.itemNodeName);
 
             this.placeEl.css('height', dragItem.height());
 
