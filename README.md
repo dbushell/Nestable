@@ -76,6 +76,7 @@ These advanced config options are also available:
 * `listClass` The class of all list elements (default `'dd-list'`)
 * `itemClass` The class of all list item elements (default `'dd-item'`)
 * `dragClass` The class applied to the list element that is being dragged (default `'dd-dragel'`)
+* `noDragClass` The class applied to an element to prevent dragging (default `'dd-nodrag'`)
 * `handleClass` The class of the content element inside each list item (default `'dd-handle'`)
 * `collapsedClass` The class applied to lists that have been collapsed (default `'dd-collapsed'`)
 * `placeClass` The class of the placeholder element (default `'dd-placeholder'`)
