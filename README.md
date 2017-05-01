@@ -80,7 +80,7 @@ These advanced config options are also available:
 * `collapsedClass` The class applied to lists that have been collapsed (default `'dd-collapsed'`)
 * `placeClass` The class of the placeholder element (default `'dd-placeholder'`)
 * `emptyClass` The class used for empty list placeholder elements (default `'dd-empty'`)
-* `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand></button>'`)
+* `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand</button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse">Collapse</button>'`)
 
 **Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
