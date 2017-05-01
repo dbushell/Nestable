@@ -63,6 +63,8 @@ The serialised JSON for the example above would be:
 
 ### Configuration
 
+You can add `data-move-in` attribute to `item`, the value is a list no, which defined in `list` object, using `data-list-no` attribute, see example list-2, these item can only move up/down in theirs list range.
+
 You can change the follow options:
 
 * `maxDepth` number of levels an item can be nested (default `5`)
@@ -82,10 +84,23 @@ These advanced config options are also available:
 * `emptyClass` The class used for empty list placeholder elements (default `'dd-empty'`)
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand></button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse">Collapse</button>'`)
+* `enableHMove` Enable horizontal move or not, default is `true`
 
 **Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
 
 ## Change Log
+
+### 10th June 2014
+
+* add restore feature, it can restores the state of nestable list, it accepts serialized object and extract item state('opened' or 'closed'), usage: `$('#root').nestable().nestable('restore', serialized_obj)`
+
+### 9th June 2014
+
+* add `enableHMove` to options for enable horizontal move or not, default `true`
+
+### 7th June 2014
+
+* add `data-move-in` and `data-list-no` for `item` and `list`, `item` only can be move in that `list`
 
 ### 15th October 2012
 
