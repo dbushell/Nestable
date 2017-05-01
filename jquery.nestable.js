@@ -42,7 +42,8 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            maxItems		: null
         };
 
     function Plugin(element, options)
@@ -62,6 +63,7 @@
             list.reset();
 
             list.el.data('nestable-group', this.options.group);
+            list.el.data('nestable-max-items', this.options.maxItems);
 
             list.placeEl = $('<div class="' + list.options.placeClass + '"/>');
 
@@ -415,6 +417,13 @@
             // find parent list of item under cursor
             var pointElRoot = this.pointEl.closest('.' + opt.rootClass),
                 isNewRoot   = this.dragRootEl.data('nestable-id') !== pointElRoot.data('nestable-id');
+
+            // check item limit for destination (drop list)
+            itemsInDropList = pointElRoot.find(opt.itemNodeName).length;
+            maxItemsInDropList = pointElRoot.data('nestable-max-items');
+            if(maxItemsInDropList != null && itemsInDropList >= maxItemsInDropList){
+            	return;
+            }
 
             /**
              * move vertical
