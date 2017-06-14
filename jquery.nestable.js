@@ -4,7 +4,7 @@
  */
 ;(function($, window, document, undefined)
 {
-    var hasTouch = 'ontouchstart' in document;
+    var hasTouch = 'ontouchstart' in document;   
 
     /**
      * Detect CSS pointer-events property
