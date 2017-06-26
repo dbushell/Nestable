@@ -55,6 +55,8 @@
 
     Plugin.prototype = {
 
+        movedItem: null,
+
         init: function()
         {
             var list = this;
@@ -164,6 +166,10 @@
         serialise: function()
         {
             return this.serialize();
+        },
+
+        getMovedItem: function () {
+           return this.movedItem;
         },
 
         reset: function()
@@ -287,7 +293,8 @@
 
         dragStop: function(e)
         {
-            var el = this.dragEl.children(this.options.itemNodeName).first();
+            var el = this.movedItem = this.dragEl.children(this.options.itemNodeName).first();
+
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
 
