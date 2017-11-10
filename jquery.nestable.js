@@ -42,7 +42,8 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            moveHorizontally: true
         };
 
     function Plugin(element, options)
@@ -354,7 +355,7 @@
             /**
              * move horizontal
              */
-            if (mouse.dirAx && mouse.distAxX >= opt.threshold) {
+            if (mouse.dirAx && mouse.distAxX >= opt.threshold  && opt.moveHorizontally) {
                 // reset move distance on x-axis for new phase
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
@@ -422,6 +423,10 @@
             if (!mouse.dirAx || isNewRoot || isEmpty) {
                 // check if groups match if dragging over new root
                 if (isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
+                    return;
+                }
+                // check if you can move horizontally and restrict moving as parent or child
+                if (!opt.moveHorizontally && this.placeEl.parent().data('parent-id') !== this.pointEl.parent().data('parent-id')) {
                     return;
                 }
                 // check depth limit
