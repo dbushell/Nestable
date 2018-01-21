@@ -5,6 +5,7 @@
 ;(function($, window, document, undefined)
 {
     var hasTouch = 'ontouchstart' in document;
+    var nestableCopy;
 
     /**
      * Detect CSS pointer-events property
@@ -42,7 +43,8 @@
             collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
             group           : 0,
             maxDepth        : 5,
-            threshold       : 20
+            threshold       : 20,
+            reject          : []
         };
 
     function Plugin(element, options)
@@ -87,6 +89,9 @@
             var onStartEvent = function(e)
             {
                 var handle = $(e.target);
+
+                list.nestableCopy = handle.closest('.'+list.options.rootClass).clone(true);
+
                 if (!handle.hasClass(list.options.handleClass)) {
                     if (handle.closest('.' + list.options.noDragClass).length) {
                         return;
@@ -291,11 +296,29 @@
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
 
-            this.dragEl.remove();
-            this.el.trigger('change');
-            if (this.hasNewRoot) {
-                this.dragRootEl.trigger('change');
+            var i;
+            var isRejected = false;
+            for (i in this.options.reject) {
+              var reject = this.options.reject[i];
+              if (reject.rule.apply(this.dragRootEl, el)) {
+                var nestableDragEl = el.clone(true);
+                this.dragRootEl.html(this.nestableCopy.children().clone(true));
+                if (reject.action) {
+                  reject.action.apply(this.dragRootEl, [nestableDragEl]);
+                }
+
+                isRejected = true;
+                break;
+              }
             }
+
+            if (!isRejected) {
+              this.el.trigger('change');
+              if (this.hasNewRoot) {
+                  this.dragRootEl.trigger('change');
+              }
+            }
+            this.dragEl.remove();
             this.reset();
         },
 
