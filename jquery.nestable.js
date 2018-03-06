@@ -2,8 +2,7 @@
  * Nestable jQuery Plugin - Copyright (c) 2012 David Bushell - http://dbushell.com/
  * Dual-licensed under the BSD or MIT licenses
  */
-;
-(function($, window, document, undefined) {
+; (function ($, window, document, undefined) {
     var hasTouch = 'ontouchstart' in document;
 
     /**
@@ -11,7 +10,7 @@
      * events are normally disabled on the dragging element to avoid conflicts
      * https://github.com/ausi/Feature-detection-technique-for-pointer-events/blob/master/modernizr-pointerevents.js
      */
-    var hasPointerEvents = (function() {
+    var hasPointerEvents = (function () {
         var el = document.createElement('div'),
             docEl = document.documentElement;
         if (!('pointerEvents' in el.style)) {
@@ -41,7 +40,9 @@
         collapseBtnHTML: '<button data-action="collapse" type="button">Collapse</button>',
         group: 0,
         maxDepth: 5,
-        threshold: 20
+        threshold: 20,
+        allowDecrease: true,
+        allowIncrease: true
     };
 
     function Plugin(element, options) {
@@ -53,7 +54,7 @@
 
     Plugin.prototype = {
 
-        init: function() {
+        init: function () {
             var list = this;
 
             list.reset();
@@ -62,11 +63,11 @@
 
             list.placeEl = $('<div class="' + list.options.placeClass + '"/>');
 
-            $.each(this.el.find(list.options.itemNodeName), function(k, el) {
+            $.each(this.el.find(list.options.itemNodeName), function (k, el) {
                 list.setParent($(el));
             });
 
-            list.el.on('click', 'button', function(e) {
+            list.el.on('click', 'button', function (e) {
                 if (list.dragEl) {
                     return;
                 }
@@ -81,7 +82,7 @@
                 }
             });
 
-            var onStartEvent = function(e) {
+            var onStartEvent = function (e) {
                 var handle = $(e.target);
                 if (!handle.hasClass(list.options.handleClass)) {
                     if (handle.closest('.' + list.options.noDragClass).length) {
@@ -103,14 +104,14 @@
                 list.dragStart(e.touches ? e.touches[0] : e);
             };
 
-            var onMoveEvent = function(e) {
+            var onMoveEvent = function (e) {
                 if (list.dragEl) {
                     e.preventDefault();
                     list.dragMove(e.touches ? e.touches[0] : e);
                 }
             };
 
-            var onEndEvent = function(e) {
+            var onEndEvent = function (e) {
                 if (list.dragEl) {
                     e.preventDefault();
                     list.dragStop(e.touches ? e.touches[0] : e);
@@ -130,33 +131,33 @@
 
         },
 
-        serialize: function() {
+        serialize: function () {
             var data,
                 depth = 0,
-                list = this;
-            step = function(level, depth) {
-                var array = [],
-                    items = level.children(list.options.itemNodeName);
-                items.each(function() {
-                    var li = $(this),
-                        item = $.extend({}, li.data()),
-                        sub = li.children(list.options.listNodeName);
-                    if (sub.length) {
-                        item.children = step(sub, depth + 1);
-                    }
-                    array.push(item);
-                });
-                return array;
-            };
+                list = this,
+                step = function (level, depth) {
+                    var array = [],
+                        items = level.children(list.options.itemNodeName);
+                    items.each(function () {
+                        var li = $(this),
+                            item = $.extend({}, li.data()),
+                            sub = li.children(list.options.listNodeName);
+                        if (sub.length) {
+                            item.children = step(sub, depth + 1);
+                        }
+                        array.push(item);
+                    });
+                    return array;
+                };
             data = step(list.el.find(list.options.listNodeName).first(), depth);
             return data;
         },
 
-        serialise: function() {
+        serialise: function () {
             return this.serialize();
         },
 
-        reset: function() {
+        reset: function () {
             this.mouse = {
                 offsetX: 0,
                 offsetY: 0,
@@ -181,18 +182,19 @@
             this.dragEl = null;
             this.dragRootEl = null;
             this.dragDepth = 0;
+            this.dragLevel = 0;
             this.hasNewRoot = false;
             this.pointEl = null;
         },
 
-        expandItem: function(li) {
+        expandItem: function (li) {
             li.removeClass(this.options.collapsedClass);
             li.children('[data-action="expand"]').hide();
             li.children('[data-action="collapse"]').show();
             li.children(this.options.listNodeName).show();
         },
 
-        collapseItem: function(li) {
+        collapseItem: function (li) {
             var lists = li.children(this.options.listNodeName);
             if (lists.length) {
                 li.addClass(this.options.collapsedClass);
@@ -202,35 +204,41 @@
             }
         },
 
-        expandAll: function() {
+        expandAll: function () {
             var list = this;
-            list.el.find(list.options.itemNodeName).each(function() {
+            list.el.find(list.options.itemNodeName).each(function () {
                 list.expandItem($(this));
             });
         },
 
-        collapseAll: function() {
+        collapseAll: function () {
             var list = this;
-            list.el.find(list.options.itemNodeName).each(function() {
+            list.el.find(list.options.itemNodeName).each(function () {
                 list.collapseItem($(this));
             });
         },
 
-        setParent: function(li) {
-            if (li.children(this.options.listNodeName).length) {
-                li.prepend($(this.options.expandBtnHTML));
-                li.prepend($(this.options.collapseBtnHTML));
-            }
-            li.children('[data-action="expand"]').hide();
+        isParent: function (li) {
+            return (li.find('button[data-action]').length != 0);
         },
 
-        unsetParent: function(li) {
+        setParent: function (li) {
+            if (!this.isParent(li)) {
+                if (li.children(this.options.listNodeName).length) {
+                    li.prepend($(this.options.expandBtnHTML));
+                    li.prepend($(this.options.collapseBtnHTML));
+                }
+                li.children('[data-action="expand"]').hide();
+            }
+        },
+
+        unsetParent: function (li) {
             li.removeClass(this.options.collapsedClass);
             li.children('[data-action]').remove();
             li.children(this.options.listNodeName).remove();
         },
 
-        dragStart: function(e) {
+        dragStart: function (e) {
             var mouse = this.mouse,
                 target = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName);
@@ -242,8 +250,8 @@
             mouse.startX = mouse.lastX = e.pageX;
             mouse.startY = mouse.lastY = e.pageY;
 
+            this.dragLevel = dragItem.parents(this.options.listNodeName).length;
             this.dragRootEl = this.el;
-
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
 
@@ -267,7 +275,7 @@
             }
         },
 
-        dragStop: function(e) {
+        dragStop: function (e) {
             var el = this.dragEl.children(this.options.itemNodeName).first();
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
@@ -280,7 +288,7 @@
             this.reset();
         },
 
-        dragMove: function(e) {
+        dragMove: function (e) {
             var list, parent, prev, next, depth,
                 opt = this.options,
                 mouse = this.mouse;
@@ -338,8 +346,9 @@
                 // reset move distance on x-axis for new phase
                 mouse.distAxX = 0;
                 prev = this.placeEl.prev(opt.itemNodeName);
+
                 // increase horizontal level if previous sibling exists and is not collapsed
-                if (mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
+                if (opt.allowIncrease && mouse.distX > 0 && prev.length && !prev.hasClass(opt.collapsedClass)) {
                     // cannot increase level when item above is collapsed
                     list = prev.find(opt.listNodeName).last();
                     // check if depth limit has reached
@@ -358,8 +367,9 @@
                         }
                     }
                 }
+
                 // decrease horizontal level
-                if (mouse.distX < 0) {
+                if (opt.allowDecrease && mouse.distX < 0) {
                     // we can't decrease a level if an item preceeds the current one
                     next = this.placeEl.next(opt.itemNodeName);
                     if (!next.length) {
@@ -399,15 +409,48 @@
              * move vertical
              */
             if (!mouse.dirAx || isNewRoot || isEmpty) {
+                // get previously hovered element based on direction of mouse movement
+                if (mouse.dirY == 1) {
+                    prev = this.pointEl.prev(opt.itemNodeName);
+                } else if (mouse.dirY == -1) {
+                    prev = this.pointEl.next(opt.itemNodeName);
+                }
+
                 // check if groups match if dragging over new root
                 if (isNewRoot && opt.group !== pointElRoot.data('nestable-group')) {
                     return;
                 }
                 // check depth limit
+                var currentLevel = this.pointEl.parents(opt.listNodeName).length;
                 depth = this.dragDepth - 1 + this.pointEl.parents(opt.listNodeName).length;
+
                 if (depth > opt.maxDepth) {
                     return;
                 }
+                if (!opt.allowIncrease && this.dragLevel < currentLevel) {
+                    return;
+                }
+                if (!opt.allowDecrease && this.dragLevel > currentLevel && (this.dragLevel - currentLevel != 1)) {
+                    return;
+                }
+                if ((!opt.allowDecrease || !opt.allowIncrease) && (this.dragLevel - currentLevel == 1)) {
+                    // set parent for currently hovered element
+                    list = this.pointEl.find(opt.listNodeName).last();
+                    if (!list.length) {
+                        list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
+                        list.append(this.placeEl);
+                        this.pointEl.append(list);
+                        this.setParent(this.pointEl);
+                    }
+
+                    // unset parent for previously hovered element
+                    if (prev != undefined && this.isParent(prev) && prev.find(opt.listNodeName).children().length == 0) {
+                        this.unsetParent(prev);
+                    }
+
+                    return;
+                }
+
                 var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
                 parent = this.placeEl.parent();
                 // if empty create new list to replace empty placeholder
@@ -436,11 +479,11 @@
 
     };
 
-    $.fn.nestable = function(params) {
+    $.fn.nestable = function (params) {
         var lists = this,
             retval = this;
 
-        lists.each(function() {
+        lists.each(function () {
             var plugin = $(this).data("nestable");
 
             if (!plugin) {
