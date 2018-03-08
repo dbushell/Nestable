@@ -47,8 +47,9 @@ Then activate with jQuery like so:
 
 The `change` event is fired when items are reordered.
 
-    $('.dd').on('change', function() {
-        /* on change event */
+    $('.dd').on('change', function(e, elemDragged) {
+        //e: event
+        //elemDragged: elemento que foi movimentado
     });
 
 ### Methods
