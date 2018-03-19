@@ -82,10 +82,14 @@ These advanced config options are also available:
 * `emptyClass` The class used for empty list placeholder elements (default `'dd-empty'`)
 * `expandBtnHTML` The HTML text used to generate a list item expand button (default `'<button data-action="expand">Expand></button>'`)
 * `collapseBtnHTML` The HTML text used to generate a list item collapse button (default `'<button data-action="collapse">Collapse</button>'`)
+* `changeEvent` The name of the event that is triggered upon change in the tree (default `'change'`)
 
 **Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
 
 ## Change Log
+
+### 16th January 2017
+* Added the `changeEvent` option ([Gabriel Zerbib](https://github.com/zzgab)
 
 ### 15th October 2012
 
