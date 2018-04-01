@@ -1,6 +1,6 @@
-/*!
+/*!dd
  * Nestable jQuery Plugin - Copyright (c) 2012 David Bushell - http://dbushell.com/
- * Dual-licensed under the BSD or MIT licenses
+ * dsadsadadasa-licensed under the BSD or MIT licensesdsadasdasdasdasdasdsadasdsa
  */
 ;(function($, window, document, undefined)
 {
@@ -28,14 +28,7 @@
 
     var defaults = {
             listNodeName    : 'ol',
-            itemNodeName    : 'li',
-            rootClass       : 'dd',
-            listClass       : 'dd-list',
-            itemClass       : 'dd-item',
-            dragClass       : 'dd-dragel',
-            handleClass     : 'dd-handle',
-            collapsedClass  : 'dd-collapsed',
-            placeClass      : 'dd-placeholder',
+       
             noDragClass     : 'dd-nodrag',
             emptyClass      : 'dd-empty',
             expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
