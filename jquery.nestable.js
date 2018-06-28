@@ -5,6 +5,7 @@
 ;(function($, window, document, undefined)
 {
     var hasTouch = 'ontouchstart' in document;
+    var nestableIds = [];
 
     /**
      * Detect CSS pointer-events property
@@ -446,9 +447,12 @@
                 if (!parent.children().length) {
                     this.unsetParent(parent.parent());
                 }
-                if (!this.dragRootEl.find(opt.itemNodeName).length) {
+
+                // If do not have opt.itemNodeName and opt.emptyClass
+                if (!this.dragRootEl.find(opt.itemNodeName).length && !this.dragRootEl.find("." + opt.emptyClass).length) {
                     this.dragRootEl.append('<div class="' + opt.emptyClass + '"/>');
                 }
+
                 // parent root list has changed
                 if (isNewRoot) {
                     this.dragRootEl = pointElRoot;
@@ -456,7 +460,6 @@
                 }
             }
         }
-
     };
 
     $.fn.nestable = function(params)
@@ -470,7 +473,17 @@
 
             if (!plugin) {
                 $(this).data("nestable", new Plugin(this, params));
-                $(this).data("nestable-id", new Date().getTime());
+
+                // not duplicated nestableId
+                var nestableId;
+                
+                do {
+                	nestableId = new Date().getTime();
+                } while(nestableIds.indexOf(nestableId) !== -1);
+                
+                nestableIds.push(nestableId);
+                
+                $(this).data("nestable-id", nestableId);
             } else {
                 if (typeof params === 'string' && typeof plugin[params] === 'function') {
                     retval = plugin[params]();
