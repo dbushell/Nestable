@@ -67,6 +67,7 @@ You can change the follow options:
 
 * `maxDepth` number of levels an item can be nested (default `5`)
 * `group` group ID to allow dragging between lists (default `0`)
+* Class your itemNodeName with `clone` to clone the node on move (does not delete from original list)
 
 These advanced config options are also available:
 
@@ -86,6 +87,10 @@ These advanced config options are also available:
 **Inspect the [Nestable Demo](http://dbushell.github.com/Nestable/) for guidance.**
 
 ## Change Log
+
+### 24th September 2018
+
+* Add cloneable nodes
 
 ### 15th October 2012
 
