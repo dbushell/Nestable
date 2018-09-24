@@ -265,8 +265,19 @@
             this.dragEl = $(document.createElement(this.options.listNodeName)).addClass(this.options.listClass + ' ' + this.options.dragClass);
             this.dragEl.css('width', dragItem.width());
 
-            dragItem.after(this.placeEl);
-            dragItem[0].parentNode.removeChild(dragItem[0]);
+            if($(dragItem[0]).hasClass("clone"))
+            {
+                var cloneNode = dragItem[0].cloneNode(true);
+                dragItem[0].parentNode.replaceChild(cloneNode, dragItem[0]);
+                $(dragItem[0]).removeClass("clone");
+                dragItem.after(this.placeEl);
+            }
+            else
+            {
+                dragItem.after(this.placeEl);
+                dragItem[0].parentNode.removeChild(dragItem[0]);
+            }
+
             dragItem.appendTo(this.dragEl);
 
             $(document.body).append(this.dragEl);
