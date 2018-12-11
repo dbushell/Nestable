@@ -27,23 +27,23 @@
     })();
 
     var defaults = {
-            listNodeName    : 'ol',
-            itemNodeName    : 'li',
-            rootClass       : 'dd',
-            listClass       : 'dd-list',
-            itemClass       : 'dd-item',
-            dragClass       : 'dd-dragel',
-            handleClass     : 'dd-handle',
-            collapsedClass  : 'dd-collapsed',
-            placeClass      : 'dd-placeholder',
-            noDragClass     : 'dd-nodrag',
-            emptyClass      : 'dd-empty',
-            expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
-            collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
-            group           : 0,
-            maxDepth        : 5,
-            threshold       : 20
-        };
+        listNodeName    : 'ol',
+        itemNodeName    : 'li',
+        rootClass       : 'dd',
+        listClass       : 'dd-list',
+        itemClass       : 'dd-item',
+        dragClass       : 'dd-dragel',
+        handleClass     : 'dd-handle',
+        collapsedClass  : 'dd-collapsed',
+        placeClass      : 'dd-placeholder',
+        noDragClass     : 'dd-nodrag',
+        emptyClass      : 'dd-empty',
+        expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
+        collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
+        group           : 0,
+        maxDepth        : 5,
+        threshold       : 20
+    };
 
     function Plugin(element, options)
     {
@@ -140,7 +140,7 @@
         {
             var data,
                 depth = 0,
-                list  = this;
+                list  = this,
                 step  = function(level, depth)
                 {
                     var array = [ ],
